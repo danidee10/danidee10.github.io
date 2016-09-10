@@ -20,6 +20,8 @@ exclude:      []
 keep_files:   [".git", ".svn"]
 encoding:     "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
+paginate: 5
+paginate_path: "/blog/page:num/"
 
 # Filtering Content
 show_drafts: null
@@ -45,7 +47,6 @@ baseurl: "" # does not include hostname
 
 # Outputting
 permalink:     date
-paginate_path: /page:num
 timezone:      null
 
 quiet:    false

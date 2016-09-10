@@ -135,6 +135,7 @@ PLATFORMS
 DEPENDENCIES
   github-pages
   jekyll-github-metadata
+  jekyll-paginate
 
 BUNDLED WITH
    1.12.5
