@@ -1,3 +1,8 @@
+---
+title: "Blog"
+permalink: /blog/
+---
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -5,12 +10,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>end2end</title>
-    <meta name="description" content="A free Jekyll theme for download">
+    <title>Blog</title>
+    <meta name="description" content="Blog">
 
-    <link rel="stylesheet" href="/end2end/css/main.css">
+    <link rel="stylesheet" href="../css/main.css">
     <link rel="canonical" href="http://nandomoreira.me/end2end/blog/">
-    <link rel="alternate" type="application/rss+xml" title="end2end" href="http://nandomoreira.me/end2end/feed.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Osaetin Daniel" href="http://nandomoreira.me/end2end/feed.xml" />
   </head>
 
   <body>
@@ -27,7 +32,7 @@
     <main>
       <header class="site-header">
   <div class="container">
-    <h1><a href="/end2end/">end2<span>end</span></a></h1>
+    <h1><a href="/">Osaetin<span>Daniel</span></a></h1>
 
     <button type="button" class="sliding-panel-button">
       <span></span>
@@ -37,12 +42,11 @@
 
     <nav class="navbar sliding-panel-content">
       <ul>
-        
-          <li><a href="/end2end/about" title="About">About</a></li>
-        
-          <li><a href="/end2end/blog" title="Blog">Blog</a></li>
-        
-        <li><a href="http://github.com/nandomoreirame/end2end/archive/master.zip" title="Download">Download</a></li>
+
+          <li><a href="/about" title="About">About</a></li>
+
+          <li><a href="/blog" title="Blog">Blog</a></li>
+
         <li><a href="/end2end/feed.xml" target="_blank"><i class="icon icon-feed"></i></a></li>
       </ul>
     </nav>
@@ -54,58 +58,34 @@
 
       <div class="container">
         <section class="post-list">
-  
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title">
-      <a class="post-link" href="/end2end/blog/2015/welcome-to-jekyll/">Welcome to Jekyll!</a>
-    </h1>
-    <div class="post-meta">
-      <time>Nov 26, 2015</time>
-    </div>
-  </header>
 
-  <p><a href="/end2end/blog/2015/welcome-to-jekyll/" title="Permalink to: Welcome to Jekyll!" class="read-more">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways,...</a></p>
-</article>
-  
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title">
-      <a class="post-link" href="/end2end/blog/2015/lorem-ipsum-dolor-sit/">Lorem ipsum dolor sit</a>
-    </h1>
-    <div class="post-meta">
-      <time>Nov 26, 2015</time>
-    </div>
-  </header>
+          {% for  post in site.posts %}
 
-  <p><a href="/end2end/blog/2015/lorem-ipsum-dolor-sit/" title="Permalink to: Lorem ipsum dolor sit" class="read-more">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit...</a></p>
-</article>
-  
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title">
-      <a class="post-link" href="/end2end/blog/2015/lorem/">Lorem ipsum dolor sit amet</a>
-    </h1>
-    <div class="post-meta">
-      <time>Nov 12, 2015</time>
-    </div>
-  </header>
+          <article class="post">
+            <header class="post-header">
+              <h1 class="post-title">
+                <a class="post-link" href="{{ post.url }}">{{ post.title }}</a>
+              </h1>
+              <div class="post-meta">
+                <time>{{ post.date | date: "%B %e, %Y" }}</time>
+              </div>
+            </header>
 
-  <p><a href="/end2end/blog/2015/lorem/" title="Permalink to: Lorem ipsum dolor sit amet" class="read-more">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam...</a></p>
-</article>
-  
+            <p><a href="{{ post.url }}" title="Permalink to: {{ post.title }}" class="read-more">Read more</a></p>
+          </article>
 
-  
+          {% endfor %}
+
 <nav class="pagination" role="pagination">
   <ul>
-    
-    
+
+
       <li><span class="prev btn btn-ghost disabled">&laquo; Prev</span></li>
-    
+
     <li><span class="page-number">Page 1 of 3</span></li>
-    
+
       <li><a class="next btn btn-ghost" href="/end2end/blog/page/2" title="Articles old">Next &raquo;</a></li>
-    
+
   </ul>
 </nav>
 
