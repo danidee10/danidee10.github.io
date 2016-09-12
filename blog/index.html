@@ -13,8 +13,8 @@ title: "Blog"
     <meta name="description" content="Blog">
 
     <link rel="stylesheet" href="../css/main.css">
-    <link rel="canonical" href="http://nandomoreira.me/end2end/blog/">
-    <link rel="alternate" type="application/rss+xml" title="Osaetin Daniel" href="http://nandomoreira.me/end2end/feed.xml" />
+    <link rel="canonical" href="https://danidee10.github.io/blog/">
+    <link rel="alternate" type="application/atom+xml" title="Osaetin Daniel" href="/feed.xml" />
   </head>
 
   <body>
@@ -46,7 +46,7 @@ title: "Blog"
 
           <li><a href="/blog" title="Blog">Blog</a></li>
 
-        <li><a href="/end2end/feed.xml" target="_blank"><i class="icon icon-feed"></i></a></li>
+        <li><a href="/feed.xml" target="_blank"><i class="icon icon-feed"></i></a></li>
       </ul>
     </nav>
   </div>
@@ -65,6 +65,7 @@ title: "Blog"
               <h1 class="post-title">
                 <a class="post-link" href="{{ post.url }}">{{ post.title }}</a>
               </h1>
+              <p>{{ post.excerpt }}</p>
               <div class="post-meta">
                 <time>{{ post.date | date: "%B %e, %Y" }}</time>
               </div>
