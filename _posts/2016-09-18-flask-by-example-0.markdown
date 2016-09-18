@@ -59,7 +59,7 @@ $ cd votr
 $ source bin/activate
 {% endhighlight %}
 
-###### Your new virtualenv is not installed and activated you should see something like this in your terminal prompt
+###### Your new virtualenv is now installed and activated you should see something like this in your terminal prompt
 {% highlight bash %}
 (votr) [user@hostname votr]$
 {% endhighlight %}
@@ -72,4 +72,4 @@ $ pip install flask
 
 That's it! our development environment is all setup with flask installed. Note that we'll have to install other libraries (we haven't installed react yet). but i feel it's best to install every library we need as we go through the series, so we can understand what each library does and handle the quirks and issues that may arise when we get there.
 
-If you have any questions or issues with the installation process. please leave a comment below else I'll see you in the next part where we're to start writing some code!.
+If you have any questions or issues with the installation process. please leave a comment below else I'll see you in the next part where we're going to start writing some code!.
