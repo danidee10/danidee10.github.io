@@ -4,11 +4,11 @@ title: Hello World
 date: 2016-09-08T22:35:33+01:00
 ---
 
-Finally got jekyll working!! and now my highlighting is not working
+Everything always starts hello world!
 
 {% highlight python %}
 
 def foo(x):
-    return 'bar'
+    return 'hello world'
 
 {% endhighlight %}
