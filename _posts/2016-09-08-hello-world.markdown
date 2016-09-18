@@ -4,7 +4,7 @@ title: Hello World
 date: 2016-09-08T22:35:33+01:00
 ---
 
-Everything always starts hello world!
+Everything always starts with hello world!.
 
 {% highlight python %}
 
