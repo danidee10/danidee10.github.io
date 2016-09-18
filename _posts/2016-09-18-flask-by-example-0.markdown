@@ -1,11 +1,19 @@
 ---
 layout: post
-title: Flask by example (How to build a polling app)
+title: Flask by example (How to build a Voting app)
 date: 2016-09-18T22:35:33+01:00
 ---
 
-Welcome everyone!, This is the beginning of a new series where we'll learn how to use flask by building a simple polling app.
-This series is going to be split into several parts because of the size of the app we're building. At the end of this series we'll have built a polling app, where the users can login, vote on various topics and leave comments, the comments can also be upvoted and downvoted so that the best comments get to the top for other users to see.
+Welcome everyone!, This is the beginning of a new series where we'll learn how to use flask by building a simple Voting app.
+This series is going to be split into several parts because of the size of the app we're building. At the end of this series we'll have built a Voting app, where:
+
+<ul class="postlist">
+  <li>Users can login.</li>
+  <li>Vote on various topics and leave comments.</li>
+  <li>Comments can also be upvoted and downvoted so that the best comments get to the top for other users to see.</li>
+</ul>
+
+<br />
 
 We're going to use [Flask](http://flask.pocoo.org) as our backend, [Bootstrap3](http://getbootstrap.com/) for our interface generally and [Reactjs](https://facebook.github.io/react/) for other parts of our UI. the rest is just plain old html and css.
 
@@ -27,9 +35,13 @@ So if you're a newbie in building web apps with python and you've been frustrate
 #### Requirements and setup
 To follow this tutorial effectively you should have the following installed:
 
- * [Python3x](https://www.python.org/downloads/)
- * [Virtualenv](http://www.virtualenv.org/en/latest/) and
- * [Flask](http://flask.pocoo.org)
+<ul class="postlist">
+  <li><a href="https://www.python.org/downloads/">Python 3x</a></li>
+  <li><a href="http://www.virtualenv.org/en/latest/">Virtualenv</a></li>
+  <li><a href="http://flask.pocoo.org">Flask</a></li>
+</ul>
+
+<br />
 
  I'll also assume you have basic knowledge of html and css and that you're running Linux (what have you been doing with your life if you aren't).
 
