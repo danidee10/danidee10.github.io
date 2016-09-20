@@ -81,7 +81,42 @@ $ source bin/activate
 $ pip install flask
 {% endhighlight %}
 
+#### Everything starts with hello world!
+We're going to write a basic flask app that returns 'hello world' when we navigate to `/` in our browser
+
+###### Create the project folder and votr.py
+{% highlight bash %}
+$ mkdir votr
+$ cd votr
+$ touch votr.py
+{% endhighlight %}
+
+That will create a new directory called `votr` and a file named `votr.py`
+
+###### Open votr.py with favourite text editor and include the following
+
+{% highlight python %}
+from flask import Flask
+
+votr = Flask('__name__')
+
+@votr.route('/')
+def home():
+    return 'hello world'
+
+if __name__ == '__main__':
+    votr.run()
+
+{% endhighlight %}
+
+###### Run it from the terminal with:
+
+{% highlight bash %}
+$ python3 votr.py
+{% endhighlight %}
+
+By default flask runs on port `5000` so open any browser you have an enter the address `localhost:5000` and sure enough `hello world` should be displayed.
 
 That's it! our development environment is all setup with flask installed. Note that we'll have to install other libraries (we haven't installed react yet). but i feel it's best to install every library we need as we go through the series, so we can understand what each library does and handle the quirks and issues that may arise when we get there.
 
-If you have any questions or issues with the installation process. please leave a comment below else I'll see you in the next part where we're going to start writing some code!.
+If you have any questions or issues with the installation process. please leave a comment below else I'll see you in the next part where we're going to start writing some code!

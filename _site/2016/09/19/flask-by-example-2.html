@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Flask by example (How to build a Voting app) Part 2</title>
+    <meta name="description" content="Osaetin Daniel's blog">
+    <link rel="alternate" type="application/atom+xml" title="Osaetin Daniel" href="/feed.xml" />
+
+    <style>
+    /*!
+ * end2end - jekyll theme free
+ * https://github.com/nandomoreirame/end2end
+ * MIT License
+ */@import url("//fonts.googleapis.com/css?family=Open+Sans:400,300,700");html{box-sizing:border-box}*,*::after,*::before{box-sizing:inherit}html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}table{border-collapse:collapse;border-spacing:0}.btn,.sliding-panel-button{appearance:none;background-color:#337ab7;border:0;border-radius:3px;color:#fff;cursor:pointer;display:inline-block;font-family:"Open Sans","Helvetica Neue","Helvetica","Roboto","Arial",sans-serif;font-size:1em;-webkit-font-smoothing:antialiased;font-weight:600;line-height:1;padding:.75em 1.5em;text-decoration:none;transition:background-color .2s ease;user-select:none;vertical-align:middle;white-space:nowrap}.btn:hover,.sliding-panel-button:hover,.btn:focus,.sliding-panel-button:focus{background-color:#296292;color:#fff}.btn:disabled,.sliding-panel-button:disabled{cursor:not-allowed;opacity:0.5}.btn:disabled:hover,.sliding-panel-button:disabled:hover{background-color:#337ab7}fieldset{background-color:#f7f7f7;border:1px solid #dedede;margin:0 0 .75em;padding:1.5em}input,label,select{display:block;font-family:"Open Sans","Helvetica Neue","Helvetica","Roboto","Arial",sans-serif;font-size:1em}label{font-weight:600;margin-bottom:.375em}label.required::after{content:"*"}label abbr{display:none}input[type="color"],input[type="date"],input[type="datetime"],input[type="datetime-local"],input[type="email"],input[type="month"],input[type="number"],input[type="password"],input[type="search"],input[type="tel"],input[type="text"],input[type="time"],input[type="url"],input[type="week"],input:not([type]),textarea,select[multiple=multiple]{background-color:#fff;border:1px solid #dedede;border-radius:3px;box-shadow:inset 0 1px 3px rgba(0,0,0,0.06);box-sizing:border-box;font-family:"Open Sans","Helvetica Neue","Helvetica","Roboto","Arial",sans-serif;font-size:1em;margin-bottom:.75em;padding:.5em;transition:border-color .2s ease;width:100%}input[type="color"]:hover,input[type="date"]:hover,input[type="datetime"]:hover,input[type="datetime-local"]:hover,input[type="email"]:hover,input[type="month"]:hover,input[type="number"]:hover,input[type="password"]:hover,input[type="search"]:hover,input[type="tel"]:hover,input[type="text"]:hover,input[type="time"]:hover,input[type="url"]:hover,input[type="week"]:hover,input:not([type]):hover,textarea:hover,select[multiple=multiple]:hover{border-color:#b2b2b2}input[type="color"]:focus,input[type="date"]:focus,input[type="datetime"]:focus,input[type="datetime-local"]:focus,input[type="email"]:focus,input[type="month"]:focus,input[type="number"]:focus,input[type="password"]:focus,input[type="search"]:focus,input[type="tel"]:focus,input[type="text"]:focus,input[type="time"]:focus,input[type="url"]:focus,input[type="week"]:focus,input:not([type]):focus,textarea:focus,select[multiple=multiple]:focus{border-color:#337ab7;box-shadow:inset 0 1px 3px rgba(0,0,0,0.06),0 0 5px rgba(45,109,163,0.7);outline:none}input[type="color"]:disabled,input[type="date"]:disabled,input[type="datetime"]:disabled,input[type="datetime-local"]:disabled,input[type="email"]:disabled,input[type="month"]:disabled,input[type="number"]:disabled,input[type="password"]:disabled,input[type="search"]:disabled,input[type="tel"]:disabled,input[type="text"]:disabled,input[type="time"]:disabled,input[type="url"]:disabled,input[type="week"]:disabled,input:not([type]):disabled,textarea:disabled,select[multiple=multiple]:disabled{background-color:#f2f2f2;cursor:not-allowed}input[type="color"]:disabled:hover,input[type="date"]:disabled:hover,input[type="datetime"]:disabled:hover,input[type="datetime-local"]:disabled:hover,input[type="email"]:disabled:hover,input[type="month"]:disabled:hover,input[type="number"]:disabled:hover,input[type="password"]:disabled:hover,input[type="search"]:disabled:hover,input[type="tel"]:disabled:hover,input[type="text"]:disabled:hover,input[type="time"]:disabled:hover,input[type="url"]:disabled:hover,input[type="week"]:disabled:hover,input:not([type]):disabled:hover,textarea:disabled:hover,select[multiple=multiple]:disabled:hover{border:1px solid #dedede}textarea{resize:vertical}input[type="search"]{appearance:none}input[type="checkbox"],input[type="radio"]{display:inline;margin-right:.375em}input[type="checkbox"]+label,input[type="radio"]+label{display:inline-block}input[type="file"]{margin-bottom:.75em;width:100%}select{margin-bottom:1.5em;max-width:100%;width:auto}ul,ol{margin:0;padding:0;list-style-position:inside;padding-left:25px}dl{margin-bottom:.75em}dl dt{font-weight:bold;margin-top:.75em}dl dd{margin:0}table{border-collapse:collapse;font-feature-settings:"kern", "liga", "tnum";margin:.75em 0;table-layout:fixed;width:100%}th{border-bottom:1px solid #a7a7a7;font-weight:600;padding:.75em 0;text-align:left}td{border-bottom:1px solid #dedede;padding:.75em 0}tr,td,th{vertical-align:middle}body{color:#000000;font-size:18px;font-weight:400;line-height:1.5}h1,h2,h3,h4,h5,h6{font-family:"Open Sans","Helvetica Neue","Helvetica","Roboto","Arial",sans-serif;font-size:1em;line-height:1.2;font-weight:700;margin:0 0 .75em}h1{font-size:35px; color: #337ab7;}h2{font-size:1.625rem}h3{font-size:1.5rem}h4{font-size:1.25rem}h5,h6{font-size:1rem}p{margin:0 0 .75em;font-weight:300}em{font-style:italic}small{font-size:80%}a{color:#337ab7;text-decoration:none;-webkit-transition:color .2s ease;-moz-transition:color .2s ease;transition:color .2s ease}a:active,a:focus,a:hover{color:#265c89}hr{border-bottom:1px solid #dedede;border-left:0;border-right:0;border-top:0;margin:1.5em 0}img,picture{margin:0;max-width:100%}code{background:none;border-radius:0;border:none;font-family:"Courier New", monospace;font-size:0.9em;margin:0;padding:0 5px;background-color:#ededed}pre{-webkit-overflow-scrolling:touch;font-family:"Courier New", monospace;font-size:0.9em;margin:0}pre code{line-height:1.75em}.txt-primary{color:#337ab7}.txt-white{color:#fff}.txt-black{color:#000}.txt-blue{color:#477dca}.txt-dark-gray{color:#232323}.txt-medium-gray{color:#9a9a9a}.txt-light-gray{color:#dedede}.txt-left{text-align:left}.txt-right{text-align:right}.txt-center{text-align:center}.txt-justify{text-align:justify}.word-wrap{overflow-wrap:break-word;word-wrap:break-word;word-break:break-all}.dot{border-radius:50%}blockquote{background:#f9f9f9;border-left:10px solid #ccc;margin:1.5em 10px;padding:0.5em 10px;quotes:"“" "”" "‘" "’"}blockquote:before{color:#ccc;content:open-quote;font-size:4em;line-height:0.1em;margin-right:0.25em;vertical-align:-0.4em}blockquote p{display:inline}.site-header::after,.social::after,.pagination::after,.highlight::after{clear:both;content:"";display:table}html,body{min-height:100%;height:100%}body{border-top:5px solid #337ab7;background:#fff url("/images/bg-pattern.png")}.container{max-width:800px;margin-left:auto;margin-right:auto;padding-left:.75em;padding-right:.75em}.container::after{clear:both;content:"";display:table}.card,.post-list .post{background-color:#fff;box-shadow:0 2px 1px rgba(0,0,0,0.1);margin:0 0 1.5em;padding:1.5em .75em}@media screen and (min-width: 480px){.card,.post-list .post{padding:1.5em}}.site-header{background-color:#fff;padding:1.5em 0;margin-bottom:1.5em;border-bottom:1px solid rgba(222,222,222,0.5)}.site-header h1{margin:0;padding:5px 0;float:left;font-weight:400;font-size:1.25rem}.site-header h1 span{color:#337ab7}.site-header h1,.site-header a{text-transform:lowercase}.site-header .navbar{float:right}.site-header a{color:#9a9a9a}.site-header a:hover,.site-header a:focus,.site-header a:active{color:#232323}@media screen and (max-width: 480px){.site-header .container{padding-left:1.5em;padding-right:1.5em}}.sliding-panel-button{float:right;padding:5px;margin:0 3.75em 0 0}.sliding-panel-button span{width:30px;display:block;height:3px;border-radius:2px;background:#fff;margin:3px 0}@media screen and (min-width: 480px){.sliding-panel-button{display:none}}@media screen and (max-width: 480px){.sliding-panel-content{border-top:5px solid #337ab7;position:fixed;top:0;right:auto;bottom:0;left:0;height:100%;width:220px;-webkit-transform:translateX(-100%);-moz-transform:translateX(-100%);-ms-transform:translateX(-100%);-o-transform:translateX(-100%);transform:translateX(-100%);-webkit-transition:all 0.25s linear;-moz-transition:all 0.25s linear;transition:all 0.25s linear;background:#fff;-webkit-overflow-scrolling:touch;overflow-y:auto;z-index:999999}.sliding-panel-content.is-visible{-webkit-transform:translateX(0);-moz-transform:translateX(0);-ms-transform:translateX(0);-o-transform:translateX(0);transform:translateX(0)}.sliding-panel-fade-screen{position:fixed;top:0;right:0;bottom:0;left:0;-webkit-transition:all 0.15s ease-out 0s;-moz-transition:all 0.15s ease-out 0s;transition:all 0.15s ease-out 0s;background:#000;opacity:0;visibility:hidden;z-index:9999}.sliding-panel-fade-screen.is-visible{opacity:0.4;visibility:visible}.sliding-panel-close{cursor:pointer}}.navbar li,.navbar a{display:inline-block}.navbar a{padding:5px 15px}@media screen and (max-width: 600px){.navbar a{padding:5px 10px}}@media screen and (max-width: 480px){.navbar li,.navbar a{display:block;text-align:center}.navbar li{border-bottom:1px solid #f2f2f2}.navbar a{padding:15px 0}}.btn.btn-ghost,.btn-ghost.sliding-panel-button{background-color:transparent;border:2px solid #337ab7;color:#337ab7;margin-bottom:2px}.btn.disabled,.disabled.sliding-panel-button,.btn[disabled],[disabled].sliding-panel-button,fieldset[disabled] .btn,fieldset[disabled] .sliding-panel-button{cursor:not-allowed;filter:alpha(opacity=65);-webkit-box-shadow:none;box-shadow:none;opacity:.65}body.home{width:100%;display:table}.hero{text-align:center;display:table-cell;vertical-align:middle}.hero-inner{text-align:center;display:inline-block;padding:1.5em}.hero-inner .dot{padding:5px;border:1px solid #dedede}.hero-inner h1{margin-top:.7em;font-size:2.5rem}.hero-inner h3{font-size:1.25rem;margin:.8em 0 1.2em}@media screen and (min-width: 600px){.hero-inner h3{font-size:1.5rem}}.hero-inner h3,.hero-inner em{font-weight:300}.hero-inner em{color:#337ab7}.hero-inner strong{font-weight:700}.post{padding:1.5em 0}.post-header{margin-bottom:1.5em; padding-bottom: 5px; border-bottom: 1px solid #999;}.post-title{font-size:1.625rem;margin-bottom:0;line-height:1.5em}.post-list .post a{color:#636363}.post-list .post a:hover,.post-list .post a:active,.post-list .post a:focus{color:#337ab7}.social{padding:1.5em 0}.social li{display:inline-block;padding:0 .6em}.social a{color:#9a9a9a}.social a:hover,.social a:active,.social a:focus{color:#337ab7}.social i{font-size:1.2em}.pagination{text-align:center;margin:2em 0}.pagination li{padding:0 .4em}.pagination li,.pagination a,.pagination span{display:inline-block}.pagination a,.pagination span{line-height:1.2em;font-size:.75rem}.pagination .btn,.pagination .sliding-panel-button{color:#636363;border-color:rgba(222,222,222,0.8)}.pagination span{color:#aaa;font-style:italic}.site-footer{background-color:#fff;border-top:1px solid rgba(222,222,222,0.5);padding:1.5em;text-align:center}.site-footer p{margin:0}.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width: 500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}@font-face{font-family:"end2end-icons";src:url("../fonts/end2end-icons.eot?vs69d0");src:url("../fonts/end2end-icons.eot?vs69d0#iefix") format("embedded-opentype"),url("../fonts/end2end-icons.ttf?vs69d0") format("truetype"),url("../fonts/end2end-icons.woff?vs69d0") format("woff"),url("../fonts/end2end-icons.svg?vs69d0#end2end-icons") format("svg");font-weight:normal;font-style:normal}.icon{font-family:"end2end-icons" !important;speak:none;font-style:normal;font-weight:normal;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.icon-home:before{content:""}.icon-comments:before{content:""}.icon-comment-o:before{content:""}.icon-comments-o:before{content:""}.icon-search:before{content:""}.icon-share:before{content:""}.icon-google-plus:before{content:""}.icon-facebook:before{content:""}.icon-facebook-rounded:before{content:""}.icon-twitter:before{content:""}.icon-twitter-rounded:before{content:""}.icon-feed:before{content:""}.icon-github:before{content:""}.icon-linkedin:before{content:""}.highlight{padding:0;margin-top:1.2em;margin-bottom:1.2em}.highlight,.highlight .hll,.highlight pre,.highlight code{background-color:#272822 !important;border:none}.highlight pre{margin:0;padding:1.3em;white-space:pre;line-height:23px;overflow-x:auto;margin-bottom:0;word-break:inherit;word-wrap:inherit}.highlight pre,.highlight pre code{color:#eeffdd}.highlight pre code{white-space:pre;padding:0 !important}.highlight pre code *{white-space:nowrap}.highlight .c{color:#75715e}.highlight .err{color:#f2f1f2}.highlight .k{color:#66d9ef}.highlight .l{color:#ae81ff}.highlight .n{color:#f8f8f2}.highlight .o{color:#f92672}.highlight .p{color:#f8f8f2}.highlight .cm{color:#75715e}.highlight .cp{color:#75715e}.highlight .c1{color:#75715e}.highlight .cs{color:#75715e}.highlight .ge{font-style:italic}.highlight .gs{font-weight:bold}.highlight .kc{color:#66d9ef}.highlight .kd{color:#66d9ef}.highlight .kn{color:#f92672}.highlight .kp{color:#66d9ef}.highlight .kr{color:#66d9ef}.highlight .kt{color:#66d9ef}.highlight .ld{color:#e6db74}.highlight .m{color:#ae81ff}.highlight .s{color:#e6db74}.highlight .na{color:#a6e22e}.highlight .nb{color:#f8f8f2}.highlight .nc{color:#a6e22e}.highlight .no{color:#66d9ef}.highlight .nd{color:#a6e22e}.highlight .ni{color:#f8f8f2}.highlight .ne{color:#a6e22e}.highlight .nf{color:#a6e22e}.highlight .nl{color:#f8f8f2}.highlight .nn{color:#f8f8f2}.highlight .nx{color:#a6e22e}.highlight .py{color:#f8f8f2}.highlight .nt{color:#f92672}.highlight .nv{color:#f8f8f2}.highlight .ow{color:#f92672}.highlight .w{color:#f8f8f2}.highlight .mf{color:#ae81ff}.highlight .mh{color:#ae81ff}.highlight .mi{color:#ae81ff}.highlight .mo{color:#ae81ff}.highlight .sb{color:#e6db74}.highlight .sc{color:#e6db74}.highlight .sd{color:#e6db74}.highlight .s2{color:#e6db74}.highlight .se{color:#ae81ff}.highlight .sh{color:#e6db74}.highlight .si{color:#e6db74}.highlight .sx{color:#e6db74}.highlight .sr{color:#e6db74}.highlight .s1{color:#e6db74}.highlight .ss{color:#e6db74}.highlight .bp{color:#f8f8f2}.highlight .vc{color:#f8f8f2}.highlight .vg{color:#f8f8f2}.highlight .vi{color:#f8f8f2}.highlight .il{color:#ae81ff}.highlight .gu{color:#75715e}.highlight .gd{color:#f92672}.highlight .gi{color:#a6e22e}
+
+.post-meta {
+  font-style: italic;
+  font-size: 16px;
+}
+
+a {
+  font-weight: bold;
+}
+
+.postlist {
+  list-style: inside;
+  font-style: italic;
+}
+
+    </style>
+
+    <script src="https://use.fontawesome.com/5bbf16a3a0.js"></script>
+
+    <link rel="canonical" href="https://danidee10.github.io/2016/09/19/flask-by-example-2.html">
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-83888894-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+  </head>
+
+
+    <main>
+      <header class="site-header">
+  <div class="container">
+    <h1><a href="/">Osaetin<span>Daniel</span></a></h1>
+
+    <button type="button" class="sliding-panel-button">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="navbar sliding-panel-content">
+      <ul>
+
+          <li><a href="/about" title="About">About</a></li>
+
+          <li><a href="/blog" title="Blog">Blog</a></li>
+
+        <!--rssfeed li><a href="/end2end/feed.xml" target="_blank"><i class="icon icon-feed"></i></a></li-->
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+      <div class="sliding-panel-fade-screen"></div>
+
+      <div class="container">
+        <article role="article" class="post">
+          <div class="card">
+            <header class="post-header">
+              <h1 class="post-title">Flask by example (How to build a Voting app) Part 2</h1>
+              <p class="post-meta">September 19, 2016</i>
+            </header>
+
+            <div class="post-content">
+              <p>Welcome to part 2 of the series ‘How to build a voting app with flask’, in the previous tutorial, we setup our development environment and installed flask. we also wrote a basic hello world application just to see if everything was installed properly.</p>
+
+<p>Now we’re going to start building our database, which is the last layer in our voting app. I found this amazing <a href="http://ondras.zarovi.cz/sql/demo/?keyword=default">tool</a> which i used to visualize how the schema of our database would look like, it’s very lightweight and it has no dependencies, it just runs in your browser.</p>
+
+<h4 id="visual-representation-of-our-schema">Visual representation of our schema</h4>
+<p><img src="/images/votr.png" alt="Database schema" /></p>
+
+<p>From the image our schema is pretty clear, we have three tables, the <em>topics</em> table contains all the various topics we’re going to be voting on, for example “<strong><em>Is Alex iwobi better than Dele Alli?</em></strong>”</p>
+
+<p>The <em>options</em> table are the voting options the users can choose when voting which would be (<strong><em>Alex iwobi</em></strong> or <strong><em>Dele Alli</em></strong>)</p>
+
+<p>Lastly, the <em>polls</em> table. this table serves as a <em>‘join’</em> table (ManyToMany relationship) between <em>topics</em> and <em>options</em>, this table is needed because of the nature of the voting system where each option can belong to more than one topic at the same time, (we could be comparing <strong><em>Dele Alli</em></strong> to <strong><em>Messi</em></strong> at the same time as our first poll). if we don’t do this we’ll end up creating several <strong><em>Dele Alli’s</em></strong> in our tables for the other topics where his name is used which would defeat the <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY</a> principle.</p>
+
+<p>Next step is to convert our schema to code.</p>
+
+<h4 id="flask-sqlalchemy">Flask SQLAlchemy</h4>
+<p>Since flask is a micro framework, it doesn’t provide any special <em>batteries</em> out of the box, so the option is left to the programmer to choose the <em>batteries</em> he wants for his application. Traditionally, before ORM’s (Object Relational mapping) came to make our lives easier, programmers wrote plain SQL and programming languages provided libraries for working with different database (Python for example has libraries for working with sqlite out of the box). You’d typically pass in a valid SQL query to the Database and then have the results returned back to you, stored in an arrays or some container data structure for the programmer to work with, but as applications and data-sets grew larger it became a huge pain to maintain or even look at code that had a lot of SQL running everywhere.</p>
+
+<p>A perfect example is this:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php">$objQuery = $this-&gt;db-&gt;query
+
+( "SELECT rd.*, ((rd.rd_numberofrooms) - (select sum(rn.reservation_numberofrooms) as count_reserve_room from reservation as rn WHERE rn.reservation_rd_id = rd.rd_id AND (str_to_date('$data_Check_in_date','%d-%m-%y') BETWEEN str_to_date(rn.reservation_check_in_date,'%d-%m-%y') AND str_to_date(rn.reservation_check_out_date,'%d-%m-%y') OR str_to_date('$data_Check_out_date','%d-%m-%y') BETWEEN str_to_date(rn.reservation_check_in_date,'%d-%m-%y') AND str_to_date(rn.reservation_check_out_date,'%d-%m-%y') OR str_to_date('$data_Check_in_date','%d-%m-%y') <span class="err">&lt;</span>= str_to_date(rn.reservation_check_in_date,'%d-%m-%y') AND str_to_date('$data_Check_out_date','%d-%m-%y') ) )) as reserve
+
+FROM room_details rd LEFT JOIN reservation rn ON rd.rd_id = rn.reservation_rd_id WHERE NOT EXISTS
+
+(
+
+SELECT rn.* FROM reservation rn WHERE rn.reservation_rd_id = rd.rd_id
+
+AND (str_to_date('$data_Check_in_date','%d-%m-%y') BETWEEN str_to_date(rn.reservation_check_in_date,'%d-%m-%y') AND str_to_date(rn.reservation_check_out_date,'%d-%m-%y') OR str_to_date('$data_Check_out_date','%d-%m-%y') BETWEEN str_to_date(rn.reservation_check_in_date,'%d-%m-%y') AND str_to_date(rn.reservation_check_out_date,'%d-%m-%y') OR str_to_date('$data_Check_in_date','%d-%m-%y') <span class="err">&lt;</span>= str_to_date(rn.reservation_check_in_date,'%d-%m-%y') AND str_to_date('$data_Check_out_date','%d-%m-%y') &gt;= str_to_date(rn.reservation_check_out_date,'%d-%m-%y'))
+
+AND (rd.rd_numberofrooms <span class="err">&lt;</span>= (select sum(rn.reservation_numberofrooms) as count_reserve_room from reservation as rn WHERE rn.reservation_rd_id = rd.rd_id AND (str_to_date('$data_Check_in_date','%d-%m-%y') BETWEEN str_to_date(rn.reservation_check_in_date,'%d-%m-%y') AND str_to_date(rn.reservation_check_out_date,'%d-%m-%y') OR str_to_date('$data_Check_out_date','%d-%m-%y') BETWEEN str_to_date(rn.reservation_check_in_date,'%d-%m-%y') AND str_to_date(rn.reservation_check_out_date,'%d-%m-%y') OR str_to_date('$data_Check_in_date','%d-%m-%y') <span class="err">&lt;</span>= str_to_date(rn.reservation_check_in_date,'%d-%m-%y') AND str_to_date('$data_Check_out_date','%d-%m-%y') ) ) )
+
+)
+
+");</code></pre></figure>
+
+<p>Imagine having hundreds of this everywhere in your web app. it’s bound to happen as your data sets and your application grows.</p>
+
+<p>Some people got fed up and decided to put another layer of abstraction to make working with SQL easier for themselves and everyone else. so basically ORM is a technique in programming that allows you to interact with your database in an object oriented fashion. something like this:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">dele_alli</span> <span class="o">=</span> <span class="n">Option</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Delle Alli'</span><span class="p">,</span> <span class="n">club</span><span class="o">=</span><span class="s">'Spurs'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">dele_alli</span><span class="o">.</span><span class="n">club</span>
+<span class="o">&gt;&gt;&gt;</span><span class="s">'Spurs'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">dele_alli</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></code></pre></figure>
+
+<p><a href="http://www.sqlalchemy.org/">SQLAlchemy</a> is a very mature ORM that’s very popular in the python community, there are other [ORM’s]https://www.fullstackpython.com/object-relational-mappers-orms.html for python, but we’ll stick with SQLAlchemy due to it’s sheer popularity and excellent documentation.</p>
+
+<p><a href="flask-sqlalchemy.pocoo.org/2.1/">Flask SQLAlchemy</a> is a flask extension that makes it easier for us to work with SQLAlchemy directly in flask (You can use plain SQLAlchemy without the flask extension if you want to). we’re going to install it now with <code class="highlighter-rouge">pip</code>.</p>
+
+<h6 id="make-sure-your-virtualenv-is-activated">Make sure your virtualenv is activated</h6>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>pip install flask_sqlalchemy</code></pre></figure>
+
+<p>We’re now ready to start building our database with SQLAlchemy. If you’ve read the flask docs you should know that all our code can live in one file, but we won’t be stupid just because we were given the license to be stupid :). so we’re going to seperate files that’ll only contain code for a common thing they achieve.</p>
+
+<h6 id="create-a-new-file-called-modelspy-in-the-votr-directory">Create a new file called <code class="highlighter-rouge">models.py</code> in the <code class="highlighter-rouge">votr</code> directory</h6>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>touch models.py</code></pre></figure>
+
+<h6 id="open-up-your-favourite-text-editor-and-type-in-the-following">Open up your favourite text-editor and type in the following</h6>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask_sqlalchemy</span> <span class="kn">import</span> <span class="n">SQLAlchemy</span>
+
+<span class="c"># create a new SQLAlchemy object</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">SQLAlchemy</span><span class="p">()</span>
+
+<span class="c"># Base model that for other models to inherit from</span>
+<span class="k">class</span> <span class="nc">Base</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">__abstract__</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">autoincrement</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">date_created</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">db</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">current_timestamp</span><span class="p">())</span>
+    <span class="n">date_modified</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">db</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">current_timestamp</span><span class="p">(),</span>
+            <span class="n">onupdate</span><span class="o">=</span><span class="n">db</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">current_timestamp</span><span class="p">())</span>
+
+<span class="c"># Model for poll topics</span>
+<span class="k">class</span> <span class="nc">Topics</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">500</span><span class="p">))</span>
+
+<span class="c"># Model for poll options</span>
+<span class="k">class</span> <span class="nc">Options</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">200</span><span class="p">))</span>
+
+<span class="c"># Polls model to connect topics and options together</span>
+<span class="k">class</span> <span class="nc">Polls</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+
+    <span class="c"># Columns declaration</span>
+    <span class="n">topic_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s">'topics.id'</span><span class="p">))</span>
+    <span class="n">option_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s">'options.id'</span><span class="p">))</span>
+    <span class="n">vote_count</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Boolean</span><span class="p">)</span> <span class="c"># to mark poll as open or closed</span>
+
+    <span class="c"># Relationship declaration (makes it easier for us to access the polls model</span>
+    <span class="c"># from the other models it's related to)</span>
+    <span class="n">topic</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">relationship</span><span class="p">(</span><span class="s">'Topics'</span><span class="p">,</span> <span class="n">foreign_keys</span><span class="o">=</span><span class="p">[</span><span class="n">topic_id</span><span class="p">],</span>
+            <span class="n">backref</span><span class="o">=</span><span class="n">db</span><span class="o">.</span><span class="n">backref</span><span class="p">(</span><span class="s">'options'</span><span class="p">,</span> <span class="n">lazy</span><span class="o">=</span><span class="s">'dynamic'</span><span class="p">))</span>
+    <span class="n">option</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">relationship</span><span class="p">(</span><span class="s">'Options'</span><span class="p">,</span><span class="n">foreign_keys</span><span class="o">=</span><span class="p">[</span><span class="n">option_id</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># a user friendly way to view our objects in the terminal</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">option</span><span class="o">.</span><span class="n">name</span></code></pre></figure>
+
+<p>To properly use <code class="highlighter-rouge">flask_sqlalchemy</code>, we have to create a configuration file which tells flask the type of database we’re making use of and how to connect it, we can also use our configuration file to store site-wide information (Like the password to our admin account!). we’re going to use sqlite as the database for votr because it’s lightweight and easy to setup.</p>
+
+<p>But seriously never store passwords or sensitive information of any kind in a plain file or unencrypted in your database. Never!</p>
+
+<h6 id="create-a-new-file-configpy-and-include-the-following">Create a new file <code class="highlighter-rouge">config.py</code> and include the following</h6>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#configuration file for votr</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">DB_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="s">'votr.db'</span><span class="p">)</span>
+<span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s">'development key'</span> <span class="c"># keep this key secret during production</span>
+<span class="n">SQLALCHEMY_DATABASE_URI</span> <span class="o">=</span> <span class="s">'sqlite:///{}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DB_PATH</span><span class="p">)</span>
+<span class="n">SQLALCHEMY_TRACK_MODIFICATIONS</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="n">DEBUG</span> <span class="o">=</span> <span class="bp">True</span></code></pre></figure>
+
+<p>To find out more about the configuration parameters you can use for sqlalchemy you can read the docs <a href="http://flask-sqlalchemy.pocoo.org/2.1/config/">here</a>
+For now we’ll just keep everything simple.</p>
+
+<h6 id="edit-the-votrpy-file-we-created-earlier-to-include-the-following">Edit the <code class="highlighter-rouge">votr.py</code> file we created earlier to include the following:</h6>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">db</span>
+
+<span class="n">votr</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="s">'__name__'</span><span class="p">)</span>
+
+<span class="c"># load config from the config file we created earlier</span>
+<span class="n">votr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="s">'config'</span><span class="p">)</span>
+
+<span class="c"># initialize and create the database</span>
+<span class="n">db</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">votr</span><span class="p">)</span>
+<span class="n">db</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">app</span><span class="o">=</span><span class="n">votr</span><span class="p">)</span>
+
+<span class="nd">@votr.route</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">home</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">'hello world'</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">votr</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></code></pre></figure>
+
+<p>We imported the <code class="highlighter-rouge">db</code> we created in our <code class="highlighter-rouge">models.py</code> file, and called <code class="highlighter-rouge">db.init_app(votr)</code> and <code class="highlighter-rouge">db.create_all(app=votr)</code> to bind sqlalchemy to our flask app and create the database tables we specified in our <code class="highlighter-rouge">models.py</code> file. Note that <code class="highlighter-rouge">db.create_all</code> doesn’t actually create our database, it would simply create the required tables we specified in our <code class="highlighter-rouge">models.py</code> file on an existing database (Remember our <code class="highlighter-rouge">config.py</code> file where we specified the location of our database).</p>
+
+<p>We’re going to create that db file now.</p>
+
+<h6 id="if-you-have-python-installed-properly-you-should-have-sqlite3-if-for-some-reason-you-dont-have-it-you-can-install-it-with">If you have python installed properly you should have sqlite3, if for some reason you don’t have it, you can install it with:</h6>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>sudo apt-get install sqlite3</code></pre></figure>
+
+<h6 id="now-lets-create-our-database">Now lets create our database</h6>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>sqlite3
+SQLite version 3.14.2 2016-09-12 18:50:49
+Enter <span class="s2">".help"</span> <span class="k">for </span>usage hints.
+Connected to a transient <span class="k">in</span>-memory database.
+Use <span class="s2">".open FILENAME"</span> to reopen on a persistent database.
+<span class="gp">sqlite&gt; </span>.save votr.db
+sqlite&gt;</code></pre></figure>
+
+<h6 id="press-ctrl--d-or-ctrl--c-to-exit">Press Ctrl + D or Ctrl + C to exit.</h6>
+
+<h6 id="this-creates-a-new-db-called-votrdb-in-the-votr-directory-now-run-the-votrpy-with-python">This creates a new db called <code class="highlighter-rouge">votr.db</code> in the <code class="highlighter-rouge">votr</code> directory, now run the <code class="highlighter-rouge">votr.py</code> with python.</h6>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>python3 votr.py</code></pre></figure>
+
+<h6 id="this-should-create-all-the-models-we-specified-in-our-modelspy-file-as-tables-in-our-database-we-can-confirm-that-by-using-sqlite3-again-from-the-terminal">This should create all the models we specified in our <code class="highlighter-rouge">models.py</code> file as tables in our database, we can confirm that by using sqlite3 again from the terminal.</h6>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>sqlite3
+SQLite version 3.14.2 2016-09-12 18:50:49
+Enter <span class="s2">".help"</span> <span class="k">for </span>usage hints.
+Connected to a transient <span class="k">in</span>-memory database.
+Use <span class="s2">".open FILENAME"</span> to reopen on a persistent database.
+<span class="gp">sqlite&gt; </span>.open votr.db
+<span class="gp">sqlite&gt; </span>.tables
+options  polls    topics</code></pre></figure>
+
+<p>when we run <code class="highlighter-rouge">.tables</code>, we can see the three tables we specified in our <code class="highlighter-rouge">models.py</code> file.</p>
+
+<p>Let’s play with SQLalchemy a little.</p>
+
+<h6 id="open-a-new-python-shell">Open a new python shell</h6>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">votr</span> <span class="kn">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">votr</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">Options</span><span class="p">,</span> <span class="n">Topics</span><span class="p">,</span> <span class="n">Polls</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">topic</span> <span class="o">=</span> <span class="n">Topics</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s">'Which side is going to win the EPL this season'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">arsenal</span> <span class="o">=</span> <span class="n">Options</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Arsenal'</span><span class="p">)</span>     
+<span class="o">&gt;&gt;&gt;</span> <span class="n">spurs</span> <span class="o">=</span> <span class="n">Options</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Spurs'</span><span class="p">)</span>                   
+<span class="o">&gt;&gt;&gt;</span> <span class="n">poll</span> <span class="o">=</span> <span class="n">Polls</span><span class="p">(</span><span class="n">topic</span><span class="o">=</span><span class="n">topic</span><span class="p">,</span> <span class="n">option</span><span class="o">=</span><span class="n">arsenal</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">poll1</span> <span class="o">=</span> <span class="n">Polls</span><span class="p">(</span><span class="n">topic</span><span class="o">=</span><span class="n">topic</span><span class="p">,</span> <span class="n">option</span><span class="o">=</span><span class="n">spurs</span><span class="p">)</span>  
+<span class="o">&gt;&gt;&gt;</span> <span class="n">topic</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="nb">all</span><span class="p">()</span>
+<span class="p">[</span><span class="n">Arsenal</span><span class="p">,</span> <span class="n">Spurs</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">poll</span><span class="o">.</span><span class="n">vote_count</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">poll1</span><span class="o">.</span><span class="n">vote_count</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="s">'Arsenal'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">topic</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="nb">all</span><span class="p">():</span>
+<span class="o">...</span>     <span class="k">print</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">option</span><span class="o">.</span><span class="n">vote_count</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="n">Arsenal</span> <span class="mi">3</span>
+<span class="n">Spurs</span> <span class="mi">2</span></code></pre></figure>
+
+<p>From the example above, we’re already interacting with our database without writing any SQL!, we created a topic, two poll objects, and the <code class="highlighter-rouge">backref</code> we created earlier in our <code class="highlighter-rouge">models.py</code> file, made it possible for us to access all the options under our topic. by simply calling <code class="highlighter-rouge">topics.options.all()</code>.</p>
+
+<p>Note that everything we’ve done isn’t actually stored in our database yet, we’ll have to add it to the SQLalchemy session and then commit <code class="highlighter-rouge">commit()</code> before it would be written to our database. it would be a disaster if everything we experimented with is automatically commited to our database by default.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">votr</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">votr</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">create_all</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">arsenal</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">(</span><span class="n">arsenal</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></code></pre></figure>
+
+<h6 id="if-youre-still-reeling-in-confusion-heres-another-example-to-make-you-understand-better">If you’re still reeling in confusion here’s another example to make you understand better:</h6>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">&gt;&gt;&gt; </span>city <span class="o">=</span> Options<span class="o">(</span><span class="nv">name</span><span class="o">=</span><span class="s1">'Manchester city'</span><span class="o">)</span>
+<span class="gp">&gt;&gt;&gt; </span>liverpool <span class="o">=</span> Options<span class="o">(</span><span class="nv">name</span><span class="o">=</span><span class="s1">'Liverpool FC'</span><span class="o">)</span>
+<span class="gp">&gt;&gt;&gt; </span>liverpool <span class="o">=</span> Polls<span class="o">(</span><span class="nv">option</span><span class="o">=</span>liverpool<span class="o">)</span>
+<span class="gp">&gt;&gt;&gt; </span>city <span class="o">=</span> Polls<span class="o">(</span><span class="nv">option</span><span class="o">=</span>city<span class="o">)</span>
+<span class="gp">&gt;&gt;&gt; </span>new_topic <span class="o">=</span> Topics<span class="o">(</span><span class="nv">title</span><span class="o">=</span><span class="s1">'Whos better liverpool or city'</span>, <span class="nv">options</span><span class="o">=[</span>liverpool, city]<span class="o">)</span>
+<span class="gp">&gt;&gt;&gt; </span>new_topic.options.all<span class="o">()</span>
+<span class="o">[</span>Liverpool FC, Manchester city]
+<span class="gp">&gt;&gt;&gt; </span>liverpool.topic
+&lt;models.Topics object at 0x7f797135ef28&gt;
+<span class="gp">&gt;&gt;&gt; </span>liverpool.topic.name
+<span class="s2">"Who's better liverpool or city"</span>
+&gt;&gt;&gt;</code></pre></figure>
+
+<p>This shows that you can pass in a list of options to a topic, thanks to <code class="highlighter-rouge">backref</code> again!</p>
+
+<p>Well that’s it for this part!
+We were able to set up our database and get a feel of how SQLalchemy works, in the next part we’re going to build the front-end for our users, so they can easily add polls to votr easily.</p>
+
+<p>SQLAlchemy can be quite confusing sometimes, but if you stick with it and just take things one step at a time it’s only going to get easier. To see more examples of long SQL queries checkout this <a href="https://www.quora.com/Whats-the-most-complex-SQL-query-you-ever-wrote">quora</a> post.</p>
+
+<p>If you have any questions or insights please use the comment box below. See you in the next part!</p>
+
+            </div>
+
+        <hr>
+
+        <aside id="comments" class="disqus">
+          <div class="container">
+            <h3><i class="fa fa-comments-o"></i> Comments</h3>
+            <div id="disqus_thread"></div>
+            <script>
+
+
+
+              var disqus_config = function() {
+                this.page.url = 'https://danidee10.github.io/2016/09/19/flask-by-example-2.html'; //shouldn't hardoce this
+                this.page.identifier = 'Flask by example (How to build a Voting app) Part 2';
+              };
+              (function() {
+                var d = document,
+                s = d.createElement('script');
+                s.src = '//osaetin-daniel.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+              })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+          </div>
+        </aside>
+
+          </div>
+
+        </article>
+
+      </div>
+
+      <footer class="site-footer">
+  <div class="container">
+    <ul class="social">
+      <li><a href="http://github.com/danidee10" target="_blank"><i class="fa fa-github"></i></a></li>
+      <li><a href="http://twitter.com/osaetindaniel" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+      <li><a href="https://www.facebook.com/osaetin.daniel" target="_blank"><i class="fa fa-facebook"></i></a></li>
+      <li><a href="https://www.linkedin.com/in/osaetin-daniel-87604098" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+    </ul>
+    <p class="txt-medium-gray">
+      <small>&copy;2016 All rights reserved. Made with <a href="http://jekyllrb.com/" target="_blank">Jekyll</a> and ♥</small>
+    </p>
+  </div>
+</footer>
+
+
+<a href="https://github.com/danidee10" target="_blank" class="github-corner"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#337ab7; color:#fff; position: absolute; top: 0; border: 0; right: 0;"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+$(document).ready(function() {
+  $('.sliding-panel-button,.sliding-panel-fade-screen,.sliding-panel-close').on('click touchstart',function (e) {
+    $('.sliding-panel-content,.sliding-panel-fade-screen').toggleClass('is-visible');
+    e.preventDefault();
+  });
+});
+</script>
+
+    </main>
+  </body>
+</html>
