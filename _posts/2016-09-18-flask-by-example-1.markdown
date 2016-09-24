@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Flask by example (How to build a Voting app)
-date: 2016-09-18T24:35:33+01:00
+date: 2016-09-18T22:35:33+01:00
 ---
 
 Welcome everyone!, This is the beginning of a new series where we'll learn how to use flask by building a simple Voting app.

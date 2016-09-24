@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Flask by example (How to build a Voting app) Part 3
-date: 2016-09-22T22:35:33+01:00
+date: 2016-09-24T22:35:33+01:00
 ---
 
 Welcome to part 3 of 'How to build a voting app with flask', the last part was all about setting up our database with SQLAlchemy, if you missed it check it out [here]({% post_url 2016-09-19-flask-by-example-2 %}).
