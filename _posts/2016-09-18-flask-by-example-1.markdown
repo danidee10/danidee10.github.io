@@ -22,11 +22,13 @@ Our polling app is going to be called **Votr**
 <br />
 
 #### Why flask?
+![Flask](/images/flask.jpg)
+
 Quoting the flask [docs](http://flask.pocoo.org) ***Flask is a microframework for Python based on Werkzeug, Jinja 2 and good intentions***. Most people are quick to dismiss microframeworks like flask as not being powerful compared to django or other 'batteries included' web frameworks which isn't correct. so what does micro mean?
 
 Micro means that the framework was designed to be as minimal as possible and just do what a basic web framework should do, while being extensible without making assumptions and including features that may not be used by everyone. Now What does this mean to you as a developer?, it means that you can build your web app from scratch and then as your need more features for your app you can simply install the required libraries and plugins you need (You can even roll out a new flask plugin and share it with the world if you're feeling adventrous ).
 
-At the end of the day you'll get a better understanding of how different parts of your web app ticks because you actually added those 'parts' yourself. instead of using a web framework for over a year only for you to discover that feature `x` existed like 2 years earlier! and you've been doing things the wrong way.
+At the end of the day you'll get a better understanding of how different parts of your web app ticks because you actually added those 'parts' yourself (get it? web development one drop at a time). instead of using a web framework for over a year only for you to discover that feature `x` existed like 2 years earlier! and you've been doing things the wrong way.
 
 So if you're a newbie in building web apps with python and you've been frustrated by django, I'll recommend you stick with flask, and then when you're comfortable with it. you can move on to django or another full featured framework. Using flask will help you understand most of the design decision and approaches django uses.
 

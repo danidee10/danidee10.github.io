@@ -261,7 +261,7 @@ Note that everything we've done isn't actually stored in our database yet, we'll
 This shows that you can pass in a list of options to a topic, thanks to `backref` again!
 
 Well that's it for this part!
-We were able to set up our database and get a feel of how SQLalchemy works, in the next part we're going to build the front-end for our users, so they can easily add polls to votr easily.
+We were able to set up our database and get a feel of how SQLalchemy works, in the next part we're going to build the front-end for our users, so they can login and add polls to votr.
 
 SQLAlchemy can be quite confusing sometimes, but if you stick with it and just take things one step at a time it's only going to get easier. To see more examples of long SQL queries checkout this [quora](https://www.quora.com/Whats-the-most-complex-SQL-query-you-ever-wrote) post.
 

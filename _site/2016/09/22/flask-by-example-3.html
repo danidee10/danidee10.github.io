@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Flask by example (How to build a Voting app) Part 3</title>
+    <meta name="description" content="Osaetin Daniel's blog">
+    <link rel="alternate" type="application/atom+xml" title="Osaetin Daniel" href="/feed.xml" />
+
+    <style>
+    /*!
+ * end2end - jekyll theme free
+ * https://github.com/nandomoreirame/end2end
+ * MIT License
+ */@import url("//fonts.googleapis.com/css?family=Open+Sans:400,300,700");html{box-sizing:border-box}*,*::after,*::before{box-sizing:inherit}html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}table{border-collapse:collapse;border-spacing:0}.btn,.sliding-panel-button{appearance:none;background-color:#337ab7;border:0;border-radius:3px;color:#fff;cursor:pointer;display:inline-block;font-family:"Open Sans","Helvetica Neue","Helvetica","Roboto","Arial",sans-serif;font-size:1em;-webkit-font-smoothing:antialiased;font-weight:600;line-height:1;padding:.75em 1.5em;text-decoration:none;transition:background-color .2s ease;user-select:none;vertical-align:middle;white-space:nowrap}.btn:hover,.sliding-panel-button:hover,.btn:focus,.sliding-panel-button:focus{background-color:#296292;color:#fff}.btn:disabled,.sliding-panel-button:disabled{cursor:not-allowed;opacity:0.5}.btn:disabled:hover,.sliding-panel-button:disabled:hover{background-color:#337ab7}fieldset{background-color:#f7f7f7;border:1px solid #dedede;margin:0 0 .75em;padding:1.5em}input,label,select{display:block;font-family:"Open Sans","Helvetica Neue","Helvetica","Roboto","Arial",sans-serif;font-size:1em}label{font-weight:600;margin-bottom:.375em}label.required::after{content:"*"}label abbr{display:none}input[type="color"],input[type="date"],input[type="datetime"],input[type="datetime-local"],input[type="email"],input[type="month"],input[type="number"],input[type="password"],input[type="search"],input[type="tel"],input[type="text"],input[type="time"],input[type="url"],input[type="week"],input:not([type]),textarea,select[multiple=multiple]{background-color:#fff;border:1px solid #dedede;border-radius:3px;box-shadow:inset 0 1px 3px rgba(0,0,0,0.06);box-sizing:border-box;font-family:"Open Sans","Helvetica Neue","Helvetica","Roboto","Arial",sans-serif;font-size:1em;margin-bottom:.75em;padding:.5em;transition:border-color .2s ease;width:100%}input[type="color"]:hover,input[type="date"]:hover,input[type="datetime"]:hover,input[type="datetime-local"]:hover,input[type="email"]:hover,input[type="month"]:hover,input[type="number"]:hover,input[type="password"]:hover,input[type="search"]:hover,input[type="tel"]:hover,input[type="text"]:hover,input[type="time"]:hover,input[type="url"]:hover,input[type="week"]:hover,input:not([type]):hover,textarea:hover,select[multiple=multiple]:hover{border-color:#b2b2b2}input[type="color"]:focus,input[type="date"]:focus,input[type="datetime"]:focus,input[type="datetime-local"]:focus,input[type="email"]:focus,input[type="month"]:focus,input[type="number"]:focus,input[type="password"]:focus,input[type="search"]:focus,input[type="tel"]:focus,input[type="text"]:focus,input[type="time"]:focus,input[type="url"]:focus,input[type="week"]:focus,input:not([type]):focus,textarea:focus,select[multiple=multiple]:focus{border-color:#337ab7;box-shadow:inset 0 1px 3px rgba(0,0,0,0.06),0 0 5px rgba(45,109,163,0.7);outline:none}input[type="color"]:disabled,input[type="date"]:disabled,input[type="datetime"]:disabled,input[type="datetime-local"]:disabled,input[type="email"]:disabled,input[type="month"]:disabled,input[type="number"]:disabled,input[type="password"]:disabled,input[type="search"]:disabled,input[type="tel"]:disabled,input[type="text"]:disabled,input[type="time"]:disabled,input[type="url"]:disabled,input[type="week"]:disabled,input:not([type]):disabled,textarea:disabled,select[multiple=multiple]:disabled{background-color:#f2f2f2;cursor:not-allowed}input[type="color"]:disabled:hover,input[type="date"]:disabled:hover,input[type="datetime"]:disabled:hover,input[type="datetime-local"]:disabled:hover,input[type="email"]:disabled:hover,input[type="month"]:disabled:hover,input[type="number"]:disabled:hover,input[type="password"]:disabled:hover,input[type="search"]:disabled:hover,input[type="tel"]:disabled:hover,input[type="text"]:disabled:hover,input[type="time"]:disabled:hover,input[type="url"]:disabled:hover,input[type="week"]:disabled:hover,input:not([type]):disabled:hover,textarea:disabled:hover,select[multiple=multiple]:disabled:hover{border:1px solid #dedede}textarea{resize:vertical}input[type="search"]{appearance:none}input[type="checkbox"],input[type="radio"]{display:inline;margin-right:.375em}input[type="checkbox"]+label,input[type="radio"]+label{display:inline-block}input[type="file"]{margin-bottom:.75em;width:100%}select{margin-bottom:1.5em;max-width:100%;width:auto}ul,ol{margin:0;padding:0;list-style-position:inside;padding-left:25px}dl{margin-bottom:.75em}dl dt{font-weight:bold;margin-top:.75em}dl dd{margin:0}table{border-collapse:collapse;font-feature-settings:"kern", "liga", "tnum";margin:.75em 0;table-layout:fixed;width:100%}th{border-bottom:1px solid #a7a7a7;font-weight:600;padding:.75em 0;text-align:left}td{border-bottom:1px solid #dedede;padding:.75em 0}tr,td,th{vertical-align:middle}body{color:#000000;font-size:18px;font-weight:400;line-height:1.5}h1,h2,h3,h4,h5,h6{font-family:"Open Sans","Helvetica Neue","Helvetica","Roboto","Arial",sans-serif;font-size:1em;line-height:1.2;font-weight:700;margin:0 0 .75em}h1{font-size:35px; color: #337ab7;}h2{font-size:1.625rem}h3{font-size:1.5rem}h4{font-size:1.25rem}h5,h6{font-size:1rem}p{margin:0 0 .75em;font-weight:300}em{font-style:italic}small{font-size:80%}a{color:#337ab7;text-decoration:none;-webkit-transition:color .2s ease;-moz-transition:color .2s ease;transition:color .2s ease}a:active,a:focus,a:hover{color:#265c89}hr{border-bottom:1px solid #dedede;border-left:0;border-right:0;border-top:0;margin:1.5em 0}img,picture{margin:0;max-width:100%}code{background:none;border-radius:0;border:none;font-family:"Courier New", monospace;font-size:0.9em;margin:0;padding:0 5px;background-color:#ededed}pre{-webkit-overflow-scrolling:touch;font-family:"Courier New", monospace;font-size:0.9em;margin:0}pre code{line-height:1.75em}.txt-primary{color:#337ab7}.txt-white{color:#fff}.txt-black{color:#000}.txt-blue{color:#477dca}.txt-dark-gray{color:#232323}.txt-medium-gray{color:#9a9a9a}.txt-light-gray{color:#dedede}.txt-left{text-align:left}.txt-right{text-align:right}.txt-center{text-align:center}.txt-justify{text-align:justify}.word-wrap{overflow-wrap:break-word;word-wrap:break-word;word-break:break-all}.dot{border-radius:50%}blockquote{background:#f9f9f9;border-left:10px solid #ccc;margin:1.5em 10px;padding:0.5em 10px;quotes:"“" "”" "‘" "’"}blockquote:before{color:#ccc;content:open-quote;font-size:4em;line-height:0.1em;margin-right:0.25em;vertical-align:-0.4em}blockquote p{display:inline}.site-header::after,.social::after,.pagination::after,.highlight::after{clear:both;content:"";display:table}html,body{min-height:100%;height:100%}body{border-top:5px solid #337ab7;background:#fff url("/images/bg-pattern.png")}.container{max-width:800px;margin-left:auto;margin-right:auto;padding-left:.75em;padding-right:.75em}.container::after{clear:both;content:"";display:table}.card,.post-list .post{background-color:#fff;box-shadow:0 2px 1px rgba(0,0,0,0.1);margin:0 0 1.5em;padding:1.5em .75em}@media screen and (min-width: 480px){.card,.post-list .post{padding:1.5em}}.site-header{background-color:#fff;padding:1.5em 0;margin-bottom:1.5em;border-bottom:1px solid rgba(222,222,222,0.5)}.site-header h1{margin:0;padding:5px 0;float:left;font-weight:400;font-size:1.25rem}.site-header h1 span{color:#337ab7}.site-header h1,.site-header a{text-transform:lowercase}.site-header .navbar{float:right}.site-header a{color:#9a9a9a}.site-header a:hover,.site-header a:focus,.site-header a:active{color:#232323}@media screen and (max-width: 480px){.site-header .container{padding-left:1.5em;padding-right:1.5em}}.sliding-panel-button{float:right;padding:5px;margin:0 3.75em 0 0}.sliding-panel-button span{width:30px;display:block;height:3px;border-radius:2px;background:#fff;margin:3px 0}@media screen and (min-width: 480px){.sliding-panel-button{display:none}}@media screen and (max-width: 480px){.sliding-panel-content{border-top:5px solid #337ab7;position:fixed;top:0;right:auto;bottom:0;left:0;height:100%;width:220px;-webkit-transform:translateX(-100%);-moz-transform:translateX(-100%);-ms-transform:translateX(-100%);-o-transform:translateX(-100%);transform:translateX(-100%);-webkit-transition:all 0.25s linear;-moz-transition:all 0.25s linear;transition:all 0.25s linear;background:#fff;-webkit-overflow-scrolling:touch;overflow-y:auto;z-index:999999}.sliding-panel-content.is-visible{-webkit-transform:translateX(0);-moz-transform:translateX(0);-ms-transform:translateX(0);-o-transform:translateX(0);transform:translateX(0)}.sliding-panel-fade-screen{position:fixed;top:0;right:0;bottom:0;left:0;-webkit-transition:all 0.15s ease-out 0s;-moz-transition:all 0.15s ease-out 0s;transition:all 0.15s ease-out 0s;background:#000;opacity:0;visibility:hidden;z-index:9999}.sliding-panel-fade-screen.is-visible{opacity:0.4;visibility:visible}.sliding-panel-close{cursor:pointer}}.navbar li,.navbar a{display:inline-block}.navbar a{padding:5px 15px}@media screen and (max-width: 600px){.navbar a{padding:5px 10px}}@media screen and (max-width: 480px){.navbar li,.navbar a{display:block;text-align:center}.navbar li{border-bottom:1px solid #f2f2f2}.navbar a{padding:15px 0}}.btn.btn-ghost,.btn-ghost.sliding-panel-button{background-color:transparent;border:2px solid #337ab7;color:#337ab7;margin-bottom:2px}.btn.disabled,.disabled.sliding-panel-button,.btn[disabled],[disabled].sliding-panel-button,fieldset[disabled] .btn,fieldset[disabled] .sliding-panel-button{cursor:not-allowed;filter:alpha(opacity=65);-webkit-box-shadow:none;box-shadow:none;opacity:.65}body.home{width:100%;display:table}.hero{text-align:center;display:table-cell;vertical-align:middle}.hero-inner{text-align:center;display:inline-block;padding:1.5em}.hero-inner .dot{padding:5px;border:1px solid #dedede}.hero-inner h1{margin-top:.7em;font-size:2.5rem}.hero-inner h3{font-size:1.25rem;margin:.8em 0 1.2em}@media screen and (min-width: 600px){.hero-inner h3{font-size:1.5rem}}.hero-inner h3,.hero-inner em{font-weight:300}.hero-inner em{color:#337ab7}.hero-inner strong{font-weight:700}.post{padding:1.5em 0}.post-header{margin-bottom:1.5em; padding-bottom: 5px; border-bottom: 1px solid #999;}.post-title{font-size:1.625rem;margin-bottom:0;line-height:1.5em}.post-list .post a{color:#636363}.post-list .post a:hover,.post-list .post a:active,.post-list .post a:focus{color:#337ab7}.social{padding:1.5em 0}.social li{display:inline-block;padding:0 .6em}.social a{color:#9a9a9a}.social a:hover,.social a:active,.social a:focus{color:#337ab7}.social i{font-size:1.2em}.pagination{text-align:center;margin:2em 0}.pagination li{padding:0 .4em}.pagination li,.pagination a,.pagination span{display:inline-block}.pagination a,.pagination span{line-height:1.2em;font-size:.75rem}.pagination .btn,.pagination .sliding-panel-button{color:#636363;border-color:rgba(222,222,222,0.8)}.pagination span{color:#aaa;font-style:italic}.site-footer{background-color:#fff;border-top:1px solid rgba(222,222,222,0.5);padding:1.5em;text-align:center}.site-footer p{margin:0}.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width: 500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}@font-face{font-family:"end2end-icons";src:url("../fonts/end2end-icons.eot?vs69d0");src:url("../fonts/end2end-icons.eot?vs69d0#iefix") format("embedded-opentype"),url("../fonts/end2end-icons.ttf?vs69d0") format("truetype"),url("../fonts/end2end-icons.woff?vs69d0") format("woff"),url("../fonts/end2end-icons.svg?vs69d0#end2end-icons") format("svg");font-weight:normal;font-style:normal}.icon{font-family:"end2end-icons" !important;speak:none;font-style:normal;font-weight:normal;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.icon-home:before{content:""}.icon-comments:before{content:""}.icon-comment-o:before{content:""}.icon-comments-o:before{content:""}.icon-search:before{content:""}.icon-share:before{content:""}.icon-google-plus:before{content:""}.icon-facebook:before{content:""}.icon-facebook-rounded:before{content:""}.icon-twitter:before{content:""}.icon-twitter-rounded:before{content:""}.icon-feed:before{content:""}.icon-github:before{content:""}.icon-linkedin:before{content:""}.highlight{padding:0;margin-top:1.2em;margin-bottom:1.2em}.highlight,.highlight .hll,.highlight pre,.highlight code{background-color:#272822 !important;border:none}.highlight pre{margin:0;padding:1.3em;white-space:pre;line-height:23px;overflow-x:auto;margin-bottom:0;word-break:inherit;word-wrap:inherit}.highlight pre,.highlight pre code{color:#eeffdd}.highlight pre code{white-space:pre;padding:0 !important}.highlight pre code *{white-space:nowrap}.highlight .c{color:#75715e}.highlight .err{color:#f2f1f2}.highlight .k{color:#66d9ef}.highlight .l{color:#ae81ff}.highlight .n{color:#f8f8f2}.highlight .o{color:#f92672}.highlight .p{color:#f8f8f2}.highlight .cm{color:#75715e}.highlight .cp{color:#75715e}.highlight .c1{color:#75715e}.highlight .cs{color:#75715e}.highlight .ge{font-style:italic}.highlight .gs{font-weight:bold}.highlight .kc{color:#66d9ef}.highlight .kd{color:#66d9ef}.highlight .kn{color:#f92672}.highlight .kp{color:#66d9ef}.highlight .kr{color:#66d9ef}.highlight .kt{color:#66d9ef}.highlight .ld{color:#e6db74}.highlight .m{color:#ae81ff}.highlight .s{color:#e6db74}.highlight .na{color:#a6e22e}.highlight .nb{color:#f8f8f2}.highlight .nc{color:#a6e22e}.highlight .no{color:#66d9ef}.highlight .nd{color:#a6e22e}.highlight .ni{color:#f8f8f2}.highlight .ne{color:#a6e22e}.highlight .nf{color:#a6e22e}.highlight .nl{color:#f8f8f2}.highlight .nn{color:#f8f8f2}.highlight .nx{color:#a6e22e}.highlight .py{color:#f8f8f2}.highlight .nt{color:#f92672}.highlight .nv{color:#f8f8f2}.highlight .ow{color:#f92672}.highlight .w{color:#f8f8f2}.highlight .mf{color:#ae81ff}.highlight .mh{color:#ae81ff}.highlight .mi{color:#ae81ff}.highlight .mo{color:#ae81ff}.highlight .sb{color:#e6db74}.highlight .sc{color:#e6db74}.highlight .sd{color:#e6db74}.highlight .s2{color:#e6db74}.highlight .se{color:#ae81ff}.highlight .sh{color:#e6db74}.highlight .si{color:#e6db74}.highlight .sx{color:#e6db74}.highlight .sr{color:#e6db74}.highlight .s1{color:#e6db74}.highlight .ss{color:#e6db74}.highlight .bp{color:#f8f8f2}.highlight .vc{color:#f8f8f2}.highlight .vg{color:#f8f8f2}.highlight .vi{color:#f8f8f2}.highlight .il{color:#ae81ff}.highlight .gu{color:#75715e}.highlight .gd{color:#f92672}.highlight .gi{color:#a6e22e}
+
+body {
+  font-family: "Open sans";
+  font-weight: 400;
+}
+
+.container {
+  max-width: 950px;
+}
+
+.post-meta {
+  font-style: italic;
+  font-size: 16px;
+}
+
+strong {
+  font-weight: bold;
+}
+
+a {
+  font-weight: bold;
+}
+
+.postlist {
+  list-style: inside;
+  font-style: italic;
+}
+
+    </style>
+
+    <script src="https://use.fontawesome.com/5bbf16a3a0.js"></script>
+
+    <link rel="canonical" href="https://danidee10.github.io/2016/09/22/flask-by-example-3.html">
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-83888894-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+  </head>
+
+
+    <main>
+      <header class="site-header">
+  <div class="container">
+    <h1><a href="/">Osaetin<span>Daniel</span></a></h1>
+
+    <button type="button" class="sliding-panel-button">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="navbar sliding-panel-content">
+      <ul>
+
+          <li><a href="/about" title="About">About</a></li>
+
+          <li><a href="/blog" title="Blog">Blog</a></li>
+
+        <!--rssfeed li><a href="/end2end/feed.xml" target="_blank"><i class="icon icon-feed"></i></a></li-->
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+      <div class="sliding-panel-fade-screen"></div>
+
+      <div class="container">
+        <article role="article" class="post">
+          <div class="card">
+            <header class="post-header">
+              <h1 class="post-title">Flask by example (How to build a Voting app) Part 3</h1>
+              <p class="post-meta">September 22, 2016</i>
+            </header>
+
+            <div class="post-content">
+              <p>Welcome to part 3 of ‘How to build a voting app with flask’, the last part was all about setting up our database with SQLAlchemy, if you missed it check it out <a href="/2016/09/19/flask-by-example-2.html">here</a>.</p>
+
+<p>In this part, we’re going to design a landing page for our application and an authentication system to allow our users create and vote on topics.</p>
+
+<h4 id="landing-page">Landing page</h4>
+<p>We’re going to use one of <a href="https://getbootstrap.com">bootstrap’s</a> demo pages and customize it a little to suit our needs, before we do that we’re going to create some new folders to hold our templates and static files (css, images and javascript).</p>
+
+<h6 id="create-the-required-folders">create the required folders</h6>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">mkdir -p templates static/css static/images static/js</code></pre></figure>
+
+<h6 id="download-the-webpage-from-bootstrap">Download the webpage from bootstrap</h6>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">wget -pk http://getbootstrap.com/examples/jumbotron-narrow/</code></pre></figure>
+
+<p>This would create a folder named <code class="highlighter-rouge">getbootstrap.com</code> that contains the template and all the required assets for it to render properly.</p>
+
+<h6 id="move-the-templates-and-the-assets-to-the-right-folder-so-votr-can-pick-them-up">Move the templates and the assets to the right folder so votr can pick them up.</h6>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>mv getbootstrap.com/examples/jumbotron-narrow/index.html templates
+<span class="gp">$ </span>mv getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css static/css
+<span class="gp">$ </span>mv getbootstrap.com/dist/css/bootstrap.min.css static/css
+<span class="gp">$ </span>mv getbootstrap.com/dist/fonts static
+<span class="gp">$ </span>mv getbootstrap.com/assets/css/ie10-viewport-bug-workaround.css static/css
+<span class="gp">$ </span>mv getbootstrap.com/assets/js/<span class="k">*</span> static/js
+<span class="gp">$ </span>rm getbootstrap.com -r</code></pre></figure>
+
+<p>I also dowloaded the sample login page from bootstrap <a href="https://getbootstrap.com/examples/signin/">here</a> and renamed the template to <code class="highlighter-rouge">signup.html</code>. Repeat the previous steps above, but don’t forget to rename the login template from <code class="highlighter-rouge">index.html</code> to <code class="highlighter-rouge">signup.html</code>. If you did this correctly your layout should look like this.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">.
+├── config.py
+├── LICENSE
+├── models.py
+├── README.md
+├── static
+│   ├── css
+│   │   ├── bootstrap.min.css
+│   │   ├── ie10-viewport-bug-workaround.css
+│   │   ├── jumbotron-narrow.css
+│   │   └── signin.css
+│   ├── fonts
+│   │   ├── glyphicons-halflings-regular.eot
+│   │   ├── glyphicons-halflings-regular.eot?
+│   │   ├── glyphicons-halflings-regular.svg
+│   │   ├── glyphicons-halflings-regular.ttf
+│   │   ├── glyphicons-halflings-regular.woff
+│   │   └── glyphicons-halflings-regular.woff2
+│   ├── images
+│   │   ├── background.jpg
+│   │   └── logo.png
+│   └── js
+│       ├── ie10-viewport-bug-workaround.js
+│       └── ie-emulation-modes-warning.js
+├── templates
+│   ├── index.html
+│   └── signup.html
+├── votr.db
+└── votr.py</code></pre></figure>
+
+<p>I also included some custom images for the logo and landing page, you can find them in the github <a href="https://github.com/danidee10/Votr">repo</a> for votr.</p>
+
+<p>We now have a new folder <code class="highlighter-rouge">templates</code> that contains our html files and a <code class="highlighter-rouge">static</code> folder and it’s subfolders which holds our static files. by default this is where flask looks for templates and static files.</p>
+
+<h3 id="rendering-templates">Rendering templates</h3>
+
+<p>flask provides a <code class="highlighter-rouge">render_template</code> method that allows us to display a template, when a user visits a particular url route, flask doesn’t map url’s to views like django, the Flask object has a <code class="highlighter-rouge">route</code> decorator that you can use to decorate a function that will be executed when a user visits a particular url on our website. we’re going to make use of that decorator to create a route and render the corresponding template.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">render_template</span>
+<span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">db</span>
+
+<span class="n">votr</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="s">'__name__'</span><span class="p">)</span>
+
+<span class="c"># load config from the config file we created earlier</span>
+<span class="n">votr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="s">'config'</span><span class="p">)</span>
+
+<span class="c"># create the database</span>
+<span class="n">db</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">votr</span><span class="p">)</span>
+<span class="n">db</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">app</span><span class="o">=</span><span class="n">votr</span><span class="p">)</span>
+
+<span class="nd">@votr.route</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">home</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s">'index.html'</span><span class="p">)</span>
+
+<span class="nd">@votr.route</span><span class="p">(</span><span class="s">'/signup'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">signup</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s">'signup.html'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">votr</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></code></pre></figure>
+
+<p>If you visit <code class="highlighter-rouge">localhost:5000/signup</code> in your browser, you should see the <code class="highlighter-rouge">signup.html</code> rendered in your browser</p>
+
+<h3 id="user-registraton-and-authentication">User Registraton and Authentication</h3>
+
+<p>To register new users to our application, you need a new model to store their details, we’ll call that model <code class="highlighter-rouge">Users</code></p>
+
+<h6 id="create-the-user-model">Create the User model</h6>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c"># Model to store user details</span>
+<span class="k">class</span> <span class="nc">Users</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">200</span><span class="p">))</span></code></pre></figure>
+
+<p>The email and username fields are unique to avoid duplicate users in our database.
+You might be wondering why the password field is 200 characters long.</p>
+
+<p>We did this because when we hash a user’s password we don’t want the resulting hash to be truncated by the database, if it gets truncated then we won’t be able to authenticate our users as the password they submit (which would also be hashed and compared to the hash in the database) would never match.</p>
+
+<h3 id="sign-them-up">Sign them up</h3>
+<p>Import the new <code class="highlighter-rouge">Users</code> model you just created in <code class="highlighter-rouge">votr.py</code> and use it in your <code class="highlighter-rouge">signup</code> route.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">flash</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">url_for</span>
+<span class="kn">from</span> <span class="nn">werkzeug.security</span> <span class="kn">import</span> <span class="n">generate_password_hash</span><span class="p">,</span> <span class="n">check_password_hash</span>
+<span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">Users</span>
+
+<span class="n">votr</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="s">'__name__'</span><span class="p">)</span>
+
+<span class="c"># load config from the config file we created earlier</span>
+<span class="n">votr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="s">'config'</span><span class="p">)</span>
+
+<span class="c"># create the database</span>
+<span class="n">db</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">votr</span><span class="p">)</span>
+<span class="n">db</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">app</span><span class="o">=</span><span class="n">votr</span><span class="p">)</span>
+
+<span class="nd">@votr.route</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">home</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s">'index.html'</span><span class="p">)</span>
+
+<span class="nd">@votr.route</span><span class="p">(</span><span class="s">'/signup'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'GET'</span><span class="p">,</span> <span class="s">'POST'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">signup</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">'POST'</span><span class="p">:</span>
+
+        <span class="c"># get the user details from the form</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">'email'</span><span class="p">]</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">'username'</span><span class="p">]</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">'password'</span><span class="p">]</span>
+
+        <span class="c"># hash the password</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="n">generate_password_hash</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+
+        <span class="n">user</span> <span class="o">=</span> <span class="n">Users</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="n">flash</span><span class="p">(</span><span class="s">'Thanks for signing up please login'</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">'home'</span><span class="p">))</span>
+
+    <span class="c"># it's a GET request, just render the template</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s">'signup.html'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">votr</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></code></pre></figure>
+
+<p>Woah! that’s a lot of imports at the top of the file, Let’s discuss each of them and their functions:</p>
+
+<p><strong>request:</strong> The request object allows the client (users and their browsers) to interact with your application (server). It enables you to get data from the user easily, for example the form details from the form the user submits is stored in the <code class="highlighter-rouge">request</code> object as a dictionary called <code class="highlighter-rouge">form</code> that we can access. You can also access the type of request the user made to your route through <code class="highlighter-rouge">request.method</code>.</p>
+
+<p><strong>NOTE:</strong> Take care when you’re trying to access values submitted in the form by the user, if you try to access a field that doesn’t exist and you don’t catch the resulting <code class="highlighter-rouge">keyError</code> exception, the request will become invalid and flask will fail with a <code class="highlighter-rouge">400 bad request</code>. for example if you try to get the username of a user which you gave a name of  <code class="highlighter-rouge">username</code> in your html template with <code class="highlighter-rouge">request.form['USERNAME']</code> instead of <code class="highlighter-rouge">request.form['username']</code>.</p>
+
+<p><strong>flash:</strong> The name is a little misleading (personally i would’ve preferred <code class="highlighter-rouge">send_message</code>). It doesn’t flash (show a popup) message to the user as you would expect. what it actually does is store a message at the end of the request and them makes it accessible <strong>ONLY AND ONLY</strong> on the next request.</p>
+
+<p>It will be discarded after that, so don’t try to store messages or data with it. Instead we can use it to pass a message to the next page we’re redirecting to, in our templates, all the <code class="highlighter-rouge">flash</code> messages can be accessed by calling  <code class="highlighter-rouge">get_flashed_messages()</code>.</p>
+
+<p><strong>redirect:</strong> It simply redirects to another page.</p>
+
+<p><strong>url_for:</strong> This prevents us from hardcoding the <code class="highlighter-rouge">homepage</code> route as <code class="highlighter-rouge">/</code> when calling <code class="highlighter-rouge">redirect</code>, if you hardcode it, then what happens when you decide to change the route of <code class="highlighter-rouge">home</code> from <code class="highlighter-rouge">/</code> to <code class="highlighter-rouge">/index</code>. this would break all existing links to the homepage in your application, you’ll have to go round and change all the hardcoded url’s to new url you’ve specified.</p>
+
+<p><strong>generate_password_hash and check_password_hash</strong>: are helpers from <a href="http://werkzeug.pocoo.org/">werkzeug</a> for hashing and comparing a string with a password hash respectively. The hash is a one way salted hash, meaning we cannot decrypt it back. want to read more about hashing and the meaning of a salted hash read this <a href="https://www.quora.com/What-does-it-mean-to-add-a-salt-to-a-password-hash">Quora</a> post.</p>
+
+<p>Security is a very important aspect in web applications and other applications generally (even in our daily life), it’s best to use already made solutions that have been tested and trusted by thousands of developers.</p>
+
+<p>Never use own encryption or hash algorithm no matter how smart and efficient you think it is. You’re not a cryptographer, you’re a programmer. Allow the cryptographers do their job. Cryptography is a very broad study that include lots of mathematics, computer science and <strong><em>dark magic</em></strong> which several people have devoted their entire lives to study. you simply don’t know more than them.</p>
+
+<h3 id="user-login">User Login</h3>
+
+<p>We’re going to add a new route <code class="highlighter-rouge">/login</code> that accepts <code class="highlighter-rouge">POST</code> requests only and redirects back to the login page with a specific message if a login attempt was successful or not.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="nd">@votr.route</span><span class="p">(</span><span class="s">'/login'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'POST'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">login</span><span class="p">():</span>
+    <span class="c"># we don't need to check the request type as flask will raise a bad request</span>
+    <span class="c"># error if a request aside from POST is made to this url</span>
+
+    <span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">'username'</span><span class="p">]</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">'password'</span><span class="p">]</span>
+
+    <span class="c"># search the database for the User</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">Users</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
+        <span class="n">password_hash</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">password</span>
+
+        <span class="k">if</span> <span class="n">check_password_hash</span><span class="p">(</span><span class="n">password_hash</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+            <span class="c"># The hash matches the password in the database log the user in</span>
+            <span class="n">session</span><span class="p">[</span><span class="s">'user'</span><span class="p">]</span> <span class="o">=</span> <span class="n">username</span>
+
+            <span class="n">flash</span><span class="p">(</span><span class="s">'Login was succesfull'</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># user wasn't found in the database</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s">'Username or password is incorrect please try again'</span><span class="p">,</span> <span class="s">'error'</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">'home'</span><span class="p">))</span></code></pre></figure>
+
+<h3 id="logout">Logout</h3>
+
+<p>To log users out, we’ll simply perform a check to see if they currently logged in. If they are remove their username from the session and redirect them back to the homepage with a message that they successfully logged out.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="nd">@votr.route</span><span class="p">(</span><span class="s">'/logout'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">logout</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s">'user'</span> <span class="ow">in</span> <span class="n">session</span><span class="p">:</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">'user'</span><span class="p">)</span>
+
+        <span class="n">flash</span><span class="p">(</span><span class="s">'We hope to see you again!'</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">'home'</span><span class="p">))</span></code></pre></figure>
+
+<h3 id="jinja2-and-front-end-design">Jinja2 and front end design</h3>
+<p>That’s all for our simple authentication system but we haven’t really talked about the front-end of our application, which is very important to our users, we’re going to keep our user interface as simple as possible without discarding most of the functionality that we set out to accomplish at the beginning of this tutorial.</p>
+
+<p>By default flask uses <a href="http://jinja.pocoo.org/docs/dev/">jinja2</a> as the template engine. <code class="highlighter-rouge">Jinja2</code> and other python templating language allow us to execute python code in html, reuse templates by inheritance and to generally make working with html easier with flask. Nothing actually stops us from doing this.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="nd">@votr.route</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">home</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">"""
+           &lt;html&gt;
+             &lt;head&gt;
+             &lt;link rel=</span><span class="se">\"</span><span class="s">stylesheet</span><span class="se">\"</span><span class="s"> href=</span><span class="se">\"</span><span class="s">/static/css/style.css</span><span class="se">\"</span><span class="s"> /&gt;
+             &lt;/head&gt;
+
+             &lt;body&gt;
+
+               &lt;h1&gt;Hello world&lt;/h1&gt;
+
+             &lt;/body&gt;
+           &lt;/html&gt;
+           """</span></code></pre></figure>
+
+<p>You could get killed if other flask developers see this!. On a more serious note, this has a lot of downsides. You’ll have to escape all the double quotes, poor handling of urls and links and you can’t re-use similar templates by inheritance, i can go on and on but it’s very obvious that is just ugly and messy and would be hard to debug because you wouldn’t even have html templates! No text editor would be able to work with this <strong><em>stringified</em></strong> html.</p>
+
+<p>I’ll advise you to skim through the <a href="http://jinja.pocoo.org/docs/dev/">jinja2</a> docs to get a feel of how it works and looks before moving on to the next section.</p>
+
+<h3 id="landing-page-template">Landing page template</h3>
+
+<p>Edit the default bootstrap narrow-jumbotron template you downloaded earlier to include a login form. The new template is also going to have a signup button that routes to the <code class="highlighter-rouge">signup.html</code> template.</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"X-UA-Compatible"</span> <span class="na">content=</span><span class="s">"IE=edge"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"viewport"</span> <span class="na">content=</span><span class="s">"width=device-width, initial-scale=1"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"description"</span> <span class="na">content=</span><span class="s">""</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"author"</span> <span class="na">content=</span><span class="s">""</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"icon"</span> <span class="na">href=</span><span class="s">"http://getbootstrap.com/favicon.ico"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;title&gt;</span>Votr!<span class="nt">&lt;/title&gt;</span>
+
+    <span class="c">&lt;!-- Bootstrap core CSS --&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"static/css/bootstrap.min.css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- IE10 viewport hack for Surface/desktop Windows 8 bug --&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"static/css/ie10-viewport-bug-workaround.css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- Custom styles for this template --&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"static/css/jumbotron-narrow.css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"static/js/ie-emulation-modes-warning.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+
+  <span class="nt">&lt;body&gt;</span>
+
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"header clearfix"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;nav&gt;</span>
+          <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"nav nav-pills pull-right"</span><span class="nt">&gt;</span>
+            
+            {% if session.get('user') %}
+            <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"welcome-message"</span><span class="nt">&gt;</span>Hey {{ session['user']}}!<span class="nt">&lt;/li&gt;</span>
+              <span class="nt">&lt;li</span> <span class="na">role=</span><span class="s">"presentation"</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"{{ url_for('logout') }}"</span><span class="nt">&gt;</span>Logout<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+            {% endif %}
+            
+            <span class="nt">&lt;li</span> <span class="na">role=</span><span class="s">"presentation"</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"/polls"</span><span class="nt">&gt;</span>Polls<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+            <span class="nt">&lt;li</span> <span class="na">role=</span><span class="s">"presentation"</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"https://github.com/danidee10/Votr"</span><span class="nt">&gt;</span>Github<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+          <span class="nt">&lt;/ul&gt;</span>
+        <span class="nt">&lt;/nav&gt;</span>
+        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"/"</span><span class="nt">&gt;&lt;img</span> <span class="na">src=</span><span class="s">"static/images/logo.png"</span> <span class="nt">/&gt;&lt;/a&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"jumbotron"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;h1&gt;</span>It's easier with Votr!<span class="nt">&lt;/h1&gt;</span>
+        <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"lead"</span><span class="nt">&gt;</span>Create free online polls today with Votr<span class="nt">&lt;/p&gt;</span>
+
+        
+        {% if not session.get('user') %}
+        <span class="nt">&lt;p&gt;&lt;a</span> <span class="na">class=</span><span class="s">"btn btn-lg btn-success"</span> <span class="na">href=</span><span class="s">"{{ url_for('signup') }}"</span> <span class="na">role=</span><span class="s">"button"</span><span class="nt">&gt;</span>Sign up today<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+        {% else %}
+        <span class="nt">&lt;p&gt;&lt;a</span> <span class="na">class=</span><span class="s">"btn btn-lg btn-success"</span> <span class="na">href=</span><span class="s">"/polls"</span> <span class="na">role=</span><span class="s">"button"</span><span class="nt">&gt;</span>Create a poll<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+        {% endif %}
+        
+      <span class="nt">&lt;/div&gt;</span>
+
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row marketing"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-6"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;h3&gt;</span>Popular votes<span class="nt">&lt;/h3&gt;</span>
+          <span class="nt">&lt;p&gt;</span>It's so easy to use Votr, just create an account and you can start
+          creating polls for the world to see!<span class="nt">&lt;/p&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-6"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;h3</span> <span class="na">class=</span><span class="s">"form-header"</span><span class="nt">&gt;</span>Login<span class="nt">&lt;/h3&gt;</span>
+          
+          <span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">"post"</span> <span class="na">action=</span><span class="s">"{{ url_for('login') }}"</span><span class="nt">&gt;</span>
+          {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                  {% for category, message in messages %}
+                  <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"{{ category }}"</span><span class="nt">&gt;</span>{{ message }}<span class="nt">&lt;/p&gt;</span>
+                  {% endfor %}
+              {% endif %}
+          {% endwith %}
+          
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group has-success"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="na">name=</span><span class="s">"username"</span> <span class="na">placeholder=</span><span class="s">"Username"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group has-success"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"password"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="na">name=</span><span class="s">"password"</span> <span class="na">placeholder=</span><span class="s">"Password"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+
+            <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">name=</span><span class="s">"submit"</span> <span class="na">class=</span><span class="s">"btn btn-success"</span><span class="nt">&gt;</span>Submit<span class="nt">&lt;/button&gt;</span>
+          <span class="nt">&lt;/form&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+
+      <span class="nt">&lt;footer</span> <span class="na">class=</span><span class="s">"footer"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;p&gt;</span><span class="ni">&amp;copy;</span> 2016 Votr<span class="nt">&lt;/p&gt;</span>
+      <span class="nt">&lt;/footer&gt;</span>
+
+    <span class="c">&lt;!-- IE10 viewport hack for Surface/desktop Windows 8 bug --&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"static/js/ie10-viewport-bug-workaround.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span></code></pre></figure>
+
+<p>At the top of the file, we can display different menu items for users if they’re logged in or not, using Jinja2’s <code class="highlighter-rouge"><span class="p">{</span><span class="err">%</span><span class="w"> </span><span class="err">if</span><span class="w"> </span><span class="err">%</span><span class="p">}</span></code> and <code class="highlighter-rouge"><span class="p">{</span><span class="err">%</span><span class="w"> </span><span class="err">else</span><span class="w"> </span><span class="err">%</span><span class="p">}</span></code> tags . Also the session variable we used in <code class="highlighter-rouge">votr.py</code> is made available to us automatically by flask in all our templates, so we don’t need to pass the <code class="highlighter-rouge">session</code> object around.</p>
+
+<p>We also used the same technique for menu items to display a <code class="highlighter-rouge">"signup"</code> or <code class="highlighter-rouge">"create a poll"</code> button depending on the login state of the user.</p>
+
+<p>Earlier we talked about <code class="highlighter-rouge">flash</code> messages and their use. Just above the login form we’re displaying all the flashed messages if anyone is present, you can use a context manager <strong>Wrong!!!</strong></p>
+
+<p>The with statement in jinja2 is not equivalent to python’s <code class="highlighter-rouge">with</code> statement. it doesn’t do any cleanup action when you exit the block and the variables inside the <code class="highlighter-rouge"><span class="p">{</span><span class="err">%</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">%</span><span class="p">}</span></code> block are not available outside it.</p>
+
+<p>This is exactly what this user was thinking about when he asked this question on <a href="http://stackoverflow.com/questions/6432355/variable-defined-with-with-statement-available-outside-of-with-block">stackoverflow</a>.</p>
+
+<p>It simply sets a variable and creates a new scope, so all the variables used inside the <code class="highlighter-rouge"><span class="p">{</span><span class="err">%</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">%</span><span class="p">}</span></code> block  won’t be accessible outside that block.</p>
+
+<h6 id="something-like-this-in-pure-python">something like this in pure python.</h6>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">numcount</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="c"># num is only accessible inside the function</span></code></pre></figure>
+
+<p>when you call <code class="highlighter-rouge">get_flashed_messages()</code> with <code class="highlighter-rouge">with_categories</code> set to <code class="highlighter-rouge">true</code> it allows you to access the class of the message that was flashed. Based on that, we can define a css class that displays different colours of text depending on the class of message that was flashed (Yeah you guessed right!, green for success and red for errors, and probably yellow for warnings).</p>
+
+<p>Jinja2 doesn’t actually mirror python as a language in all it’s constructs, some statements might be slightly different from their counterparts in pure python, so watch out for this if something doesn’t work as you expect it to work.</p>
+
+<h3 id="signup-template">Signup template</h3>
+
+<p>Our <code class="highlighter-rouge">signup</code> template is very basic, we’ll only ask the users for their email, username and their password once (We’ll work on our forms later with <code class="highlighter-rouge">ReactJS</code>). There’s also no form of validation going on. Except you consider the unique email and username fields we set back in our <code class="highlighter-rouge">models.py</code> file.</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"X-UA-Compatible"</span> <span class="na">content=</span><span class="s">"IE=edge"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"viewport"</span> <span class="na">content=</span><span class="s">"width=device-width, initial-scale=1"</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags --&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"description"</span> <span class="na">content=</span><span class="s">""</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"author"</span> <span class="na">content=</span><span class="s">""</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"icon"</span> <span class="na">href=</span><span class="s">"http://getbootstrap.com/favicon.ico"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;title&gt;</span>Signup To Votr!<span class="nt">&lt;/title&gt;</span>
+
+    <span class="c">&lt;!-- Bootstrap core CSS --&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"static/css/bootstrap.min.css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- IE10 viewport hack for Surface/desktop Windows 8 bug --&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"static/css/ie10-viewport-bug-workaround.css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- Custom styles for this template --&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"/static/css/signin.css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"static/js/ie-emulation-modes-warning.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+  <span class="nt">&lt;/head&gt;</span>
+
+  <span class="nt">&lt;body&gt;</span>
+
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+
+        <span class="nt">&lt;form</span> <span class="na">class=</span><span class="s">"form-signin"</span> <span class="na">method=</span><span class="s">"post"</span> <span class="na">action=</span><span class="s">"{{ url_for('signup') }}"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;h2</span> <span class="na">class=</span><span class="s">"form-signin-heading"</span> <span class="na">align=</span><span class="s">"center"</span><span class="nt">&gt;</span>Sign up<span class="nt">&lt;/h2&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group has-success"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">"email"</span> <span class="na">class=</span><span class="s">"sr-only"</span><span class="nt">&gt;</span>Email address<span class="nt">&lt;/label&gt;</span>
+          <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"email"</span> <span class="na">id=</span><span class="s">"email"</span> <span class="na">name=</span><span class="s">"email"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="na">placeholder=</span><span class="s">"Email address"</span> <span class="na">required</span> <span class="na">autofocus</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group has-success"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">"username"</span> <span class="na">class=</span><span class="s">"sr-only"</span><span class="nt">&gt;</span>Username<span class="nt">&lt;/label&gt;</span>
+          <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">id=</span><span class="s">"username"</span> <span class="na">name=</span><span class="s">"username"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="na">placeholder=</span><span class="s">"Username"</span> <span class="na">required</span> <span class="na">autofocus</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group has-success"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">"password"</span> <span class="na">class=</span><span class="s">"sr-only"</span><span class="nt">&gt;</span>Password<span class="nt">&lt;/label&gt;</span>
+          <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"password"</span> <span class="na">id=</span><span class="s">"password"</span> <span class="na">name=</span><span class="s">"password"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="na">placeholder=</span><span class="s">"Password"</span> <span class="na">required</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>  
+        <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">"btn btn-lg btn-success btn-block"</span> <span class="na">type=</span><span class="s">"submit"</span><span class="nt">&gt;</span>Sign up<span class="nt">&lt;/button&gt;</span>
+      <span class="nt">&lt;/form&gt;</span>
+
+    <span class="nt">&lt;/div&gt;</span> <span class="c">&lt;!-- /container --&gt;</span>
+
+
+    <span class="c">&lt;!-- IE10 viewport hack for Surface/desktop Windows 8 bug --&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"static/js/ie10-viewport-bug-workaround.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span></code></pre></figure>
+
+<h4 id="handling-urls-and-static-files-the-flask-way">Handling URL’s and Static files the flask way</h4>
+
+<p>If you’ve been looking at the links to our templates, you should have noticed that we’re again using <code class="highlighter-rouge">url_for</code>. we could just hardcode our url’s like the way we did to polls with <code class="highlighter-rouge">&lt;a href="/polls" /&gt;Polls&lt;/a&gt;</code> and get away with it, but what if a new programmer comes into our fictional company and decides to change the <code class="highlighter-rouge">polls</code> route form <code class="highlighter-rouge">/polls</code> to <code class="highlighter-rouge">/votr_polls</code>, and then forgets to change the links in the html template.</p>
+
+<p>You’ll end up with a broken link, and unless you have good behavioural testing, the same broken link is going to end up in your production environment.</p>
+
+<p>Using <code class="highlighter-rouge">url_for</code> ensures that when a route is changed, a template is moved to another directory or we deploy our application on another machine, our links will never break.</p>
+
+<p>This same re-usability applies for static files and assets like images and css, we want to make sure our links never break if we rename our <code class="highlighter-rouge">static</code> folder to something else, or change their location, the syntax for linking to a static file is similar to that of the template url’s. You only have to specify the filename of the asset. an example is the bootstrap css link in our homepage.</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"{{ url_for('static' filename='/css/bootstrap.min.css'}}"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span><span class="nt">&gt;</span></code></pre></figure>
+
+<p>You have to repeat the same procedure and change all the links to equivalent flask url’s. This process could get very tiring and become a huge pain especially if you have a lot of templates with a lot of static links in them.</p>
+
+<p>I created an open source python library called <a href="https://github.com/danidee10/Staticfy">Staticfy</a> to automate this process.</p>
+
+<p>To Use Staticfy, clone it in the root directory for votr</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>git clone https://github.com/danidee10/Staticfy.git <span class="o">&amp;&amp;</span> <span class="nb">cd </span>Staticfy</code></pre></figure>
+
+<p>Run <code class="highlighter-rouge">staticfy.py</code> on the templates folder</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>python3 staticfy.py ../templates                                  
+staticfied ../templates/signup.html <span class="o">==</span>&gt; staticfy/signup.html
+
+staticfied ../templates/index.html <span class="o">==</span>&gt; staticfy/index.html</code></pre></figure>
+
+<p>It should create a folder called <code class="highlighter-rouge">staticfy</code> containing two new files (with the same name as our original templates), whose static links have been converted to their flask equivalents.</p>
+
+<p>copy the new files over to replace the old files.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">cp -i staticfy/<span class="k">*</span> ../templates</code></pre></figure>
+
+<p>Thats it!. All your static files have been taken care of and linked properly, reload the page and the design should stay the same if everything went well.</p>
+
+<h3 id="summary">Summary</h3>
+<p>We’ve now built an authentication system for our users, and we we’re able to display different information based on the login status of the user. We also implemented a one way hash to make sure our passwords are stored securely in our database.</p>
+
+<p><strong>NOTE:</strong> Our authentication system is no where near secure. We are still vulnerable to <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)">CSRF</a> attacks, and we’re still passing information around as plain text.</p>
+
+<p>They’re several flask extensions that are better at handling user management and authentication in a more secure way than what we’ve done. a popular one in the flask community is <a href="https://flask-login.readthedocs.io/en/latest/">Flask-Login</a> we also have the full featured <a href="https://pythonhosted.org/Flask-Security/">Flask-security</a> which integrates a lot of flask addons together including Flask login to provide robust user management for flask applications.</p>
+
+<p>There is also no way for our users to recover their password, if they forget it.</p>
+
+<p>In the next part we’re going to design the poll form, and the actual voting form with <code class="highlighter-rouge">ReactJS</code>. If you don’t know about <code class="highlighter-rouge">ReactJS</code>, It would be wise to look at the ReactJS <a href="https://facebook.github.io/react/">docs</a> now to know why we’re using it in the first place instead of <code class="highlighter-rouge">html</code> and pure <code class="highlighter-rouge">javascript</code> or <code class="highlighter-rouge">JQuery</code>.</p>
+
+<p>All the custom css and the complete source code for this project can be found on <a href="https://github.com/danidee10/Staticfy">github</a>, feel free to fork it and play with it.</p>
+
+<p>Thanks for reading, if you found Staticfy useful don’t forget to give it a star on github. Otherwise raise an issue to contribute and improve it’s development. Drop your comments if you have any question or insights about this part.</p>
+
+            </div>
+
+        <hr>
+
+        <aside id="comments" class="disqus">
+          <div class="container">
+            <h3><i class="fa fa-comments-o"></i> Comments</h3>
+            <div id="disqus_thread"></div>
+            <script>
+
+
+
+              var disqus_config = function() {
+                this.page.url = 'https://danidee10.github.io/2016/09/22/flask-by-example-3.html'; //shouldn't hardoce this
+                this.page.identifier = 'Flask by example (How to build a Voting app) Part 3';
+              };
+              (function() {
+                var d = document,
+                s = d.createElement('script');
+                s.src = '//osaetin-daniel.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+              })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+          </div>
+        </aside>
+
+          </div>
+
+        </article>
+
+      </div>
+
+      <footer class="site-footer">
+  <div class="container">
+    <ul class="social">
+      <li><a href="http://github.com/danidee10" target="_blank"><i class="fa fa-github"></i></a></li>
+      <li><a href="http://twitter.com/osaetindaniel" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+      <li><a href="https://www.facebook.com/osaetin.daniel" target="_blank"><i class="fa fa-facebook"></i></a></li>
+      <li><a href="https://www.linkedin.com/in/osaetin-daniel-87604098" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+    </ul>
+    <p class="txt-medium-gray">
+      <small>&copy;2016 All rights reserved. Made with <a href="http://jekyllrb.com/" target="_blank">Jekyll</a> and ♥</small>
+    </p>
+  </div>
+</footer>
+
+
+<a href="https://github.com/danidee10" target="_blank" class="github-corner"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#337ab7; color:#fff; position: absolute; top: 0; border: 0; right: 0;"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+$(document).ready(function() {
+  $('.sliding-panel-button,.sliding-panel-fade-screen,.sliding-panel-close').on('click touchstart',function (e) {
+    $('.sliding-panel-content,.sliding-panel-fade-screen').toggleClass('is-visible');
+    e.preventDefault();
+  });
+});
+</script>
+
+    </main>
+  </body>
+</html>
