@@ -47,7 +47,7 @@ a {
 
     <script src="https://use.fontawesome.com/5bbf16a3a0.js"></script>
 
-    <link rel="canonical" href="https://danidee10.github.io/2016/09/22/flask-by-example-3.html">
+    <link rel="canonical" href="https://danidee10.github.io/2016/09/24/flask-by-example-3.html">
 
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -95,7 +95,7 @@ a {
           <div class="card">
             <header class="post-header">
               <h1 class="post-title">Flask by example (How to build a Voting app) Part 3</h1>
-              <p class="post-meta">September 22, 2016</i>
+              <p class="post-meta">September 24, 2016</i>
             </header>
 
             <div class="post-content">
@@ -571,7 +571,7 @@ staticfied ../templates/index.html <span class="o">==</span>&gt; staticfy/index.
 
 <p>They’re several flask extensions that are better at handling user management and authentication in a more secure way than what we’ve done. a popular one in the flask community is <a href="https://flask-login.readthedocs.io/en/latest/">Flask-Login</a> we also have the full featured <a href="https://pythonhosted.org/Flask-Security/">Flask-security</a> which integrates a lot of flask addons together including Flask login to provide robust user management for flask applications.</p>
 
-<p>There is also no way for our users to recover their password, if they forget it.</p>
+<p>There is also no way for our users to recover their password, if they forget it and the user session expires once the the web browser is closed.</p>
 
 <p>In the next part we’re going to design the poll form, and the actual voting form with <code class="highlighter-rouge">ReactJS</code>. If you don’t know about <code class="highlighter-rouge">ReactJS</code>, It would be wise to look at the ReactJS <a href="https://facebook.github.io/react/">docs</a> now to know why we’re using it in the first place instead of <code class="highlighter-rouge">html</code> and pure <code class="highlighter-rouge">javascript</code> or <code class="highlighter-rouge">JQuery</code>.</p>
 
@@ -592,7 +592,7 @@ staticfied ../templates/index.html <span class="o">==</span>&gt; staticfy/index.
 
 
               var disqus_config = function() {
-                this.page.url = 'https://danidee10.github.io/2016/09/22/flask-by-example-3.html'; //shouldn't hardoce this
+                this.page.url = 'https://danidee10.github.io/2016/09/24/flask-by-example-3.html'; //shouldn't hardoce this
                 this.page.identifier = 'Flask by example (How to build a Voting app) Part 3';
               };
               (function() {

@@ -520,7 +520,7 @@ We've now built an authentication system for our users, and we we're able to dis
 
 They're several flask extensions that are better at handling user management and authentication in a more secure way than what we've done. a popular one in the flask community is [Flask-Login](https://flask-login.readthedocs.io/en/latest/) we also have the full featured [Flask-security](https://pythonhosted.org/Flask-Security/) which integrates a lot of flask addons together including Flask login to provide robust user management for flask applications.
 
-There is also no way for our users to recover their password, if they forget it.
+There is also no way for our users to recover their password, if they forget it and the user session expires once the the web browser is closed.
 
 In the next part we're going to design the poll form, and the actual voting form with `ReactJS`. If you don't know about `ReactJS`, It would be wise to look at the ReactJS [docs](https://facebook.github.io/react/) now to know why we're using it in the first place instead of `html` and pure `javascript` or `JQuery`.
 

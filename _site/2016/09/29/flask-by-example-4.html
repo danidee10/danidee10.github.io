@@ -1,0 +1,205 @@
+<p>niel—
+layout: post
+title: Flask by example (How to build a Voting app) Part 4
+date: 2016-10-05T22:35:33+01:00
+—</p>
+
+<p>From the <a href="/2016/09/24/flask-by-example-3.html">previous tutorial</a>, we designed a landing page and built an authentication system to enable us track our users and the posts they create / vote on.</p>
+
+<p>But our users have no form to add polls, Let’s fix that.</p>
+
+<p>We’re going to create an interactive user interface where our users can see a live preview of the poll they’re creating before it’s saved to the database. For this exercise we’re going to make use of <a href="https://facebook.github.io/react/">React</a> which as the docs describe it, is a painless way to create interactive UIs.</p>
+
+<p><em>This tutorial includes Live demos of the working code, thanks to <a href="https://jsfiddle.net/">JSFiddle</a>. So you can play with the code without leaving your browser</em></p>
+
+<h3 id="why-react">Why React?</h3>
+<p>There are various reasons on why i chose React, and this list includes “Because Angular is hard and stupid”. but let’s talk about the important reasons:</p>
+
+<ol>
+  <li>
+    Because React is easy to learn. It's just pure Javascript (no pseudo language or anything slapped untop). Though you'll encounter <a href="https://facebook.github.io/react/docs/jsx-in-depth.html">JSX</a> frequently, JSX is also very simple and straight forward and if you're already familiar with html or xml, then you'd definitely breeze through JSX.
+  </li>
+  <br />
+  <li>
+  It allows you to break down chunks of html into simple re-usable components. You'll see an example of that as we move on.
+  </li>
+  <br />
+  <li>
+  Once you know the basics of React, you just need some extras and you can start developing cross platform mobile applications with <a href="https://facebook.github.io/react-native/">React Native</a>
+  </li>
+</ol>
+<p><br /></p>
+
+<h3 id="polling-page">Polling page</h3>
+<p>We’re going to make a copy of our login page and modify it to include a form which would be used to add polls to the site. we’re also going to include a preview form that shows the user exactly how a poll would look like as they’re creating it.</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"X-UA-Compatible"</span> <span class="na">content=</span><span class="s">"IE=edge"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"viewport"</span> <span class="na">content=</span><span class="s">"width=device-width, initial-scale=1"</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags --&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"description"</span> <span class="na">content=</span><span class="s">""</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"author"</span> <span class="na">content=</span><span class="s">""</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"icon"</span> <span class="na">href=</span><span class="s">"http://getbootstrap.com/favicon.ico"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;title&gt;</span>Create a poll<span class="nt">&lt;/title&gt;</span>
+
+    
+    <span class="c">&lt;!-- Bootstrap core CSS --&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"{{ url_for('static', filename='css/bootstrap.min.css') }}"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- React JS --&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://unpkg.com/react@15.3.2/dist/react.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://unpkg.com/babel-core@5.8.38/browser.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/babel"</span> <span class="na">src=</span><span class="s">"{{ url_for('static', filename='js/polls.js') }}"</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+    <span class="c">&lt;!-- IE10 viewport hack for Surface/desktop Windows 8 bug --&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"{{ url_for('static', filename='css/ie10-viewport-bug-workaround.css') }}"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- Custom styles for this template --&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"{{ url_for('static', filename='css/signin.css') }}"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"{{ url_for('static', filename='js/ie-emulation-modes-warning.js') }}"</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+  <span class="nt">&lt;/head&gt;</span>
+
+  <span class="nt">&lt;body&gt;</span>
+
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+
+      <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"form_container"</span><span class="nt">&gt;</span>
+        <span class="c">&lt;!--Placeholder for poll creation form --&gt;</span>
+
+      <span class="nt">&lt;/div&gt;</span>
+
+    <span class="nt">&lt;/div&gt;</span>
+
+    <span class="c">&lt;!-- IE10 viewport hack for Surface/desktop Windows 8 bug --&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"{{ url_for('static', filename='js/ie10-viewport-bug-workaround.js') }}"</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+    
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span></code></pre></figure>
+
+<p>We replaced the old login form with a div <code class="highlighter-rouge">poll_form</code>. This div would serve as the “container” where React would render our components.</p>
+
+<p>we also added required links to enable us use React in our application. which are React, ReactDOM and <a href="https://babeljs.io/">Babel</a></p>
+
+<p>Before we proceed, it’s good practice to layout the structure of the UI we have in mind. React is all about modular re-usable components. our UI will have the following structure:</p>
+
+<p><img src="/images/react_layout.png" alt="React Layout" /></p>
+
+<p>We’re going to have two components, the main component which we’ll call <code class="highlighter-rouge">PollForm</code> is going to contain the form used to create the poll, and the second component called <code class="highlighter-rouge">LivePreview</code> is a form that shows us how a poll is going to look like during creation.</p>
+
+<p><code class="highlighter-rouge">LivePreview</code> is part of the <code class="highlighter-rouge">PollForm</code> component because the both of them are share the state of different input fields. <code class="highlighter-rouge">PollForm</code> is the parent component and <code class="highlighter-rouge">LivePreview</code> is the child component.</p>
+
+<p><code class="highlighter-rouge">form_container</code> is just a plain div that houses the two forms.</p>
+
+<p>Create a new javascript file in the static directory called <code class="highlighter-rouge">poll.js</code>. This is where our react code will live in. We already have a link at the top of <code class="highlighter-rouge">polls.html</code> that points to it.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">touch static/js/polls.js</code></pre></figure>
+
+<h5 id="pollsjs">polls.js</h5>
+
+<script async="" src="//jsfiddle.net/danidee10/8asnq3uz/2/embed/js,html,css,result/dark/"></script>
+
+<p>Basically, we created the two components we talked about earlier. Looking at <code class="highlighter-rouge">PollForm</code>, you can see that it contains a form that would be used to save our poll. But if you look at the form closely, you can see that instead of using the <code class="highlighter-rouge">class</code> attribute as we would do in html we’re using <code class="highlighter-rouge">className</code>.</p>
+
+<p>That is <a href="https://facebook.github.io/react/docs/jsx-in-depth.html">JSX</a> in action, <code class="highlighter-rouge">JSX</code> might look similar to html, but it’s not. infact it’s much more terse (like xml) and simply doesn’t allow you do what you want to do. Capitalization matters. (<code class="highlighter-rouge">classname</code> is not the same as <code class="highlighter-rouge">className</code>).</p>
+
+<p><code class="highlighter-rouge">JSX</code> eventually translates down to raw Javascript. So you’re not required to use JSX with React. without JSX this is how you’d create a simple <code class="highlighter-rouge">&lt;h1&gt;Hello world&lt;/h1&gt;</code></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">helloComponent</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">'h1'</span><span class="p">,</span> <span class="p">{},</span> <span class="s2">"Hello world"</span><span class="p">)</span>
+
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">helloComponent</span><span class="p">,</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'form_container'</span><span class="p">))</span></code></pre></figure>
+
+<p>This doesn’t look very pretty and instantly you can see that it’s going to become cumbersome to build your interface like this as it becomes more complex.</p>
+
+<p>It’s easier to build a web UI in a language that looks and feels like html. This is another reason why i love React and prefer it to form libraries for popular web frameworks like Flask-WTF or django forms.</p>
+
+<p><strong>Note that React is not a direct replacement for those form libraries and doesn’t totally secure your forms. Hackers and malicious users can still bypass your React forms and submit data directly to the server. Always do server side validation alongside React.</strong></p>
+
+<p>Let’s talk about the various methods in <code class="highlighter-rouge">polls.js</code>:</p>
+
+<p><u><strong>getInitialState:</strong></u> This is used to setup the initial state of the component. We created two state variables <code class="highlighter-rouge">title</code> which would be used to store the title of the poll and <code class="highlighter-rouge">options</code> which is an array that holds the various options for the poll.</p>
+
+<p>For now title and options are static because they contain hardcoded values. If you look at the Result in the JSFiddle demo you should see a new poll. “Alex iwobi vs Dele Alli”. with the two football stars as options. Ideally these values would come from <code class="highlighter-rouge">&lt;PollForm /&gt;</code> and once the user changes the value of any field. React will update the UI accordingly with the new data.</p>
+
+<p><code class="highlighter-rouge">title</code> and <code class="highlighter-rouge">options</code> are available to us as properties on an object called <code class="highlighter-rouge">state</code>. Using <code class="highlighter-rouge">this.state.title</code> and <code class="highlighter-rouge">this.state.options</code>. Treat this values as if they’re immutable, don’t go around doing something like this <code class="highlighter-rouge">this.state.title = 'My Title'</code>, It could lead to all sorts of problems as your modifications would get overridden by react when you call <code class="highlighter-rouge">setState</code>.This is the proper way to modify <code class="highlighter-rouge">title</code> using <code class="highlighter-rouge">setState</code>:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">{</span><span class="s1">'title'</span><span class="err">:</span> <span class="s1">'My Title'</span><span class="p">}</span><span class="err">`</span></code></pre></figure>
+
+<p>Calling <code class="highlighter-rouge">setState</code> will cause react to re-render the UI.</p>
+
+<p><u><strong>LivePreview:</strong></u> This is a little different from <code class="highlighter-rouge">PollForm</code>. it also a render method like <code class="highlighter-rouge">PollForm</code> the difference here is function <code class="highlighter-rouge">options</code> that loops through our state array <code class="highlighter-rouge">options</code> using map (Similar to python’s map. just that it uses a full fledged function and not an anonymous <code class="highlighter-rouge">lambda</code> function.) and returns radio buttons containing the elements we placed in our options array when we called <code class="highlighter-rouge">getInitialState</code>.</p>
+
+<p>If you’re wondering what <code class="highlighter-rouge">props</code> (short for properties). They are used to pass data to a component from it’s parent. You can think of them as named arguments that we pass to a python function. except that function in this case is a React component. For example from the parent component <code class="highlighter-rouge">&lt;PollForm /&gt;</code> we passed in the title of our poll as <code class="highlighter-rouge">title</code> to <code class="highlighter-rouge">LivePreview</code> with <code class="highlighter-rouge">&lt;LivePreview options={this.state.title} /&gt;</code>. inside the render method of <code class="highlighter-rouge">LivePreview</code> <code class="highlighter-rouge">title</code> became a property, and we accessed it with <code class="highlighter-rouge">this.props.title</code></p>
+
+<p>We’ve also added some event handlers on our input fields and buttons, we’ll implement them and talk about them more in the next section.</p>
+
+<h3 id="making-the-form-reactive">Making the form Reactive</h3>
+
+<p>We’re going to make the <code class="highlighter-rouge">LivePreview</code> form inte<strong>Reactive</strong>, so as the user types in the title of his poll, it automatically shows up the the header of our preview form, we also want the user to be able to add an option and see it appear on the preview form immediately.</p>
+
+<p>To achieve this we have to remove the default attributes we set for our state variables earlier and then implement our event handlers properly.</p>
+
+<script async="" src="//jsfiddle.net/danidee10/5Lex6gtj/9/embed/js,html,css,result/dark/"></script>
+
+<p>Lets talk about the event handlers we just implemented. This is where most of the hardwork is.</p>
+
+<p><code class="highlighter-rouge">handleTitleChange</code> and <code class="highlighter-rouge">handleOptionChange</code> do the same thing for different fields in our form, they update <code class="highlighter-rouge">title</code> and option respectively as the user types into the field. so at any point in time when we decide to submit the form, we can be sure that our state variables <code class="highlighter-rouge">title</code> and  <code class="highlighter-rouge">option</code> have the latest value from the user.</p>
+
+<p><code class="highlighter-rouge">handlOptionAdd</code> updates the array of options by appending new items to the array. Notice how we didn’t push to the array directly by doing something like this <code class="highlighter-rouge">this.state.options.push({name: this.state.option});</code>. We’re still using <code class="highlighter-rouge">setState</code> so React is in total control our our application state and knows how to update the UI accordingly. we also cleared the option field in the form by setting option to an empty string.</p>
+
+<p><code class="highlighter-rouge">handleSubmit</code> simply prevents the form from submitting by calling <code class="highlighter-rouge">e.preventDefault()</code>.</p>
+
+<p>We also wrapped the return statement of <code class="highlighter-rouge">options</code> with a condition to determine if an <code class="highlighter-rouge">option</code>s name is set before returning a new radio button (this was done to prevent users from nameless options to our preview form by repeatedly clicking on the Add option button).</p>
+
+<h3 id="useful-react-resources-and-tips">Useful React resources and tips</h3>
+<p>This tutorial was never meant to be a hello world introduction to React JS and if you’re still confused about somethings, feel free to lookup the docs, Google and <a href="http://stackoverflow.com/questions/tagged/reactjs">Stackoverflow</a> for answers to basic React questions.</p>
+
+<p>Here is a list of useful resources and tips that personally helped me grok React faster.</p>
+
+<ol>
+  <li>
+  Always model your UI down, before you start writing any code. Just like we did. This will help you to have a clear mental picture about your components about who the parent components is and what it's child(ren) is/are
+  </li>
+  <br />
+  <li>
+  Buttressing my first point, i found it easier to think about React from top to bottom, write your component first before writing the React Class.(e.g <PollForm /> should come first before writing React.createClass or any functional part)
+  </li>
+  <br />
+  <li>
+  Always use <strong>setState</strong> to trigger a UI update. There is another method called <strong>forceUpdate</strong> that forces the UI to re-render itself and it's possible to have a complex interface where you might use it. But if you see yourself relying on <strong>forceUpdate</strong> too much to update the interface, that's a warning sign that something is wrong with your UI design and your componenets aren't really interacting with each other like they should.
+  </li>
+  <br />
+  <li>
+  React isn't going anywhere soon. so learn it!. Facebook built react and they use it heavily on <strong>FACEBOOK.COM</strong> which also means that any problem you're likely to encounter with react has already been encountered and solved by facebook which is a plus for you.
+  </li>
+</ol>
+
+<p><br /></p>
+
+<h4 id="resources">Resources</h4>
+<p><a href="https://facebook">React docs</a></p>
+
+<p><a href="https://thinkster.io/understanding-react-state">Understanding state in React</a>….if you’re annoyed because you don’t really understand what “state” is and why it’s important.</p>
+
+<p><a href="https://chrome.google.com/webstore/category/apps">React Debugger for chrome</a>. it’s also availabe for firefox <a href="https://addons.mozilla.org/en-US/firefox/addon/react-devtools/">here</a></p>
+
+<p><a href="https://facebook.github.io/react/docs/jsx-gotchas.html">JSX Gotcha’s</a></p>
+
+<p><a href="https://camjackson.net/post/9-things-every-reactjs-beginner-should-know">9 things every React.js beginner should know</a></p>
+
+<p><a href="https://facebook.github.io/react/blog/2014/01/02/react-chrome-developer-tools.html">Official Video on Debugging React</a></p>
+
+<p><a href="http://magic.reactjs.net/htmltojsx.htm">Html to JSX compiler</a>…(Extremely useful)</p>
+
+<p>That’s all for this part. we’ve built a simple interactive form for our users to enable them create polls and preview them before saving them. The poll form doesn’t actually save anything to the database yet. That’s what we’re going to work on in the next part. we’re going to build a RESTful api to handle the submission and retrieval of polls.</p>
+
+<p>The complete code for this tutorial is available on (github)[https://github.com/danidee10/Votr], if you have any questions or insight on this article, you can raise an issue there or drop a comment below. If you don’t I’ll see you in the next part.</p>
+
+<p>Thanks for reading!</p>

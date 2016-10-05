@@ -7,6 +7,219 @@
     <atom:link href="https://danidee10.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Flask By Example 4</title>
+        <description>&lt;p&gt;niel—
+layout: post
+title: Flask by example (How to build a Voting app) Part 4
+date: 2016-10-05T22:35:33+01:00
+—&lt;/p&gt;
+
+&lt;p&gt;From the &lt;a href=&quot;/2016/09/24/flask-by-example-3.html&quot;&gt;previous tutorial&lt;/a&gt;, we designed a landing page and built an authentication system to enable us track our users and the posts they create / vote on.&lt;/p&gt;
+
+&lt;p&gt;But our users have no form to add polls, Let’s fix that.&lt;/p&gt;
+
+&lt;p&gt;We’re going to create an interactive user interface where our users can see a live preview of the poll they’re creating before it’s saved to the database. For this exercise we’re going to make use of &lt;a href=&quot;https://facebook.github.io/react/&quot;&gt;React&lt;/a&gt; which as the docs describe it, is a painless way to create interactive UIs.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;This tutorial includes Live demos of the working code, thanks to &lt;a href=&quot;https://jsfiddle.net/&quot;&gt;JSFiddle&lt;/a&gt;. So you can play with the code without leaving your browser&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;why-react&quot;&gt;Why React?&lt;/h3&gt;
+&lt;p&gt;There are various reasons on why i chose React, and this list includes “Because Angular is hard and stupid”. but let’s talk about the important reasons:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    Because React is easy to learn. It's just pure Javascript (no pseudo language or anything slapped untop). Though you'll encounter &lt;a href=&quot;https://facebook.github.io/react/docs/jsx-in-depth.html&quot;&gt;JSX&lt;/a&gt; frequently, JSX is also very simple and straight forward and if you're already familiar with html or xml, then you'd definitely breeze through JSX.
+  &lt;/li&gt;
+  &lt;br /&gt;
+  &lt;li&gt;
+  It allows you to break down chunks of html into simple re-usable components. You'll see an example of that as we move on.
+  &lt;/li&gt;
+  &lt;br /&gt;
+  &lt;li&gt;
+  Once you know the basics of React, you just need some extras and you can start developing cross platform mobile applications with &lt;a href=&quot;https://facebook.github.io/react-native/&quot;&gt;React Native&lt;/a&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;polling-page&quot;&gt;Polling page&lt;/h3&gt;
+&lt;p&gt;We’re going to make a copy of our login page and modify it to include a form which would be used to add polls to the site. we’re also going to include a preview form that shows the user exactly how a poll would look like as they’re creating it.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;lang=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;en&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;charset=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;utf-8&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;http-equiv=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;X-UA-Compatible&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;IE=edge&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;viewport&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;width=device-width, initial-scale=1&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;description&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;author&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;icon&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://getbootstrap.com/favicon.ico&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;Create a poll&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+
+    
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Bootstrap core CSS --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ url_for('static', filename='css/bootstrap.min.css') }}&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- React JS --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://unpkg.com/react@15.3.2/dist/react.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://unpkg.com/react-dom@15.3.2/dist/react-dom.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://unpkg.com/babel-core@5.8.38/browser.min.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;text/babel&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ url_for('static', filename='js/polls.js') }}&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- IE10 viewport hack for Surface/desktop Windows 8 bug --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ url_for('static', filename='css/ie10-viewport-bug-workaround.css') }}&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Custom styles for this template --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ url_for('static', filename='css/signin.css') }}&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ url_for('static', filename='js/ie-emulation-modes-warning.js') }}&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;container&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;form_container&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!--Placeholder for poll creation form --&amp;gt;&lt;/span&gt;
+
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- IE10 viewport hack for Surface/desktop Windows 8 bug --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ url_for('static', filename='js/ie10-viewport-bug-workaround.js') }}&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+
+    
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;We replaced the old login form with a div &lt;code class=&quot;highlighter-rouge&quot;&gt;poll_form&lt;/code&gt;. This div would serve as the “container” where React would render our components.&lt;/p&gt;
+
+&lt;p&gt;we also added required links to enable us use React in our application. which are React, ReactDOM and &lt;a href=&quot;https://babeljs.io/&quot;&gt;Babel&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Before we proceed, it’s good practice to layout the structure of the UI we have in mind. React is all about modular re-usable components. our UI will have the following structure:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/react_layout.png&quot; alt=&quot;React Layout&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We’re going to have two components, the main component which we’ll call &lt;code class=&quot;highlighter-rouge&quot;&gt;PollForm&lt;/code&gt; is going to contain the form used to create the poll, and the second component called &lt;code class=&quot;highlighter-rouge&quot;&gt;LivePreview&lt;/code&gt; is a form that shows us how a poll is going to look like during creation.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;LivePreview&lt;/code&gt; is part of the &lt;code class=&quot;highlighter-rouge&quot;&gt;PollForm&lt;/code&gt; component because the both of them are share the state of different input fields. &lt;code class=&quot;highlighter-rouge&quot;&gt;PollForm&lt;/code&gt; is the parent component and &lt;code class=&quot;highlighter-rouge&quot;&gt;LivePreview&lt;/code&gt; is the child component.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;form_container&lt;/code&gt; is just a plain div that houses the two forms.&lt;/p&gt;
+
+&lt;p&gt;Create a new javascript file in the static directory called &lt;code class=&quot;highlighter-rouge&quot;&gt;poll.js&lt;/code&gt;. This is where our react code will live in. We already have a link at the top of &lt;code class=&quot;highlighter-rouge&quot;&gt;polls.html&lt;/code&gt; that points to it.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;touch static/js/polls.js&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h5 id=&quot;pollsjs&quot;&gt;polls.js&lt;/h5&gt;
+
+&lt;script async=&quot;&quot; src=&quot;//jsfiddle.net/danidee10/8asnq3uz/2/embed/js,html,css,result/dark/&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;Basically, we created the two components we talked about earlier. Looking at &lt;code class=&quot;highlighter-rouge&quot;&gt;PollForm&lt;/code&gt;, you can see that it contains a form that would be used to save our poll. But if you look at the form closely, you can see that instead of using the &lt;code class=&quot;highlighter-rouge&quot;&gt;class&lt;/code&gt; attribute as we would do in html we’re using &lt;code class=&quot;highlighter-rouge&quot;&gt;className&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;That is &lt;a href=&quot;https://facebook.github.io/react/docs/jsx-in-depth.html&quot;&gt;JSX&lt;/a&gt; in action, &lt;code class=&quot;highlighter-rouge&quot;&gt;JSX&lt;/code&gt; might look similar to html, but it’s not. infact it’s much more terse (like xml) and simply doesn’t allow you do what you want to do. Capitalization matters. (&lt;code class=&quot;highlighter-rouge&quot;&gt;classname&lt;/code&gt; is not the same as &lt;code class=&quot;highlighter-rouge&quot;&gt;className&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;JSX&lt;/code&gt; eventually translates down to raw Javascript. So you’re not required to use JSX with React. without JSX this is how you’d create a simple &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;h1&amp;gt;Hello world&amp;lt;/h1&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;helloComponent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;React&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'h1'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hello world&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;ReactDOM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;helloComponent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getElementById&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'form_container'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;This doesn’t look very pretty and instantly you can see that it’s going to become cumbersome to build your interface like this as it becomes more complex.&lt;/p&gt;
+
+&lt;p&gt;It’s easier to build a web UI in a language that looks and feels like html. This is another reason why i love React and prefer it to form libraries for popular web frameworks like Flask-WTF or django forms.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note that React is not a direct replacement for those form libraries and doesn’t totally secure your forms. Hackers and malicious users can still bypass your React forms and submit data directly to the server. Always do server side validation alongside React.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Let’s talk about the various methods in &lt;code class=&quot;highlighter-rouge&quot;&gt;polls.js&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;u&gt;&lt;strong&gt;getInitialState:&lt;/strong&gt;&lt;/u&gt; This is used to setup the initial state of the component. We created two state variables &lt;code class=&quot;highlighter-rouge&quot;&gt;title&lt;/code&gt; which would be used to store the title of the poll and &lt;code class=&quot;highlighter-rouge&quot;&gt;options&lt;/code&gt; which is an array that holds the various options for the poll.&lt;/p&gt;
+
+&lt;p&gt;For now title and options are static because they contain hardcoded values. If you look at the Result in the JSFiddle demo you should see a new poll. “Alex iwobi vs Dele Alli”. with the two football stars as options. Ideally these values would come from &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;PollForm /&amp;gt;&lt;/code&gt; and once the user changes the value of any field. React will update the UI accordingly with the new data.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;title&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;options&lt;/code&gt; are available to us as properties on an object called &lt;code class=&quot;highlighter-rouge&quot;&gt;state&lt;/code&gt;. Using &lt;code class=&quot;highlighter-rouge&quot;&gt;this.state.title&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;this.state.options&lt;/code&gt;. Treat this values as if they’re immutable, don’t go around doing something like this &lt;code class=&quot;highlighter-rouge&quot;&gt;this.state.title = 'My Title'&lt;/code&gt;, It could lead to all sorts of problems as your modifications would get overridden by react when you call &lt;code class=&quot;highlighter-rouge&quot;&gt;setState&lt;/code&gt;.This is the proper way to modify &lt;code class=&quot;highlighter-rouge&quot;&gt;title&lt;/code&gt; using &lt;code class=&quot;highlighter-rouge&quot;&gt;setState&lt;/code&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'title'&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'My Title'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;`&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Calling &lt;code class=&quot;highlighter-rouge&quot;&gt;setState&lt;/code&gt; will cause react to re-render the UI.&lt;/p&gt;
+
+&lt;p&gt;&lt;u&gt;&lt;strong&gt;LivePreview:&lt;/strong&gt;&lt;/u&gt; This is a little different from &lt;code class=&quot;highlighter-rouge&quot;&gt;PollForm&lt;/code&gt;. it also a render method like &lt;code class=&quot;highlighter-rouge&quot;&gt;PollForm&lt;/code&gt; the difference here is function &lt;code class=&quot;highlighter-rouge&quot;&gt;options&lt;/code&gt; that loops through our state array &lt;code class=&quot;highlighter-rouge&quot;&gt;options&lt;/code&gt; using map (Similar to python’s map. just that it uses a full fledged function and not an anonymous &lt;code class=&quot;highlighter-rouge&quot;&gt;lambda&lt;/code&gt; function.) and returns radio buttons containing the elements we placed in our options array when we called &lt;code class=&quot;highlighter-rouge&quot;&gt;getInitialState&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you’re wondering what &lt;code class=&quot;highlighter-rouge&quot;&gt;props&lt;/code&gt; (short for properties). They are used to pass data to a component from it’s parent. You can think of them as named arguments that we pass to a python function. except that function in this case is a React component. For example from the parent component &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;PollForm /&amp;gt;&lt;/code&gt; we passed in the title of our poll as &lt;code class=&quot;highlighter-rouge&quot;&gt;title&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;LivePreview&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;LivePreview options={this.state.title} /&amp;gt;&lt;/code&gt;. inside the render method of &lt;code class=&quot;highlighter-rouge&quot;&gt;LivePreview&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;title&lt;/code&gt; became a property, and we accessed it with &lt;code class=&quot;highlighter-rouge&quot;&gt;this.props.title&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;We’ve also added some event handlers on our input fields and buttons, we’ll implement them and talk about them more in the next section.&lt;/p&gt;
+
+&lt;h3 id=&quot;making-the-form-reactive&quot;&gt;Making the form Reactive&lt;/h3&gt;
+
+&lt;p&gt;We’re going to make the &lt;code class=&quot;highlighter-rouge&quot;&gt;LivePreview&lt;/code&gt; form inte&lt;strong&gt;Reactive&lt;/strong&gt;, so as the user types in the title of his poll, it automatically shows up the the header of our preview form, we also want the user to be able to add an option and see it appear on the preview form immediately.&lt;/p&gt;
+
+&lt;p&gt;To achieve this we have to remove the default attributes we set for our state variables earlier and then implement our event handlers properly.&lt;/p&gt;
+
+&lt;script async=&quot;&quot; src=&quot;//jsfiddle.net/danidee10/5Lex6gtj/9/embed/js,html,css,result/dark/&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;Lets talk about the event handlers we just implemented. This is where most of the hardwork is.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;handleTitleChange&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;handleOptionChange&lt;/code&gt; do the same thing for different fields in our form, they update &lt;code class=&quot;highlighter-rouge&quot;&gt;title&lt;/code&gt; and option respectively as the user types into the field. so at any point in time when we decide to submit the form, we can be sure that our state variables &lt;code class=&quot;highlighter-rouge&quot;&gt;title&lt;/code&gt; and  &lt;code class=&quot;highlighter-rouge&quot;&gt;option&lt;/code&gt; have the latest value from the user.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;handlOptionAdd&lt;/code&gt; updates the array of options by appending new items to the array. Notice how we didn’t push to the array directly by doing something like this &lt;code class=&quot;highlighter-rouge&quot;&gt;this.state.options.push({name: this.state.option});&lt;/code&gt;. We’re still using &lt;code class=&quot;highlighter-rouge&quot;&gt;setState&lt;/code&gt; so React is in total control our our application state and knows how to update the UI accordingly. we also cleared the option field in the form by setting option to an empty string.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;handleSubmit&lt;/code&gt; simply prevents the form from submitting by calling &lt;code class=&quot;highlighter-rouge&quot;&gt;e.preventDefault()&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;We also wrapped the return statement of &lt;code class=&quot;highlighter-rouge&quot;&gt;options&lt;/code&gt; with a condition to determine if an &lt;code class=&quot;highlighter-rouge&quot;&gt;option&lt;/code&gt;s name is set before returning a new radio button (this was done to prevent users from nameless options to our preview form by repeatedly clicking on the Add option button).&lt;/p&gt;
+
+&lt;h3 id=&quot;useful-react-resources-and-tips&quot;&gt;Useful React resources and tips&lt;/h3&gt;
+&lt;p&gt;This tutorial was never meant to be a hello world introduction to React JS and if you’re still confused about somethings, feel free to lookup the docs, Google and &lt;a href=&quot;http://stackoverflow.com/questions/tagged/reactjs&quot;&gt;Stackoverflow&lt;/a&gt; for answers to basic React questions.&lt;/p&gt;
+
+&lt;p&gt;Here is a list of useful resources and tips that personally helped me grok React faster.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+  Always model your UI down, before you start writing any code. Just like we did. This will help you to have a clear mental picture about your components about who the parent components is and what it's child(ren) is/are
+  &lt;/li&gt;
+  &lt;br /&gt;
+  &lt;li&gt;
+  Buttressing my first point, i found it easier to think about React from top to bottom, write your component first before writing the React Class.(e.g &lt;PollForm /&gt; should come first before writing React.createClass or any functional part)
+  &lt;/li&gt;
+  &lt;br /&gt;
+  &lt;li&gt;
+  Always use &lt;strong&gt;setState&lt;/strong&gt; to trigger a UI update. There is another method called &lt;strong&gt;forceUpdate&lt;/strong&gt; that forces the UI to re-render itself and it's possible to have a complex interface where you might use it. But if you see yourself relying on &lt;strong&gt;forceUpdate&lt;/strong&gt; too much to update the interface, that's a warning sign that something is wrong with your UI design and your componenets aren't really interacting with each other like they should.
+  &lt;/li&gt;
+  &lt;br /&gt;
+  &lt;li&gt;
+  React isn't going anywhere soon. so learn it!. Facebook built react and they use it heavily on &lt;strong&gt;FACEBOOK.COM&lt;/strong&gt; which also means that any problem you're likely to encounter with react has already been encountered and solved by facebook which is a plus for you.
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;resources&quot;&gt;Resources&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://facebook&quot;&gt;React docs&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://thinkster.io/understanding-react-state&quot;&gt;Understanding state in React&lt;/a&gt;….if you’re annoyed because you don’t really understand what “state” is and why it’s important.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://chrome.google.com/webstore/category/apps&quot;&gt;React Debugger for chrome&lt;/a&gt;. it’s also availabe for firefox &lt;a href=&quot;https://addons.mozilla.org/en-US/firefox/addon/react-devtools/&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://facebook.github.io/react/docs/jsx-gotchas.html&quot;&gt;JSX Gotcha’s&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://camjackson.net/post/9-things-every-reactjs-beginner-should-know&quot;&gt;9 things every React.js beginner should know&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://facebook.github.io/react/blog/2014/01/02/react-chrome-developer-tools.html&quot;&gt;Official Video on Debugging React&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://magic.reactjs.net/htmltojsx.htm&quot;&gt;Html to JSX compiler&lt;/a&gt;…(Extremely useful)&lt;/p&gt;
+
+&lt;p&gt;That’s all for this part. we’ve built a simple interactive form for our users to enable them create polls and preview them before saving them. The poll form doesn’t actually save anything to the database yet. That’s what we’re going to work on in the next part. we’re going to build a RESTful api to handle the submission and retrieval of polls.&lt;/p&gt;
+
+&lt;p&gt;The complete code for this tutorial is available on (github)[https://github.com/danidee10/Votr], if you have any questions or insight on this article, you can raise an issue there or drop a comment below. If you don’t I’ll see you in the next part.&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;
+</description>
+        <pubDate>Thu, 29 Sep 2016 00:00:00 +0100</pubDate>
+        <link>https://danidee10.github.io//2016/09/29/flask-by-example-4.html</link>
+        <guid isPermaLink="true">https://danidee10.github.io//2016/09/29/flask-by-example-4.html</guid>
+      </item>
+    
+      <item>
         <title>Flask by example (How to build a Voting app) Part 3</title>
         <description>&lt;p&gt;Welcome to part 3 of ‘How to build a voting app with flask’, the last part was all about setting up our database with SQLAlchemy, if you missed it check it out &lt;a href=&quot;/2016/09/19/flask-by-example-2.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
@@ -480,7 +693,7 @@ staticfied ../templates/index.html &lt;span class=&quot;o&quot;&gt;==&lt;/span&g
 
 &lt;p&gt;They’re several flask extensions that are better at handling user management and authentication in a more secure way than what we’ve done. a popular one in the flask community is &lt;a href=&quot;https://flask-login.readthedocs.io/en/latest/&quot;&gt;Flask-Login&lt;/a&gt; we also have the full featured &lt;a href=&quot;https://pythonhosted.org/Flask-Security/&quot;&gt;Flask-security&lt;/a&gt; which integrates a lot of flask addons together including Flask login to provide robust user management for flask applications.&lt;/p&gt;
 
-&lt;p&gt;There is also no way for our users to recover their password, if they forget it.&lt;/p&gt;
+&lt;p&gt;There is also no way for our users to recover their password, if they forget it and the user session expires once the the web browser is closed.&lt;/p&gt;
 
 &lt;p&gt;In the next part we’re going to design the poll form, and the actual voting form with &lt;code class=&quot;highlighter-rouge&quot;&gt;ReactJS&lt;/code&gt;. If you don’t know about &lt;code class=&quot;highlighter-rouge&quot;&gt;ReactJS&lt;/code&gt;, It would be wise to look at the ReactJS &lt;a href=&quot;https://facebook.github.io/react/&quot;&gt;docs&lt;/a&gt; now to know why we’re using it in the first place instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;html&lt;/code&gt; and pure &lt;code class=&quot;highlighter-rouge&quot;&gt;javascript&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;JQuery&lt;/code&gt;.&lt;/p&gt;
 
@@ -488,9 +701,9 @@ staticfied ../templates/index.html &lt;span class=&quot;o&quot;&gt;==&lt;/span&g
 
 &lt;p&gt;Thanks for reading, if you found Staticfy useful don’t forget to give it a star on github. Otherwise raise an issue to contribute and improve it’s development. Drop your comments if you have any question or insights about this part.&lt;/p&gt;
 </description>
-        <pubDate>Thu, 22 Sep 2016 22:35:33 +0100</pubDate>
-        <link>https://danidee10.github.io//2016/09/22/flask-by-example-3.html</link>
-        <guid isPermaLink="true">https://danidee10.github.io//2016/09/22/flask-by-example-3.html</guid>
+        <pubDate>Sat, 24 Sep 2016 22:35:33 +0100</pubDate>
+        <link>https://danidee10.github.io//2016/09/24/flask-by-example-3.html</link>
+        <guid isPermaLink="true">https://danidee10.github.io//2016/09/24/flask-by-example-3.html</guid>
       </item>
     
       <item>
