@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Flask by example (How to build a Voting app) Part 4
+title: Flask by example 4 (Building an interactive UI with ReactJS)
 date: 2016-10-05T22:35:33+01:00
 ---
 
@@ -218,6 +218,6 @@ Here is a list of useful resources and tips that personally helped me grok React
 
 That's all for this part. we've built a simple interactive form for our users to enable them create polls and preview them before saving them. The poll form doesn't actually save anything to the database yet. That's what we're going to work on in the next part. we're going to build a RESTful api to handle the submission and retrieval of polls.
 
-The complete code for this tutorial is available on (github)[https://github.com/danidee10/Votr], if you have any questions or insight on this article, you can raise an issue there or drop a comment below. If you don't I'll see you in the next part.
+The complete code for this tutorial is available on [github](https://github.com/danidee10/Votr), if you have any questions or insight on this article, you can raise an issue there or drop a comment below. If you don't I'll see you in the next part.
 
 Thanks for reading!

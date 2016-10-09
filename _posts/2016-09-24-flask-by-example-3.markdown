@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Flask by example (How to build a Voting app) Part 3
+title: Flask by example 3 (Templating, Authentiation and Static assets)
 date: 2016-09-24T22:35:33+01:00
 ---
 

@@ -1,11 +1,11 @@
 ---
 layout: post
-title: Flask by example (How to build a Voting app)
+title: Flask by example (How to build an online polling app)
 date: 2016-09-18T22:35:33+01:00
 ---
 
 Welcome everyone!, This is the beginning of a new series where we'll learn how to use flask by building a simple Voting app.
-This series is going to be split into several parts because of the size of the app we're building. At the end of this series we'll have built a Voting app, where:
+This series is going to be split into several parts because of the size of the app we're building. At the end of this series we'll have built a polling app, where:
 
 <ul class="postlist">
   <li>Users can login.</li>
