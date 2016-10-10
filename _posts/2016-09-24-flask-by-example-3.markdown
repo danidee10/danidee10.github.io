@@ -4,7 +4,7 @@ title: Flask by example 3 (Templating, Authentiation and Static assets)
 date: 2016-09-24T22:35:33+01:00
 ---
 
-Welcome to part 3 of 'How to build a voting app with flask', the last part was all about setting up our database with SQLAlchemy, if you missed it check it out [here]({% post_url 2016-09-19-flask-by-example-2 %}).
+Welcome to part 3 of 'How to build an online voting app with flask', the last part was all about setting up our database with SQLAlchemy, if you missed it check it out [here]({% post_url 2016-09-19-flask-by-example-2 %}).
 
 In this part, we're going to design a landing page for our application and an authentication system to allow our users create and vote on topics.
 
@@ -488,16 +488,16 @@ You have to repeat the same procedure and change all the links to equivalent fla
 
 I created an open source python library called [Staticfy](https://github.com/danidee10/Staticfy) to automate this process.
 
-To Use Staticfy, clone it in the root directory for votr
+To Use Staticfy, install if from pip
 
 {% highlight bash %}
-$ git clone https://github.com/danidee10/Staticfy.git && cd Staticfy
+$ pip install staticfy
 {% endhighlight %}
 
-Run `staticfy.py` on the templates folder
+Once it's done, run staticfy on the template folder
 
 {% highlight bash %}
-$ python3 staticfy.py ../templates                                  
+$ staticfy ../templates                                  
 staticfied ../templates/signup.html ==> staticfy/signup.html
 
 staticfied ../templates/index.html ==> staticfy/index.html
