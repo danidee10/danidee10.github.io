@@ -1616,7 +1616,7 @@ We were able to set up our database and get a feel of how SQLalchemy works, in t
 &lt;h4 id=&quot;why-flask&quot;&gt;Why flask?&lt;/h4&gt;
 &lt;p&gt;&lt;img src=&quot;/images/flask.jpg&quot; alt=&quot;Flask&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Quoting the flask &lt;a href=&quot;http://flask.pocoo.org&quot;&gt;docs&lt;/a&gt; &lt;strong&gt;&lt;em&gt;Flask is a microframework for Python based on Werkzeug, Jinja 2 and good intentions&lt;/em&gt;&lt;/strong&gt;. Most people are quick to dismiss microframeworks like flask as not being powerful compared to django or other ‘batteries included’ web frameworks which isn’t correct. so what does micro mean?&lt;/p&gt;
+&lt;p&gt;Quoting the flask &lt;a href=&quot;http://flask.pocoo.org&quot;&gt;docs&lt;/a&gt; &lt;strong&gt;&lt;em&gt;Flask is a microframework for Python based on Werkzeug, Jinja 2 and good intentions&lt;/em&gt;&lt;/strong&gt;. Most people are quick to dismiss microframeworks like flask as not being powerful compared to django or other &lt;em&gt;batteries included&lt;/em&gt; web frameworks which isn’t correct. so what does micro mean?&lt;/p&gt;
 
 &lt;p&gt;Micro means that the framework was designed to be as minimal as possible and just do what a basic web framework should do, while being extensible without making assumptions and including features that may not be used by everyone. Now What does this mean to you as a developer?, it means that you can build your web app from scratch and then as your need more features for your app you can simply install the required libraries and plugins you need (You can even roll out a new flask plugin and share it with the world if you’re feeling adventrous ).&lt;/p&gt;
 
@@ -1636,10 +1636,10 @@ We were able to set up our database and get a feel of how SQLalchemy works, in t
 &lt;ul class=&quot;postlist&quot;&gt;
   &lt;li&gt;Built a RESTful API with flask and also learnt more about how API's work&lt;/li&gt;
 
-  &lt;li&gt;Leveraged the power of some popular flask extensions like &lt;a href=&quot;&quot;&gt;Flask SQLAlchemy&lt;/a&gt; and
-      &lt;a href=&quot;&quot;&gt;Flask Migrate&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Leveraged the power of some popular flask extensions like &lt;a href=&quot;flask-sqlalchemy.pocoo.org/2.1/&quot;&gt;Flask SQLAlchemy&lt;/a&gt; and
+      &lt;a href=&quot;https://flask-migrate.readthedocs.io/en/latest/&quot;&gt;Flask Migrate&lt;/a&gt;&lt;/li&gt;
 
-  &lt;li&gt;Learned how to Build interactive and dynamic UI's with &lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Learned how to Build interactive and dynamic UI's with &lt;a href=&quot;https://facebook.github.io/react-native/&quot;&gt;ReactJS&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Here is a screenshot of the online polling app you will build.&lt;/p&gt;

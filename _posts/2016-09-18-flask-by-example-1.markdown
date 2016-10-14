@@ -25,7 +25,7 @@ Our polling app is going to be called **Votr**
 #### Why flask?
 ![Flask](/images/flask.jpg)
 
-Quoting the flask [docs](http://flask.pocoo.org) ***Flask is a microframework for Python based on Werkzeug, Jinja 2 and good intentions***. Most people are quick to dismiss microframeworks like flask as not being powerful compared to django or other 'batteries included' web frameworks which isn't correct. so what does micro mean?
+Quoting the flask [docs](http://flask.pocoo.org) ***Flask is a microframework for Python based on Werkzeug, Jinja 2 and good intentions***. Most people are quick to dismiss microframeworks like flask as not being powerful compared to django or other *batteries included* web frameworks which isn't correct. so what does micro mean?
 
 Micro means that the framework was designed to be as minimal as possible and just do what a basic web framework should do, while being extensible without making assumptions and including features that may not be used by everyone. Now What does this mean to you as a developer?, it means that you can build your web app from scratch and then as your need more features for your app you can simply install the required libraries and plugins you need (You can even roll out a new flask plugin and share it with the world if you're feeling adventrous ).
 
@@ -45,10 +45,10 @@ At the end of this tutorial, You would have:
 <ul class="postlist">
   <li>Built a RESTful API with flask and also learnt more about how API's work</li>
 
-  <li>Leveraged the power of some popular flask extensions like <a href="">Flask SQLAlchemy</a> and
-      <a href="">Flask Migrate</a></li>
+  <li>Leveraged the power of some popular flask extensions like <a href="flask-sqlalchemy.pocoo.org/2.1/">Flask SQLAlchemy</a> and
+      <a href="https://flask-migrate.readthedocs.io/en/latest/">Flask Migrate</a></li>
 
-  <li>Learned how to Build interactive and dynamic UI's with <a href=""></a></li>
+  <li>Learned how to Build interactive and dynamic UI's with <a href="https://facebook.github.io/react-native/">ReactJS</a></li>
 </ul>
 
 Here is a screenshot of the online polling app you will build.
