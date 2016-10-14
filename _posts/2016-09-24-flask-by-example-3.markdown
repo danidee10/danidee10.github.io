@@ -81,7 +81,7 @@ flask provides a `render_template` method that allows us to display a template, 
 from flask import Flask, render_template
 from models import db
 
-votr = Flask('__name__')
+votr = Flask(__name__)
 
 # load config from the config file we created earlier
 votr.config.from_object('config')
@@ -132,7 +132,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, Users
 
-votr = Flask('__name__')
+votr = Flask(__name__)
 
 # load config from the config file we created earlier
 votr.config.from_object('config')

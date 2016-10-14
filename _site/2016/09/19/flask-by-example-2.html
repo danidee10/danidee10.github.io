@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Flask by example (How to build a Voting app) Part 2</title>
+    <title>Flask by example 2 (Designing the Database with SQLAlchemy)</title>
     <meta name="description" content="Osaetin Daniel's blog">
     <link rel="alternate" type="application/atom+xml" title="Osaetin Daniel" href="/feed.xml" />
 
@@ -94,12 +94,12 @@ a {
         <article role="article" class="post">
           <div class="card">
             <header class="post-header">
-              <h1 class="post-title">Flask by example (How to build a Voting app) Part 2</h1>
+              <h1 class="post-title">Flask by example 2 (Designing the Database with SQLAlchemy)</h1>
               <p class="post-meta">September 19, 2016</i>
             </header>
 
             <div class="post-content">
-              <p>Welcome to part 2 of the series ‘How to build a voting app with flask’, in the previous tutorial, we setup our development environment and installed flask. we also wrote a basic hello world application just to see if everything was installed properly.</p>
+              <p>Welcome to part 2 of the series ‘How to build a polling app with flask and ReactJS’, in the previous tutorial, we setup our development environment and installed flask. we also wrote a basic hello world application just to see if everything was installed properly.</p>
 
 <p>Now we’re going to start building our database, which is the last layer in our voting app. I found this amazing <a href="http://ondras.zarovi.cz/sql/demo/?keyword=default">tool</a> which i used to visualize how the schema of our database would look like, it’s very lightweight and it has no dependencies, it just runs in your browser.</p>
 
@@ -180,6 +180,10 @@ AND (rd.rd_numberofrooms <span class="err">&lt;</span>= (select sum(rn.reservati
 <span class="k">class</span> <span class="nc">Topics</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
     <span class="n">title</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">500</span><span class="p">))</span>
 
+    <span class="c"># user friendly way to display the object</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span>
+
 <span class="c"># Model for poll options</span>
 <span class="k">class</span> <span class="nc">Options</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">200</span><span class="p">))</span>
@@ -190,7 +194,7 @@ AND (rd.rd_numberofrooms <span class="err">&lt;</span>= (select sum(rn.reservati
     <span class="c"># Columns declaration</span>
     <span class="n">topic_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s">'topics.id'</span><span class="p">))</span>
     <span class="n">option_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s">'options.id'</span><span class="p">))</span>
-    <span class="n">vote_count</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">vote_count</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">status</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Boolean</span><span class="p">)</span> <span class="c"># to mark poll as open or closed</span>
 
     <span class="c"># Relationship declaration (makes it easier for us to access the polls model</span>
@@ -226,7 +230,7 @@ For now we’ll just keep everything simple.</p>
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
 <span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">db</span>
 
-<span class="n">votr</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="s">'__name__'</span><span class="p">)</span>
+<span class="n">votr</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 <span class="c"># load config from the config file we created earlier</span>
 <span class="n">votr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="s">'config'</span><span class="p">)</span>
@@ -309,7 +313,6 @@ options  polls    topics</code></pre></figure>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">votr</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">create_all</span><span class="p">()</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">arsenal</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">(</span><span class="n">arsenal</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></code></pre></figure>
 
 <h6 id="if-youre-still-reeling-in-confusion-heres-another-example-to-make-you-understand-better">If you’re still reeling in confusion here’s another example to make you understand better:</h6>
@@ -350,7 +353,7 @@ We were able to set up our database and get a feel of how SQLalchemy works, in t
 
               var disqus_config = function() {
                 this.page.url = 'https://danidee10.github.io/2016/09/19/flask-by-example-2.html'; //shouldn't hardoce this
-                this.page.identifier = 'Flask by example (How to build a Voting app) Part 2';
+                this.page.identifier = 'Flask by example 2 (Designing the Database with SQLAlchemy)';
               };
               (function() {
                 var d = document,

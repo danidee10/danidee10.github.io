@@ -4,7 +4,7 @@ title: Flask by example 2 (Designing the Database with SQLAlchemy)
 date: 2016-09-19T22:35:33+01:00
 ---
 
-Welcome to part 2 of the series 'How to build a voting app with flask', in the previous tutorial, we setup our development environment and installed flask. we also wrote a basic hello world application just to see if everything was installed properly.
+Welcome to part 2 of the series 'How to build a polling app with flask and ReactJS', in the previous tutorial, we setup our development environment and installed flask. we also wrote a basic hello world application just to see if everything was installed properly.
 
 Now we're going to start building our database, which is the last layer in our voting app. I found this amazing [tool](http://ondras.zarovi.cz/sql/demo/?keyword=default) which i used to visualize how the schema of our database would look like, it's very lightweight and it has no dependencies, it just runs in your browser.
 
@@ -92,6 +92,10 @@ class Base(db.Model):
 class Topics(Base):
     title = db.Column(db.String(500))
 
+    # user friendly way to display the object
+    def __repr__(self):
+        return self.title
+
 # Model for poll options
 class Options(Base):
     name = db.Column(db.String(200))
@@ -102,7 +106,7 @@ class Polls(Base):
     # Columns declaration
     topic_id = db.Column(db.Integer, db.ForeignKey('topics.id'))
     option_id = db.Column(db.Integer, db.ForeignKey('options.id'))
-    vote_count = db.Column(db.Integer)
+    vote_count = db.Column(db.Integer, default=0)
     status = db.Column(db.Boolean) # to mark poll as open or closed
 
     # Relationship declaration (makes it easier for us to access the polls model
@@ -142,7 +146,7 @@ For now we'll just keep everything simple.
 from flask import Flask
 from models import db
 
-votr = Flask('__name__')
+votr = Flask(__name__)
 
 # load config from the config file we created earlier
 votr.config.from_object('config')
@@ -237,7 +241,6 @@ Note that everything we've done isn't actually stored in our database yet, we'll
 >>> db.init_app(votr)
 >>> db.create_all()
 >>> db.session.add(arsenal)
->>> db.session.commit(arsenal)
 >>> db.session.commit()
 {% endhighlight %}
 

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Flask by example (How to build a Voting app) Part 3</title>
+    <title>Flask by example 3 (Templating, Authentiation and Static assets)</title>
     <meta name="description" content="Osaetin Daniel's blog">
     <link rel="alternate" type="application/atom+xml" title="Osaetin Daniel" href="/feed.xml" />
 
@@ -94,12 +94,12 @@ a {
         <article role="article" class="post">
           <div class="card">
             <header class="post-header">
-              <h1 class="post-title">Flask by example (How to build a Voting app) Part 3</h1>
+              <h1 class="post-title">Flask by example 3 (Templating, Authentiation and Static assets)</h1>
               <p class="post-meta">September 24, 2016</i>
             </header>
 
             <div class="post-content">
-              <p>Welcome to part 3 of ‘How to build a voting app with flask’, the last part was all about setting up our database with SQLAlchemy, if you missed it check it out <a href="/2016/09/19/flask-by-example-2.html">here</a>.</p>
+              <p>Welcome to part 3 of ‘How to build an online voting app with flask’, the last part was all about setting up our database with SQLAlchemy, if you missed it check it out <a href="/2016/09/19/flask-by-example-2.html">here</a>.</p>
 
 <p>In this part, we’re going to design a landing page for our application and an authentication system to allow our users create and vote on topics.</p>
 
@@ -169,7 +169,7 @@ a {
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">render_template</span>
 <span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">db</span>
 
-<span class="n">votr</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="s">'__name__'</span><span class="p">)</span>
+<span class="n">votr</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 <span class="c"># load config from the config file we created earlier</span>
 <span class="n">votr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="s">'config'</span><span class="p">)</span>
@@ -215,7 +215,7 @@ You might be wondering why the password field is 200 characters long.</p>
 <span class="kn">from</span> <span class="nn">werkzeug.security</span> <span class="kn">import</span> <span class="n">generate_password_hash</span><span class="p">,</span> <span class="n">check_password_hash</span>
 <span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">Users</span>
 
-<span class="n">votr</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="s">'__name__'</span><span class="p">)</span>
+<span class="n">votr</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 <span class="c"># load config from the config file we created earlier</span>
 <span class="n">votr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="s">'config'</span><span class="p">)</span>
@@ -545,13 +545,13 @@ You might be wondering why the password field is 200 characters long.</p>
 
 <p>I created an open source python library called <a href="https://github.com/danidee10/Staticfy">Staticfy</a> to automate this process.</p>
 
-<p>To Use Staticfy, clone it in the root directory for votr</p>
+<p>To Use Staticfy, install if from pip</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>git clone https://github.com/danidee10/Staticfy.git <span class="o">&amp;&amp;</span> <span class="nb">cd </span>Staticfy</code></pre></figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>pip install staticfy</code></pre></figure>
 
-<p>Run <code class="highlighter-rouge">staticfy.py</code> on the templates folder</p>
+<p>Once it’s done, run staticfy on the template folder</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>python3 staticfy.py ../templates                                  
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>staticfy ../templates                                  
 staticfied ../templates/signup.html <span class="o">==</span>&gt; staticfy/signup.html
 
 staticfied ../templates/index.html <span class="o">==</span>&gt; staticfy/index.html</code></pre></figure>
@@ -593,7 +593,7 @@ staticfied ../templates/index.html <span class="o">==</span>&gt; staticfy/index.
 
               var disqus_config = function() {
                 this.page.url = 'https://danidee10.github.io/2016/09/24/flask-by-example-3.html'; //shouldn't hardoce this
-                this.page.identifier = 'Flask by example (How to build a Voting app) Part 3';
+                this.page.identifier = 'Flask by example 3 (Templating, Authentiation and Static assets)';
               };
               (function() {
                 var d = document,

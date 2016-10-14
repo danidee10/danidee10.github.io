@@ -4,7 +4,8 @@ title: Flask by example (How to build an online polling app)
 date: 2016-09-18T22:35:33+01:00
 ---
 
-Welcome everyone!, This is the beginning of a new series where we'll learn how to use flask by building a simple Voting app.
+Welcome everyone!, This is the beginning of a new series where we'll learn how to use flask by building a simple Online polling application.
+
 This series is going to be split into several parts because of the size of the app we're building. At the end of this series we'll have built a polling app, where:
 
 <ul class="postlist">
@@ -34,6 +35,25 @@ So if you're a newbie in building web apps with python and you've been frustrate
 
 <br />
 
+#### Goals of this tutorial
+I created this tutorial for those (Python programmers and others coming from other languages) who have tried out web development with Django and found it too confusing and difficult to grasp.
+
+It's also for those who've heard about how simple and straight forward flask is, followed the official docs, but don't know how to do something *real* with it.
+
+At the end of this tutorial, You would have:
+
+  1. Built a RESTful API with flask and also learnt more about how API's work
+
+  2. Leveraged the power of some popular flask extensions like [Flask SQLAlchemy]() and [Flask Migrate](). (*While learning about Flask SQLAlchemy you'll also get a feel of the ORM that powers it...SQLAlchemy*)
+
+  3. Learned how to Build interactive and dynamic UI's with [ReactJS]()
+
+Here is a screenshot of the online polling app you will build.
+
+
+![Votr image](/images/screenshot.png)
+
+
 #### Requirements and setup
 To follow this tutorial effectively you should have the following installed:
 
@@ -47,9 +67,11 @@ To follow this tutorial effectively you should have the following installed:
 
  I'll also assume you have basic knowledge of html and css and that you're running Linux (what have you been doing with your life if you aren't).
 
- Also when i refer to Linux i'm referring to Ubuntu or some other Ubuntu based distro like Linux mint or elementary. user's of other distro's should be able to follow along without any problems. everything should also work on windows, if you're stuck with something on windows, please feel free to drop a comment or google your way out of it if you're ashamed of yourself and feel it's too basic :).
+ Also when i refer to Linux i'm referring to Ubuntu or some other Ubuntu based distro like Linux mint or elementary. User's of other distro's should be able to follow along without any problems because most of the libraries you'd be installing would be done with pip. Everything should also work on windows, if you know your way around, but if you're stuck with something on windows, please feel free to drop a comment or google your way out of it if you're ashamed of yourself and feel it's too basic :).
 
 If you're on Linux, you should have python and pip installed installed by default in your distro. On windows make sure you download the python3 `exe` from python.org and tick the option to add python to your path.
+
+Lastly you should have basic knowledge of the Python programming language.
 
 Now we're going to install virtualenv and create a new virtual environment where our project and all it's files and dependencies will reside.
 
@@ -100,7 +122,7 @@ That will create a new directory called `votr` and a file named `votr.py`
 {% highlight python %}
 from flask import Flask
 
-votr = Flask('__name__')
+votr = Flask(__name__)
 
 @votr.route('/')
 def home():

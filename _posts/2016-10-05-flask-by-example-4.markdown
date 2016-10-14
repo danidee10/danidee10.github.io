@@ -186,7 +186,7 @@ Here is a list of useful resources and tips that personally helped me grok React
   </li>
   <br />
   <li>
-  Buttressing my first point, i found it easier to think about React from top to bottom, write your component first before writing the React Class.(e.g <PollForm /> should come first before writing React.createClass or any functional part)
+  Buttressing my first point, i found it easier to think about React from top to bottom. Write your component first before writing the React Class.(for example "<PollForm />" should come first before writing "React.createClass" or any functional part)
   </li>
   <br />
   <li>
@@ -216,7 +216,7 @@ Here is a list of useful resources and tips that personally helped me grok React
 [Html to JSX compiler](http://magic.reactjs.net/htmltojsx.htm)...(Extremely useful)
 
 
-That's all for this part. we've built a simple interactive form for our users to enable them create polls and preview them before saving them. The poll form doesn't actually save anything to the database yet. That's what we're going to work on in the next part. we're going to build a RESTful api to handle the submission and retrieval of polls.
+That's all for this part. You've now built an interactive form that allows users preview polls before they save them. The poll form doesn't actually save anything to the database yet. That's what we're going to work on in the next part. we're going to build a RESTful api to handle the submission and retrieval of polls.
 
 The complete code for this tutorial is available on [github](https://github.com/danidee10/Votr), if you have any questions or insight on this article, you can raise an issue there or drop a comment below. If you don't I'll see you in the next part.
 

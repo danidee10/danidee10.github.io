@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Flask by example (How to build an online polling app)</title>
+    <title>Blog</title>
     <meta name="description" content="Osaetin Daniel's blog">
     <link rel="alternate" type="application/atom+xml" title="Osaetin Daniel" href="/feed.xml" />
 
@@ -47,7 +47,7 @@ a {
 
     <script src="https://use.fontawesome.com/5bbf16a3a0.js"></script>
 
-    <link rel="canonical" href="https://danidee10.github.io/2016/09/18/flask-by-example-1.html">
+    <link rel="canonical" href="https://danidee10.github.io/blog/page2/">
 
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -62,9 +62,7 @@ a {
 
   </head>
 
-
-    <main>
-      <header class="site-header">
+<header class="site-header">
   <div class="container">
     <h1><a href="/">Osaetin<span>Daniel</span></a></h1>
 
@@ -88,180 +86,48 @@ a {
 </header>
 
 
-      <div class="sliding-panel-fade-screen"></div>
+<body>
+
+<div class="sliding-panel-fade-screen"></div>
+
 
       <div class="container">
-        <article role="article" class="post">
-          <div class="card">
+        <section class="post-list">
+
+          
+
+          <article class="post">
             <header class="post-header">
-              <h1 class="post-title">Flask by example (How to build an online polling app)</h1>
-              <p class="post-meta">September 18, 2016</i>
+              <h1 class="post-title">
+                <a class="post-link" href="/2016/09/08/hello-world.html">Hello World</a>
+              </h1>
+              <p><p>Everything always starts with hello world!.</p>
+
+</p>
+              <div class="post-meta">
+                <time>September  8, 2016</time>
+              </div>
             </header>
 
-            <div class="post-content">
-              <p>Welcome everyone!, This is the beginning of a new series where we’ll learn how to use flask by building a simple Online polling application.</p>
+            <p><a href="/2016/09/08/hello-world.html" title="Permalink to: Hello World" class="read-more">Read more</a></p>
+          </article>
 
-<p>This series is going to be split into several parts because of the size of the app we’re building. At the end of this series we’ll have built a polling app, where:</p>
+          
 
-<ul class="postlist">
-  <li>Users can login.</li>
-  <li>Vote on various topics and leave comments.</li>
-  <li>Comments can also be upvoted and downvoted so that the best comments get to the top for other users to see.</li>
-</ul>
+<nav class="pagination" role="pagination">
+  <!-- Pagination links -->
+  <div class="pagination">
+    
+      <a href="/blog/" class="previous">Previous</a>
+    
+    <span class="page_number ">Page: 2 of 2</span>
+    
+      <span class="next btn btn-ghost">Next</span>
+    
+  </div>
+</nav>
 
-<p><br /></p>
-
-<p>We’re going to use <a href="http://flask.pocoo.org">Flask</a> as our backend, <a href="http://getbootstrap.com/">Bootstrap3</a> for our interface generally and <a href="https://facebook.github.io/react/">Reactjs</a> for other parts of our UI. the rest is just plain old html and css.</p>
-
-<p>Our polling app is going to be called <strong>Votr</strong></p>
-
-<p><br /></p>
-
-<h4 id="why-flask">Why flask?</h4>
-<p><img src="/images/flask.jpg" alt="Flask" /></p>
-
-<p>Quoting the flask <a href="http://flask.pocoo.org">docs</a> <strong><em>Flask is a microframework for Python based on Werkzeug, Jinja 2 and good intentions</em></strong>. Most people are quick to dismiss microframeworks like flask as not being powerful compared to django or other ‘batteries included’ web frameworks which isn’t correct. so what does micro mean?</p>
-
-<p>Micro means that the framework was designed to be as minimal as possible and just do what a basic web framework should do, while being extensible without making assumptions and including features that may not be used by everyone. Now What does this mean to you as a developer?, it means that you can build your web app from scratch and then as your need more features for your app you can simply install the required libraries and plugins you need (You can even roll out a new flask plugin and share it with the world if you’re feeling adventrous ).</p>
-
-<p>At the end of the day you’ll get a better understanding of how different parts of your web app ticks because you actually added those ‘parts’ yourself (get it? web development one drop at a time). instead of using a web framework for over a year only for you to discover that feature <code class="highlighter-rouge">x</code> existed like 2 years earlier! and you’ve been doing things the wrong way.</p>
-
-<p>So if you’re a newbie in building web apps with python and you’ve been frustrated by django, I’ll recommend you stick with flask, and then when you’re comfortable with it. you can move on to django or another full featured framework. Using flask will help you understand most of the design decision and approaches django uses.</p>
-
-<p><br /></p>
-
-<h4 id="goals-of-this-tutorial">Goals of this tutorial</h4>
-<p>I created this tutorial for those (Python programmers and others coming from other languages) who have tried out web development with Django and found it too confusing and difficult to grasp.</p>
-
-<p>It’s also for those who’ve heard about how simple and straight forward flask is, followed the official docs, but don’t know how to do something <em>real</em> with it.</p>
-
-<p>At the end of this tutorial, You would have:</p>
-
-<ol>
-  <li>
-    <p>Built a RESTful API with flask and also learnt more about how API’s work</p>
-  </li>
-  <li>
-    <p>Leveraged the power of some popular flask extensions like <a href="">Flask SQLAlchemy</a> and <a href="">Flask Migrate</a>. (<em>While learning about Flask SQLAlchemy you’ll also get a feel of the ORM that powers it…SQLAlchemy</em>)</p>
-  </li>
-  <li>
-    <p>Learned how to Build interactive and dynamic UI’s with <a href="">ReactJS</a></p>
-  </li>
-</ol>
-
-<p>Here is a screenshot of the online polling app you will build.</p>
-
-<p><img src="/images/screenshot.png" alt="Votr image" /></p>
-
-<h4 id="requirements-and-setup">Requirements and setup</h4>
-<p>To follow this tutorial effectively you should have the following installed:</p>
-
-<ul class="postlist">
-  <li><a href="https://www.python.org/downloads/">Python 3x</a></li>
-  <li><a href="http://www.virtualenv.org/en/latest/">Virtualenv</a></li>
-  <li><a href="http://flask.pocoo.org">Flask</a></li>
-</ul>
-
-<p><br /></p>
-
-<p>I’ll also assume you have basic knowledge of html and css and that you’re running Linux (what have you been doing with your life if you aren’t).</p>
-
-<p>Also when i refer to Linux i’m referring to Ubuntu or some other Ubuntu based distro like Linux mint or elementary. User’s of other distro’s should be able to follow along without any problems because most of the libraries you’d be installing would be done with pip. Everything should also work on windows, if you know your way around, but if you’re stuck with something on windows, please feel free to drop a comment or google your way out of it if you’re ashamed of yourself and feel it’s too basic :).</p>
-
-<p>If you’re on Linux, you should have python and pip installed installed by default in your distro. On windows make sure you download the python3 <code class="highlighter-rouge">exe</code> from python.org and tick the option to add python to your path.</p>
-
-<p>Lastly you should have basic knowledge of the Python programming language.</p>
-
-<p>Now we’re going to install virtualenv and create a new virtual environment where our project and all it’s files and dependencies will reside.</p>
-
-<h3 id="installing-virtualenv">Installing virtualenv</h3>
-
-<h6 id="install-virtualenv-with-pip">Install virtualenv with pip.</h6>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"> <span class="nv">$ </span>sudo pip install virtualenv</code></pre></figure>
-
-<h6 id="create-a-new-virtualenv-with-python3-and-activate-it-you-can-skip-the--p-python3-part-if-youre-on-windows-and-you-installed-python3">Create a new virtualenv with python3 and activate it, (you can skip the <code class="highlighter-rouge">-p python3</code> part if you’re on windows and you installed python3)</h6>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>virtualenv -p python3 votr</code></pre></figure>
-
-<h6 id="activate-the-virtualenv">Activate the virtualenv</h6>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span><span class="nb">cd </span>votr
-<span class="gp">$ </span><span class="nb">source </span>bin/activate</code></pre></figure>
-
-<h6 id="your-new-virtualenv-is-now-installed-and-activated-you-should-see-something-like-this-in-your-terminal-prompt">Your new virtualenv is now installed and activated you should see something like this in your terminal prompt</h6>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="o">(</span>votr<span class="o">)</span> <span class="o">[</span>user@hostname votr]<span class="err">$</span></code></pre></figure>
-
-<h6 id="finally-were-going-to-install-flask">Finally we’re going to install flask</h6>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>pip install flask</code></pre></figure>
-
-<h4 id="everything-starts-with-hello-world">Everything starts with hello world!</h4>
-<p>We’re going to write a basic flask app that returns ‘hello world’ when we navigate to <code class="highlighter-rouge">/</code> in our browser</p>
-
-<h6 id="create-the-project-folder-and-votrpy">Create the project folder and votr.py</h6>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>mkdir votr
-<span class="gp">$ </span><span class="nb">cd </span>votr
-<span class="gp">$ </span>touch votr.py</code></pre></figure>
-
-<p>That will create a new directory called <code class="highlighter-rouge">votr</code> and a file named <code class="highlighter-rouge">votr.py</code></p>
-
-<h6 id="open-votrpy-with-favourite-text-editor-and-include-the-following">Open votr.py with favourite text editor and include the following</h6>
-
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
-
-<span class="n">votr</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
-
-<span class="nd">@votr.route</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">home</span><span class="p">():</span>
-    <span class="k">return</span> <span class="s">'hello world'</span>
-
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
-    <span class="n">votr</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></code></pre></figure>
-
-<h6 id="run-it-from-the-terminal-with">Run it from the terminal with:</h6>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>python3 votr.py</code></pre></figure>
-
-<p>By default flask runs on port <code class="highlighter-rouge">5000</code> so open any browser you have an enter the address <code class="highlighter-rouge">localhost:5000</code> and sure enough <code class="highlighter-rouge">hello world</code> should be displayed.</p>
-
-<p>That’s it! our development environment is all setup with flask installed. Note that we’ll have to install other libraries (we haven’t installed react yet). but i feel it’s best to install every library we need as we go through the series, so we can understand what each library does and handle the quirks and issues that may arise when we get there.</p>
-
-<p>If you have any questions or issues with the installation process. please leave a comment below else I’ll see you in the next part where we’re going to start writing some code!</p>
-
-            </div>
-
-        <hr>
-
-        <aside id="comments" class="disqus">
-          <div class="container">
-            <h3><i class="fa fa-comments-o"></i> Comments</h3>
-            <div id="disqus_thread"></div>
-            <script>
-
-
-
-              var disqus_config = function() {
-                this.page.url = 'https://danidee10.github.io/2016/09/18/flask-by-example-1.html'; //shouldn't hardoce this
-                this.page.identifier = 'Flask by example (How to build an online polling app)';
-              };
-              (function() {
-                var d = document,
-                s = d.createElement('script');
-                s.src = '//osaetin-daniel.disqus.com/embed.js';
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-              })();
-            </script>
-            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-          </div>
-        </aside>
-
-          </div>
-
-        </article>
+</section>
 
       </div>
 
@@ -291,6 +157,7 @@ $(document).ready(function() {
   });
 });
 </script>
+
 
     </main>
   </body>
