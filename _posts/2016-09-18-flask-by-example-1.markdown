@@ -42,11 +42,14 @@ It's also for those who've heard about how simple and straight forward flask is,
 
 At the end of this tutorial, You would have:
 
-  1. Built a RESTful API with flask and also learnt more about how API's work
+<ul class="postlist">
+  <li>Built a RESTful API with flask and also learnt more about how API's work</li>
 
-  2. Leveraged the power of some popular flask extensions like [Flask SQLAlchemy]() and [Flask Migrate](). (*While learning about Flask SQLAlchemy you'll also get a feel of the ORM that powers it...SQLAlchemy*)
+  <li>Leveraged the power of some popular flask extensions like <a href="">Flask SQLAlchemy</a> and
+      <a href="">Flask Migrate</a></li>
 
-  3. Learned how to Build interactive and dynamic UI's with [ReactJS]()
+  <li>Learned how to Build interactive and dynamic UI's with <a href=""></a></li>
+</ul>
 
 Here is a screenshot of the online polling app you will build.
 

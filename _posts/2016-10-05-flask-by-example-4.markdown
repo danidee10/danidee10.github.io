@@ -15,7 +15,7 @@ We're going to create an interactive user interface where our users can see a li
 ### Why React?
 There are various reasons on why i chose React, and this list includes "Because Angular is hard and stupid". but let's talk about the important reasons:
 
-<ol>
+<ul class="postlist">
   <li>
     Because React is easy to learn. It's just pure Javascript (no pseudo language or anything slapped untop). Though you'll encounter <a href="https://facebook.github.io/react/docs/jsx-in-depth.html">JSX</a> frequently, JSX is also very simple and straight forward and if you're already familiar with html or xml, then you'd definitely breeze through JSX.
   </li>
@@ -27,7 +27,8 @@ There are various reasons on why i chose React, and this list includes "Because 
   <li>
   Once you know the basics of React, you just need some extras and you can start developing cross platform mobile applications with <a href="https://facebook.github.io/react-native/">React Native</a>
   </li>
-</ol>
+</ul>
+
 <br />
 
 ### Polling page
@@ -180,7 +181,7 @@ This tutorial was never meant to be a hello world introduction to React JS and i
 
 Here is a list of useful resources and tips that personally helped me grok React faster.
 
-<ol>
+<ul class="postlist">
   <li>
   Always model your UI down, before you start writing any code. Just like we did. This will help you to have a clear mental picture about your components about who the parent components is and what it's child(ren) is/are
   </li>
@@ -196,7 +197,7 @@ Here is a list of useful resources and tips that personally helped me grok React
   <li>
   React isn't going anywhere soon. so learn it!. Facebook built react and they use it heavily on <strong>FACEBOOK.COM</strong> which also means that any problem you're likely to encounter with react has already been encountered and solved by facebook which is a plus for you.
   </li>
-</ol>
+</ul>
 
 <br />
 

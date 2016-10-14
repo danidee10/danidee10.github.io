@@ -664,7 +664,7 @@ flask db upgrade&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;h3 id=&quot;why-react&quot;&gt;Why React?&lt;/h3&gt;
 &lt;p&gt;There are various reasons on why i chose React, and this list includes “Because Angular is hard and stupid”. but let’s talk about the important reasons:&lt;/p&gt;
 
-&lt;ol&gt;
+&lt;ul class=&quot;postlist&quot;&gt;
   &lt;li&gt;
     Because React is easy to learn. It's just pure Javascript (no pseudo language or anything slapped untop). Though you'll encounter &lt;a href=&quot;https://facebook.github.io/react/docs/jsx-in-depth.html&quot;&gt;JSX&lt;/a&gt; frequently, JSX is also very simple and straight forward and if you're already familiar with html or xml, then you'd definitely breeze through JSX.
   &lt;/li&gt;
@@ -676,7 +676,8 @@ flask db upgrade&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
   &lt;li&gt;
   Once you know the basics of React, you just need some extras and you can start developing cross platform mobile applications with &lt;a href=&quot;https://facebook.github.io/react-native/&quot;&gt;React Native&lt;/a&gt;
   &lt;/li&gt;
-&lt;/ol&gt;
+&lt;/ul&gt;
+
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;polling-page&quot;&gt;Polling page&lt;/h3&gt;
@@ -812,7 +813,7 @@ flask db upgrade&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Here is a list of useful resources and tips that personally helped me grok React faster.&lt;/p&gt;
 
-&lt;ol&gt;
+&lt;ul class=&quot;postlist&quot;&gt;
   &lt;li&gt;
   Always model your UI down, before you start writing any code. Just like we did. This will help you to have a clear mental picture about your components about who the parent components is and what it's child(ren) is/are
   &lt;/li&gt;
@@ -828,7 +829,7 @@ flask db upgrade&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
   &lt;li&gt;
   React isn't going anywhere soon. so learn it!. Facebook built react and they use it heavily on &lt;strong&gt;FACEBOOK.COM&lt;/strong&gt; which also means that any problem you're likely to encounter with react has already been encountered and solved by facebook which is a plus for you.
   &lt;/li&gt;
-&lt;/ol&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
@@ -1632,17 +1633,14 @@ We were able to set up our database and get a feel of how SQLalchemy works, in t
 
 &lt;p&gt;At the end of this tutorial, You would have:&lt;/p&gt;
 
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;Built a RESTful API with flask and also learnt more about how API’s work&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Leveraged the power of some popular flask extensions like &lt;a href=&quot;&quot;&gt;Flask SQLAlchemy&lt;/a&gt; and &lt;a href=&quot;&quot;&gt;Flask Migrate&lt;/a&gt;. (&lt;em&gt;While learning about Flask SQLAlchemy you’ll also get a feel of the ORM that powers it…SQLAlchemy&lt;/em&gt;)&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Learned how to Build interactive and dynamic UI’s with &lt;a href=&quot;&quot;&gt;ReactJS&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
+&lt;ul class=&quot;postlist&quot;&gt;
+  &lt;li&gt;Built a RESTful API with flask and also learnt more about how API's work&lt;/li&gt;
+
+  &lt;li&gt;Leveraged the power of some popular flask extensions like &lt;a href=&quot;&quot;&gt;Flask SQLAlchemy&lt;/a&gt; and
+      &lt;a href=&quot;&quot;&gt;Flask Migrate&lt;/a&gt;&lt;/li&gt;
+
+  &lt;li&gt;Learned how to Build interactive and dynamic UI's with &lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;Here is a screenshot of the online polling app you will build.&lt;/p&gt;
 
