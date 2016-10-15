@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Flask by example 5 (Building a simple REST API)</title>
+    <title>Flask by example 5 (How to build a simple REST API)</title>
     <meta name="description" content="Osaetin Daniel's blog">
     <link rel="alternate" type="application/atom+xml" title="Osaetin Daniel" href="/feed.xml" />
 
@@ -94,18 +94,22 @@ a {
         <article role="article" class="post">
           <div class="card">
             <header class="post-header">
-              <h1 class="post-title">Flask by example 5 (Building a simple REST API)</h1>
+              <h1 class="post-title">Flask by example 5 (How to build a simple REST API)</h1>
               <p class="post-meta">October 05, 2016</i>
             </header>
 
             <div class="post-content">
               <p>Welcome to part 5. In this part I’m going to show you how to build your own RESTful API with flask</p>
 
-<p>That would serve as the middle-man between the browser and the web server and it’s the means by which data would be sent between both parties.</p>
+<p>The API would serve as the middle-man between the client (browser) and the web server and it’s the means by which data would be sent across both parties. We’re going to be passing the data along as JSON (Javascript object Notation).</p>
 
-<p>At the end of this tutorial you’d have created an API that receives data as json, parses it and stores the information in the database and also send back json when you query it.</p>
+<p>At the end of this tutorial you’d have created an API that receives data as JSON, parses it and stores the information in the database, and also sends JSON back to the client whenever it’s queried.</p>
 
-<p>This is an overview on the structure of our application after you complete this part</p>
+<p>The API would also be robust enough to respond with useful error messages (as JSON) whenever the client sends incomplete data to the server.</p>
+
+<p>This is an overview on the structure of our application and the important technology/library used by each component.</p>
+
+<p>From the diagram you can see that the API is the one who runs the show and provides a means for the other components to communicate with each other, including external services.</p>
 
 <p><img src="/images/flask-5-overview.png" alt="flask part 5" /></p>
 
@@ -114,7 +118,7 @@ a {
 
 <p>The main reason why need an API is because client-side Javascript libraries like ReactJS cannot communicate directly with your database (which resides on the server) directly. Though Server side Javascript like NodeJS can do that.</p>
 
-<p>This is how our form declaration looks with React.</p>
+<p>Currently this is how our form declaration looks with React</p>
 
 <h4 id="with-react">With React</h4>
 
@@ -128,19 +132,28 @@ a {
 
 <p>When the <code class="highlighter-rouge">handleSubmit</code> function is eventually called a lot of “DOM changing” processes would have gone on in the other methods <code class="highlighter-rouge">handleOptionAdd</code>, <code class="highlighter-rouge">handleOptionChange</code> and <code class="highlighter-rouge">handleTitleChange</code> (Adding options and setting the Title of the poll) that the DOM wouldn’t know about.</p>
 
-<p>I urge you to experiment and  submit the form without using the <code class="highlighter-rouge">onSubmit</code> handler (the example i gave without react) and see what happens when you print <code class="highlighter-rouge">request.form</code> in flask.</p>
+<p>I urge you to experiment and  submit the form you created in the previous part without using the <code class="highlighter-rouge">onSubmit</code> handler and see what happens when you print <code class="highlighter-rouge">request.form</code> in flask.</p>
 
-<p>So in summary an API serves as a common interface for the client and the server to talk to each other reliably. Enough of the talk let’s build an API.</p>
+<p>So in summary an API serves as a common interface for the client and the server to talk to each other reliably.</p>
+
+<p>Enough of the talk let’s build an API.</p>
 
 <p><em>The full code of some of some files won’t be pasted, Only the important part will be pasted so if you want to see the full source code at any point, feel free to checkout the github <a href="https://github.com/danidee10/Votr">repo</a></em></p>
 
 <h2 id="building-the-api">Building the API</h2>
 
-<p>Our API is going to perform two basic functions at this stage:
-  1. Receive data as a valid JSON string, parse it and store the information in the database
-  2. Return data in the form of JSON back to our client who then decides on what he wants to do with the data. We’re simply providing the raw data back and not forcing the presentation of the data on the client</p>
+<p>Our API is going to perform two basic functions at this stage:</p>
 
-<p>This is how the JSON would be structured. Let’s call this our dream API</p>
+<ul class="postlist">
+  <li>Receive data as a valid JSON string, parse it and store the information in the database</li>
+
+  <li>Return data in as JSON back to our client who then decides on what he wants to do with the data. We're simply providing the raw data back and not forcing the presentation of the data on the client. we don't care about what the client wants to do with the data he could be using it for stastics and data analysis or to build an alternate version of our polling application</li>
+
+</ul>
+
+<p><br /></p>
+
+<h2 id="json-structure-for-get-requests">JSON STRUCTURE FOR GET REQUESTS</h2>
 
 <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
 	<span class="s2">"Polls"</span><span class="err">:</span> <span class="p">[{</span>
@@ -172,13 +185,17 @@ a {
 	<span class="p">]</span>
 <span class="p">}</span></code></pre></figure>
 
-<p>If the JSON looks scary to you, just think of them as python dictionaries and lists and the structure should become clearer. You can also check the validity of this JSON and any JSON string online with <a href="http://jsonlint.com/">JSON lint</a></p>
+<p>This is how we want to return polls back to the client when they make a request to <em>get some or all the polls</em> in our database. Let’s call this structure our <em>dream API</em></p>
 
-<p>Moving forward, we’re going to separate our <code class="highlighter-rouge">API</code> calls from our main application routes by prefixing the url with <code class="highlighter-rouge">/api</code></p>
+<p>If the JSON structure looks scary to you, just think of it as a collection of python dictionaries and lists and the structure should become clearer to you.</p>
+
+<p>You can also check the validity of this JSON and any JSON string online with <a href="http://jsonlint.com/">JSON lint</a></p>
+
+<p>Moving forward, we’re going to separate our API routes from our main application routes by prefixing the url with <code class="highlighter-rouge">/api</code></p>
 
 <p><em>hint: We’re goint to refactor the whole codebase at the end of this series and make our API into a flask blueprint. if you don’t know what a blueprint is in flask this might be a good time to <a href="http://flask.pocoo.org/docs/0.11/blueprints/">check it out</a></em></p>
 
-<p>Edit the <code class="highlighter-rouge">votr.py</code> file to include a new route <code class="highlighter-rouge">/api/polls</code></p>
+<h6 id="now-edit-the-votrpy-file-to-include-a-new-route-apipolls">Now edit the <code class="highlighter-rouge">votr.py</code> file to include a new route <code class="highlighter-rouge">/api/polls</code></h6>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="nd">@votr.route</span><span class="p">(</span><span class="s">'/api/polls'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'GET'</span><span class="p">,</span> <span class="s">'POST'</span><span class="p">])</span>
 <span class="c"># retrieves/adds polls from/to the database</span>
@@ -204,19 +221,21 @@ a {
 
         <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">all_polls</span><span class="p">)</span></code></pre></figure>
 
-<p>In the POST request, we aren’t really doing anything, we just get the JSON the user sent with <code class="highlighter-rouge">request.get_json()</code> and then return the details back to show us that our API works.</p>
+<p>In the POST request, we aren’t really doing anything, we just get the JSON the user sent with <code class="highlighter-rouge">request.get_json()</code> and then return the details back to show us that our API works. request.get_json() is a helper method provided that flask that gets the JSON data from the request and converts it to a python dictionary for us. It’s similar to calling json.loads on a JSON string.</p>
 
-<p>In the GET request, our aim was to return a json string containing the poll and various details associated with it. To acheive that we queried the database for all the existing Topics and then for each topic we fetched the associated polls (<code class="highlighter-rouge">Polls.query.filter_by(topic=topic)</code>), after that we appended the results in the format we wanted and then used a flask function called <code class="highlighter-rouge">jsonify</code> to convert the string to JSON. jsonify is similar to python’s json.dumps but it actually does more for you behind the scenes that pure json.dumps won’t do.</p>
+<p>Earlier, our aim was to return a JSON string containing the poll and various details associated with it. This is exactly what we implemented in the GET request. To acheive that we queried the database for all the existing Topics and then for each topic we fetched the associated polls (<code class="highlighter-rouge">Polls.query.filter_by(topic=topic)</code>), after that we appended the results in the format we wanted and then used another flask helper function called <code class="highlighter-rouge">jsonify</code> to convert the string to JSON. jsonify is also similar to python’s json.dumps but it does more for you behind the scenes that pure json.dumps won’t do.</p>
 
-<p>Okay our code works but we could still improve it, by leveraging the power of SQLAlchemy by using an SQL join statement <em>But how do you use a join statement when you’re not writing raw SQL…Simple use SQLAlchemy</em></p>
+<p>Okay our should work properly but we could still improve it by leveraging the power of SQLAlchemy and using an SQL join statement <em>But how do you use a join statement when you’re not writing raw SQL…Simple use SQLAlchemy</em></p>
 
-<h5 id="lets-fire-up-a-terminal-and-play-around">Let’s fire up a terminal and play around</h5>
+<h5 id="lets-fire-up-a-terminal-and-play-around-with-sqlalchemy">Let’s fire up a terminal and play around with SQLAlchemy</h5>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">&gt;&gt;&gt; </span>from votr import db, votr, Topics, Polls
 <span class="gp">&gt;&gt;&gt; </span>db.app <span class="o">=</span> votr
 <span class="gp">&gt;&gt;&gt; </span>db.init_app<span class="o">(</span>votr<span class="o">)</span>
 <span class="gp">&gt;&gt;&gt; </span>Topics.query.join<span class="o">(</span>Polls<span class="o">)</span>.all<span class="o">()</span>
 <span class="o">[</span>Which side is going to win the EPL this season, Whos better liverpool or city]</code></pre></figure>
+
+<p><em>If for some reason you have an empty database (your query returns a blank result), here’s a github <a href="https://gist.github.com/danidee10/a597bbc92dbb8b5add6eea768b1bc18b">gist</a> to quickly create all the records in the database at this stage. Just run each line of code in the file in a python interactive shell</em></p>
 
 <p>Neat! we were able to fetch all the topics and their associated polls in a single query. Though you’re seeing only the title of the Topic (that’s <code class="highlighter-rouge">__repr__</code> in action). those two items are actually SQLAlchemy objects that contain all the data you need, you just need to know how to extract them from the object.</p>
 
@@ -225,7 +244,7 @@ a {
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="nb">str</span><span class="p">(</span><span class="n">Topics</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Polls</span><span class="p">))</span>     
 <span class="s">'SELECT topics.id AS topics_id, topics.date_created AS topics_date_created, topics.date_modified AS topics_date_modified, topics.title AS topics_title </span><span class="se">\n</span><span class="s">FROM topics JOIN polls ON topics.id = polls.topic_id'</span></code></pre></figure>
 
-<p>You can also see the specific query for an SQL dialect</p>
+<p>That shows us the General SQL statment it’s going to generate for us, but we can go a step further and see the specific query for the SQL dialect of a specific database.</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">sqlalchemy.dialects</span> <span class="kn">import</span> <span class="n">postgresql</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">ddd</span> <span class="o">=</span> <span class="n">Topics</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Polls</span><span class="p">)</span>
@@ -237,7 +256,7 @@ a {
 <span class="n">SELECT</span> <span class="n">topics</span><span class="o">.</span><span class="nb">id</span><span class="p">,</span> <span class="n">topics</span><span class="o">.</span><span class="n">date_created</span><span class="p">,</span> <span class="n">topics</span><span class="o">.</span><span class="n">date_modified</span><span class="p">,</span> <span class="n">topics</span><span class="o">.</span><span class="n">title</span>
 <span class="n">FROM</span> <span class="n">topics</span> <span class="n">JOIN</span> <span class="n">polls</span> <span class="n">ON</span> <span class="n">topics</span><span class="o">.</span><span class="nb">id</span> <span class="o">=</span> <span class="n">polls</span><span class="o">.</span><span class="n">topic_id</span></code></pre></figure>
 
-<p>For the experienced database admins this could be pretty useful, as an ORM doesn’t generate the most efficient SQL query sometimes (but there’s no need for premature optimization at this level). And as a beginner you could also learn more about complex SQL queries that SQLAlchemy allows you to create easily</p>
+<p>For the experienced database admins this could be pretty useful, as ORM’s don’t generate the most efficient SQL query sometimes (but there’s no need for premature optimization at this level). And as a beginner you could also learn more about SQL as a languge. by simply writing complex queries in SQLAlchemy and inspecting the generated SQL.</p>
 
 <p>Okay, so how do we convert this complex query object into a dictionary which can be jsonified.</p>
 
@@ -293,17 +312,17 @@ a {
 
 <p>What happened to our dream API, weren’t we supposed to have the status of the poll included.</p>
 
-<p>Yes we were but we can’t, because well…our database design is broken. Yes you read that right it’s broken. The status of the poll is supposed to be a column on the <code class="highlighter-rouge">Topics</code> model, so once we set a Topic as closed all options under it can immediately know that their parent Topic has been closed hence closing the poll.</p>
+<p>Yes we were but we can’t, because well…our database design is broken. Yes you read that right it’s broken. The status of the poll is supposed to be a column on the <code class="highlighter-rouge">Topics</code> model, so once we set a Topic as closed all options (actually <code class="highlighter-rouge">Poll</code> objects in our models) associated with it are automatically closed (because their parent was). Thereby marking the poll as closed.</p>
 
-<p>But you went ahead and put it in the <code class="highlighter-rouge">Polls</code> table (actually i misled you and congrats! you fell for it brilliantly).</p>
+<p>But you went ahead and <em>brilliantly</em> put it in the <code class="highlighter-rouge">Polls</code> table (actually i misled you and congrats! you fell for it).</p>
 
-<p>So after cursing yourself and me, how do you correct this mistake. Yes you’re interacting with your database with python through SQLAlchemy and you can easily cut and paste the status line into the <code class="highlighter-rouge">Topics</code> model. But that’s not going to work.</p>
+<p>So after cursing yourself and me, how are you going to fix this mistake. Yes you’re interacting with your database with python through SQLAlchemy and you can easily cut and paste the status line into the <code class="highlighter-rouge">Topics</code> model. But that’s not going to work.</p>
 
-<p>SQLAlchemy on it’s own can only alter the schema of our database by adding new models, but we’ve found ourself in a situation where we need to delete a column from a table and then add that column to another table. (altering two tables)</p>
+<p>SQLAlchemy on it’s own can only alter the schema of our database by adding new models, but we’ve found ourself in a situation where we need to delete a column from a table and then add create that column in another table. (altering two tables).</p>
 
-<p>SQLAlchemy and other ORM’s are only an abstraction not a direct replacement, so at the end of the day you’re still working with a database and SQL. SQLAlchemy cannot magically alter and update the database for you it’s just an ORM.</p>
+<p>SQLAlchemy and other ORM’s are only an abstraction not a direct replacement for SQL, so at the end of the day you’re still working with a database and SQL.</p>
 
-<p>The database also, knows nothing about python so it wouldn’t know when we made any change to the python file containing your models. The models need a way need a way to tell the database <em>hey one of the us just got updated. you need to updated yourself to match our current state</em></p>
+<p>The database on it’s own part, knows nothing about python so it wouldn’t know when we made any change to the python file containing the models. The <code class="highlighter-rouge">models.py</code> needs a way need a way to tell the database <em>hey one of the us just got updated. you need to update yourself to match our current state</em></p>
 
 <p>This is where <a href="https://flask-migrate.readthedocs.io/en/latest/">Flask-Migrate</a> comes to the rescue and says step aside guys I’ll settle this.</p>
 
@@ -316,11 +335,15 @@ a {
 
 <p>Migrations (also known as ‘schema evolution’ or ‘mutations’) are simply a way of changing your database schema from one version into another.</p>
 
-<p>Doing database migrations manually is very problematic, sure you could use a tool like PHPMyadmin to edit your table and update it, but picture this scenario - You’ve done a lot of migrations manually with a graphical tool or from the command line and then for some reason, you need to go three steps back to the previous migrations. If you don’t have a good memory or you didn’t document the state of your database then, you’re screwed.</p>
+<p>Carrying out database migrations manually is very problematic, sure you could use a tool like <a href="https://www.phpmyadmin.net/">phpMyAdmin</a> or <a href="https://www.pgadmin.org/">pgAdmin</a>  to alter your tables, but picture this scenario - You’ve done a lot of migrations manually with a graphical tool or from the command line and then you realized that your initial database design was better than the one you have currently, so you decide to go three steps back to the previous state of your database.</p>
 
-<p>Flask Migrate (and other solutions for other web frameworks) are not meant for updating the schema of your database only. They also form a way of creating your database initially and then if for some reason you want to go back to a previous state. you can simply run an older migration.</p>
+<p>How do you go back when you have no previous history of your schema at that point in time? If you don’t have a good memory or you didn’t document that information down, you’re screwed. You either have to design it again or design that table or tables(s) again depending on the size of your database and how much you deviated from that migration</p>
 
-<p>So let’s go on and install flask migrate from pip</p>
+<p>This is what Flask Migrate (and other solutions for other web frameworks) are good at, with Flask migrate you can easily switch between older and newer versions of your database state at anytime. It’s just like a mini <code class="highlighter-rouge">git</code> for your database.</p>
+
+<p>It also makes it easier for you to switch databases, you could design and develop on an SQLite database database, and then deploy the application to a PostgreSQL database.</p>
+
+<h6 id="lets-go-on-and-install-flask-migrate-from-pip">Let’s go on and install flask migrate from pip</h6>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash">pip install flask_migrate</code></pre></figure>
 
@@ -432,9 +455,9 @@ a {
 
         <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">all_polls</span><span class="p">)</span></code></pre></figure>
 
-<p>Notice how we don’t have the <code class="highlighter-rouge">if __name__ == "__main__"</code> condition again? we don’t need this again because flask migrate has exposed some additional commands for database migrations to us and we need a way to run those commands.</p>
+<p>Did you notice that at the end of the file we don’t have the <code class="highlighter-rouge">if __name__ == "__main__"</code> condition again? we don’t need that statement again because there is an alternate way to run flask applications (From Flask 0.11). This new method is more flexible and enables us to easily run the new migration commands Flask Migrate has exposed to us.</p>
 
-<p>So we’re going to change the way our flask app is run from now on.</p>
+<p>So you wont be running your application with <code class="highlighter-rouge">python3 votr.py</code> anymore instead you’ll use the <code class="highlighter-rouge">flask run</code> command, but for that to work properly we need to setup some basic info that tells flask how to find our app and run it.</p>
 
 <p>from your terminal type in the following</p>
 
@@ -443,27 +466,27 @@ a {
 
 <p>This set’s the flask app to votr and then turns on debug mode</p>
 
-<p>To prevent yourself from typing this anytime you want to work on votr (possibly after a reboot) just add those two lines
+<p>*To prevent yourself from typing this anytime you want to work on votr (possibly after a reboot) just add those two lines
 to your activate script for your virtualenv. located in the bin directory in your virtualenv’s root folder.</p>
 
-<p>Anytime you run <code class="highlighter-rouge">source/bin/activate</code> the correct app and the debug mode would be set.</p>
+<p>Anytime you run <code class="highlighter-rouge">source/bin/activate</code> the correct app and the debug mode would be set.*</p>
 
-<p>To run the initial migration, run this from the terminal</p>
+<p>To run the initial database migration, use this:</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash">flask db init</code></pre></figure>
 
-<p>You’ll be instructed to edit the alembic file in the migrations folder. (You don’t really need to for a simple database like this)</p>
+<p>You’ll be instructed to edit the alembic file in the migrations folder. (You don’t really need to, for a simple database like yours)</p>
 
-<p>Then generate an initial migration with</p>
+<p>Then generate the initial migration script with:</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash">flask db migrate</code></pre></figure>
 
-<p>After doing this you can now make the required change to the <code class="highlighter-rouge">Topics</code> model</p>
+<p>After doing this you can now make the required change to the <code class="highlighter-rouge">Topics</code> model and also add the status field to the <code class="highlighter-rouge">to_json</code> method (We also added a default value of <code class="highlighter-rouge">1</code> to the field so any poll that created is automatically opened for voting)</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c"># Model for poll topics</span>
 <span class="k">class</span> <span class="nc">Topics</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
     <span class="n">title</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">500</span><span class="p">))</span>
-    <span class="n">status</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Boolean</span><span class="p">)</span> <span class="c"># to mark poll as open or closed should be under title not polls</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Boolean</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c"># to mark poll as open or closed should be under title not polls</span>
 
     <span class="c"># user friendly way to display the object</span>
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -475,7 +498,8 @@ to your activate script for your virtualenv. located in the bin directory in you
                 <span class="s">'title'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
                 <span class="s">'options'</span><span class="p">:</span>
                     <span class="p">[{</span><span class="s">'name'</span><span class="p">:</span> <span class="n">option</span><span class="o">.</span><span class="n">option</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s">'vote_count'</span><span class="p">:</span> <span class="n">option</span><span class="o">.</span><span class="n">vote_count</span><span class="p">}</span>
-                        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="nb">all</span><span class="p">()]</span>
+                        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="nb">all</span><span class="p">()],</span>
+                <span class="s">'status'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span>
             <span class="p">}</span></code></pre></figure>
 
 <p>Now run</p>
@@ -487,72 +511,63 @@ flask db upgrade</code></pre></figure>
 
 <p><code class="highlighter-rouge">sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) near "DROP": syntax error [SQL: 'ALTER TABLE polls DROP COLUMN status']</code></p>
 
-<p>Don’t worry this problem is not from you it’s because SQLite doesn’t support alter statements fully, <a href="https://www.sqlite.org/lang_altertable.html">docs</a> Gladly there is a workaroud in alembic &gt; 0.7 (alembic is what actually handles the database migration, flask migrate is just a library that provides better integration with flask) that simulates this behaviour by:</p>
+<p>Don’t worry this problem isn’t because you did something wrong it’s because SQLite doesn’t support <a href="https://www.sqlite.org/lang_altertable.html">SQL alter statements</a> fully. Gladly there is a workaroud in alembic &gt; 0.7 that simulates this alter statements:</p>
 
-<ol>
-  <li>
-    <p>Renaming the table</p>
-  </li>
-  <li>
-    <p>Creating a new table with the old name of the previous table with the new column</p>
-  </li>
-  <li>
-    <p>Copying data over from the old table to the new one</p>
-  </li>
-  <li>
-    <p>And finally dropping the old table</p>
-  </li>
-</ol>
+<ul class="postlist">
 
-<p>This procedure is called a <em>Batch Migration</em> and it’s not perfect in alembic and most times you’ll need to edit the migrations file yourself to make it work. but don’t panic I’ll hold your hand as we go.</p>
+  <li>Renaming the table</li>
 
-<p>Edit votr.py and include the new parameter render_as_batch</p>
+  <li>Creating a new table with the old name of the previous table with the new column</li>
+
+  <li>Copying data over from the old table to the new one</li>
+
+  <li>And finally dropping the old table</li>
+
+</ul>
+
+<p>This procedure is called a <em>Batch Migration</em> and it’s not perfect in alembic and most times you’ll still need to edit the migrations file yourself to make it work. but don’t panic I’ll hold your hand as we go.</p>
+
+<p><em>Alembic is what actually handles the database migration, Flask Migrate is just a library that provides better integration with flask</em></p>
+
+<p>Edit <code class="highlighter-rouge">votr.py</code> and include the new parameter <code class="highlighter-rouge">render_as_batch</code>, this tells alembic to use batch migrations from now on</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">migrate</span> <span class="o">=</span> <span class="n">Migrate</span><span class="p">(</span><span class="n">votr</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">render_as_batch</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></code></pre></figure>
 
-<p>That should prevent this issue from happening in subsequent migrations, but we didn’t apply this fix before the initial migration, so now we have to manually edit the migration file and fix that.</p>
+<p>Setting <code class="highlighter-rouge">render_as_batch</code> to  <code class="highlighter-rouge">True</code> should prevent this issue from happening in subsequent migrations, but we didn’t apply this fix before the initial migration, so we have to manually edit the migration file and fix that.</p>
 
-<p>Go the the <code class="highlighter-rouge">migrations/versions</code> folder and you should see a python file with a random number as the name (mine was <code class="highlighter-rouge">347f4ec5eb5e_.py</code>, yours would be different), this is the migration that alembic automatically generated for us. If you’re familiar with alembic, you could easily write one yourself too.</p>
+<p>Go the the <code class="highlighter-rouge">migrations/versions</code> folder and you should see a python file with a random number as the name (mine was <code class="highlighter-rouge">347f4ec5eb5e_.py</code>, yours would be different), this is the migration script that was automatically generated by alembic. The migration script tells alembic exactly what to do when you run <code class="highlighter-rouge">flask upgrade</code>. A new one is generated anytime you change your models and run <code class="highlighter-rouge">flask migrate</code>.</p>
 
-<p>Edit the upgrade function in the file to look like this:</p>
+<p>If you’re familiar with alembic, you could easily write one yourself.</p>
+
+<p>Open the file and Edit the upgrade function to look like this:</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">upgrade</span><span class="p">():</span>
     <span class="c">### commands auto generated by Alembic - please adjust! ###</span>
     <span class="k">with</span> <span class="n">op</span><span class="o">.</span><span class="n">batch_alter_table</span><span class="p">(</span><span class="s">"polls"</span><span class="p">)</span> <span class="k">as</span> <span class="n">batch_op</span><span class="p">:</span>
         <span class="n">batch_op</span><span class="o">.</span><span class="n">drop_column</span><span class="p">(</span><span class="s">'status'</span><span class="p">)</span>
-    <span class="n">op</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s">'topics'</span><span class="p">,</span> <span class="n">sa</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s">'status'</span><span class="p">,</span> <span class="n">sa</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+    <span class="n">op</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s">'topics'</span><span class="p">,</span> <span class="n">sa</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s">'status'</span><span class="p">,</span> <span class="n">sa</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
     <span class="c">### end Alembic commands ###</span></code></pre></figure>
 
 <p>We aren’t going to touch the <code class="highlighter-rouge">downgrade</code> function because we have no plans of going back to the previous schema of our database before the migration</p>
 
-<p>After doing all this you should be able to run <code class="highlighter-rouge">flask db upgrade</code> without any issues</p>
+<p>After doing all this you should be able to run <code class="highlighter-rouge">flask db upgrade</code> without any issues.</p>
 
-<p>Now lets fix our api by adding the status field, edit the <code class="highlighter-rouge">to_json</code> method in <code class="highlighter-rouge">votr.py</code></p>
+<p>Hurray! you just did your first database migration!</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c"># returns dictionary that can easily be jsonified</span>
-<span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">{</span>
-            <span class="s">'title'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
-            <span class="s">'options'</span><span class="p">:</span>
-                <span class="p">[{</span><span class="s">'name'</span><span class="p">:</span> <span class="n">option</span><span class="o">.</span><span class="n">option</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s">'vote_count'</span><span class="p">:</span> <span class="n">option</span><span class="o">.</span><span class="n">vote_count</span><span class="p">}</span>
-                    <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="nb">all</span><span class="p">()],</span>
-            <span class="s">'status'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span>
-        <span class="p">}</span></code></pre></figure>
-
-<p>In the next section we’re going to update the existing status for the polls we’ve already created</p>
+<p>In the next section we’re going to learn about some extra commands in the flask cli.</p>
 
 <h3 id="flask-cli">Flask CLI</h3>
 <p>Normally you’d start a python interactive shell by typing <code class="highlighter-rouge">python</code> in the terminal.</p>
 
-<p>Flask has some commands that we can use to do that and more (<strong>Make sure you run it in the same directory where <code class="highlighter-rouge">votr.py</code> is located</strong>)</p>
+<p>Since Flask 0.11 the flask shell and some new commands where added to make working with flask easier.</p>
 
 <p>Now you can start an interactive python shell with:</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash">flask shell</code></pre></figure>
 
-<p>This will start up an interactive Python shell like you’d expect but it also sets up the correct application context and some variables for you. You don’t need to import <code class="highlighter-rouge">votr</code> anymore it’s available to us as variable called <code class="highlighter-rouge">app</code></p>
+<p>The <code class="highlighter-rouge">flask shell</code> command starts up an interactive Python shell like you’d expect but it also sets up the correct application context and some variables for you. Now You don’t need to import <code class="highlighter-rouge">votr</code> anymore it’s available to you as variable called <code class="highlighter-rouge">app</code></p>
 
-<p>Let’s update the Topics and make them all open for voting</p>
+<p>Let’s update the previous polls we created earlier and make them all open for voting.</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">&gt;&gt;&gt; </span><span class="k">for </span>topic <span class="k">in </span>Topics.query.all<span class="o">()</span>:
 ...     topic.status <span class="o">=</span> 1
@@ -567,27 +582,58 @@ flask db upgrade</code></pre></figure>
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>flask run</code></pre></figure>
 
 <h3 id="testing-the-api">Testing the API</h3>
-<p>To test our API we need to be able to make <code class="highlighter-rouge">requests</code> to it. Python already has an excellent module for this named the <code class="highlighter-rouge">requests</code> module. Install it from pip with</p>
+<p>To test our API we need to be able to make <code class="highlighter-rouge">requests</code> to it. Python already has an excellent module that has the same name <code class="highlighter-rouge">requests</code>. you can also use <code class="highlighter-rouge">curl</code> if you’re familiar with it.</p>
+
+<p>Install <code class="highlighter-rouge">requests</code> with</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash">pip install requests</code></pre></figure>
 
-<p>Open another Python shell, import the module and make a get request to the url the app’s listening on</p>
+<p>Based on what we discussed earlier about SQLAlchemy and Join statements, this is how our <code class="highlighter-rouge">/api/polls</code> route looks like like now:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="nd">@votr.route</span><span class="p">(</span><span class="s">'/api/polls'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'GET'</span><span class="p">,</span> <span class="s">'POST'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">api_polls</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">'POST'</span><span class="p">:</span>
+        <span class="c"># get the poll and save it in the database</span>
+        <span class="n">poll</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+
+        <span class="c"># simple validation to check if all values are properly secret</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">poll</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s">'error'</span><span class="p">:</span> <span class="s">'value for {} is empty'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">)})</span>
+
+        <span class="n">title</span> <span class="o">=</span> <span class="n">poll</span><span class="p">[</span><span class="s">'title'</span><span class="p">]</span>
+        <span class="n">options_query</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">option</span> <span class="p">:</span> <span class="n">Options</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="nb">filter</span><span class="p">(</span><span class="n">Options</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="n">option</span><span class="p">))</span>
+
+        <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="n">Polls</span><span class="p">(</span><span class="n">option</span><span class="o">=</span><span class="n">Options</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">option</span><span class="p">))</span> <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">poll</span><span class="p">[</span><span class="s">'options'</span><span class="p">]</span>
+                  <span class="p">]</span>
+
+        <span class="n">new_topic</span> <span class="o">=</span> <span class="n">Topics</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_topic</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s">'message'</span><span class="p">:</span> <span class="s">'Poll was created succesfully'</span><span class="p">})</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># it's a GET request, return dict representations of the API</span>
+        <span class="n">polls</span> <span class="o">=</span> <span class="n">Topics</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Polls</span><span class="p">)</span><span class="o">.</span><span class="nb">all</span><span class="p">()</span>
+        <span class="n">all_polls</span> <span class="o">=</span> <span class="p">{</span><span class="s">'Polls'</span><span class="p">:</span>  <span class="p">[</span><span class="n">poll</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span> <span class="k">for</span> <span class="n">poll</span> <span class="ow">in</span> <span class="n">polls</span><span class="p">]}</span>
+
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">all_polls</span><span class="p">)</span></code></pre></figure>
+
+<h6 id="open-another-python-shell-import-the-requests-module-and-make-a-get-request-to-the-url">Open another Python shell, import the requests module and make a get request to the url:</h6>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">&gt;&gt;&gt; </span>import requests
 <span class="gp">&gt;&gt;&gt; </span>requests.get<span class="o">(</span><span class="s1">'http://localhost:5000/api/polls'</span><span class="o">)</span>
 &lt;Response <span class="o">[</span>200]&gt;
-<span class="gp">&gt;&gt;&gt; </span>requests.get<span class="o">(</span><span class="s1">'http://localhost:5000/api/polls'</span><span class="o">)</span>.text
-<span class="s1">'[\n  {\n    "Which side is going to win the EPL this season": {\n      "options": [\n        "Arsenal", \n        "Spurs"\n      ], \n      "status": true\n    }\n  }, \n  {\n    "Whos better liverpool or city": {\n      "options": [\n        "Liverpool FC", \n        "Manchester city"\n      ], \n      "status": true\n    }\n  }\n]\n'</span>
-<span class="gp">&gt;&gt;&gt; </span>requests.get<span class="o">(</span><span class="s1">'http://localhost:5000/api/polls'</span><span class="o">)</span>.json<span class="o">()</span>
-<span class="o">[{</span><span class="s1">'Which side is going to win the EPL this season'</span>: <span class="o">{</span><span class="s1">'options'</span>: <span class="o">[</span><span class="s1">'Arsenal'</span>, <span class="s1">'Spurs'</span><span class="o">]</span>, <span class="s1">'status'</span>: True<span class="o">}}</span>, <span class="o">{</span><span class="s1">'Whos better liverpool or city'</span>: <span class="o">{</span><span class="s1">'options'</span>: <span class="o">[</span><span class="s1">'Liverpool FC'</span>, <span class="s1">'Manchester city'</span><span class="o">]</span>, <span class="s1">'status'</span>: True<span class="o">}}]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="o">(</span>requests.get<span class="o">(</span><span class="s1">'http://localhost:5000/api/polls'</span><span class="o">)</span>.json<span class="o">())</span>
+<span class="o">{</span><span class="s1">'Polls'</span>: <span class="o">[{</span><span class="s1">'status'</span>: None, <span class="s1">'options'</span>: <span class="o">[{</span><span class="s1">'name'</span>: <span class="s1">'Arsenal'</span>, <span class="s1">'vote_count'</span>: None<span class="o">}</span>, <span class="o">{</span><span class="s1">'name'</span>: <span class="s1">'Spurs'</span>, <span class="s1">'vote_count'</span>: None<span class="o">}]</span>, <span class="s1">'title'</span>: <span class="s1">'Which side is going to win the EPL this season'</span><span class="o">}</span>, <span class="o">{</span><span class="s1">'status'</span>: None, <span class="s1">'options'</span>: <span class="o">[{</span><span class="s1">'name'</span>: <span class="s1">'Liverpool FC'</span>, <span class="s1">'vote_count'</span>: None<span class="o">}</span>, <span class="o">{</span><span class="s1">'name'</span>: <span class="s1">'Manchester city'</span>, <span class="s1">'vote_count'</span>: None<span class="o">}]</span>, <span class="s1">'title'</span>: <span class="s1">'Whos better liverpool or city'</span><span class="o">}]}</span>
 &lt;class <span class="s1">'list'</span>&gt;</code></pre></figure>
 
-<p>Nice we got what we we’re expecting from our API</p>
+<p>Nice we got what we expected from our API.</p>
 
-<p>The request module even has a nifty <code class="highlighter-rouge">json</code> method that converts the json response to a python representation which is a list containing two dictionaries.</p>
+<p>The requests module even has a nifty <code class="highlighter-rouge">json</code> method that converts the JSON string in the response to a python dictionary.</p>
 
-<p>Let’s make a POST request to add a new polls</p>
+<p>Let’s make another request, this time a POST requests with incomplete info, to test if our validation for POST requests work, and if we can eventually create a new poll when we supply the right information.</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">'http://localhost:5000/api/polls'</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s">"title"</span><span class="p">:</span> <span class="s">"who's the fastest footballer"</span><span class="p">,</span><span class="s">"options"</span><span class="p">:</span> <span class="p">[]})</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 <span class="p">{</span><span class="s">'error'</span><span class="p">:</span> <span class="s">'value for options is empty'</span><span class="p">}</span>
@@ -596,20 +642,22 @@ flask db upgrade</code></pre></figure>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">'http://localhost:5000/api/polls'</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s">"title"</span><span class="p">:</span> <span class="s">"who's the fastest footballer"</span><span class="p">,</span><span class="s">"options"</span><span class="p">:</span> <span class="p">[</span><span class="s">"Hector bellerin"</span><span class="p">,</span> <span class="s">"Gareth Bale"</span><span class="p">,</span> <span class="s">"Arjen robben"</span><span class="p">]})</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 <span class="p">{</span><span class="s">'message'</span><span class="p">:</span> <span class="s">'poll was created succesfully'</span><span class="p">}</span></code></pre></figure>
 
-<p>It worked! we tested our validation by supplying invalid json</p>
+<p>It worked! we tested our validation by supplying invalid JSON and we got a JSON response back telling us our request failed because a particular field was empty.</p>
 
-<p>and then we finally gave it the right data and it succesfully created our poll. Let’s make a GET request to be sure the poll got saved in the database.</p>
+<p>and then we finally gave it the right data and it succesfully created the poll. Let’s make a GET request to be sure the poll got saved in the database.</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'http://localhost:5000/api/polls'</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 <span class="p">{</span><span class="s">'Polls'</span><span class="p">:</span> <span class="p">[{</span><span class="s">'options'</span><span class="p">:</span> <span class="p">[{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Arsenal'</span><span class="p">,</span> <span class="s">'vote_count'</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Spurs'</span><span class="p">,</span> <span class="s">'vote_count'</span><span class="p">:</span> <span class="mi">2</span><span class="p">}],</span> <span class="s">'title'</span><span class="p">:</span> <span class="s">'Which side is going to win the EPL this season'</span><span class="p">,</span> <span class="s">'status'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="p">{</span><span class="s">'options'</span><span class="p">:</span> <span class="p">[{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Liverpool FC'</span><span class="p">,</span> <span class="s">'vote_count'</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Manchester city'</span><span class="p">,</span> <span class="s">'vote_count'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}],</span> <span class="s">'title'</span><span class="p">:</span> <span class="s">'Whos better liverpool or city'</span><span class="p">,</span> <span class="s">'status'</span><span class="p">:</span> <span class="bp">True</span><span class="p">},</span> <span class="p">{</span><span class="s">'options'</span><span class="p">:</span> <span class="p">[{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Hector bellerin'</span><span class="p">,</span> <span class="s">'vote_count'</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Gareth Bale'</span><span class="p">,</span> <span class="s">'vote_count'</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Arjen robben'</span><span class="p">,</span> <span class="s">'vote_count'</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Hector bellerin'</span><span class="p">,</span> <span class="s">'vote_count'</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Gareth Bale'</span><span class="p">,</span> <span class="s">'vote_count'</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Arjen robben'</span><span class="p">,</span> <span class="s">'vote_count'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}],</span> <span class="s">'title'</span><span class="p">:</span> <span class="s">"who's the fastest footballer"</span><span class="p">,</span> <span class="s">'status'</span><span class="p">:</span> <span class="bp">True</span><span class="p">}]}</span>
 <span class="o">&gt;&gt;&gt;</span></code></pre></figure>
 
-<p>Congratulations! you’ve just built a fully functional API, that accepts JSON and also sends JSON data back when it’s queried</p>
+<p>Congratulations! you’ve just built a fully functional RESTful API, that accepts JSON and also sends JSON data back when it’s queried</p>
 
-<p>You’ve now provided a universal means for any client to that talks to your application…The client could be a mobile app, or even a Desktop app or another website!</p>
+<p>You’ve now provided a universal means for any client to talk to your application…The client could be a mobile app, a Desktop app or another website!</p>
 
 <h3 id="another-migration">Another Migration</h3>
-<p>Now we want to make sure duplicate options don’t get stored in our database, to do that we’re going to make the <code class="highlighter-rouge">name</code> field in the <code class="highlighter-rouge">Options</code> table column unique. Change the declaration to this</p>
+<p>Now we want to make sure duplicate options don’t get stored in our database, to do that we’re going to make the <code class="highlighter-rouge">name</code> field in the <code class="highlighter-rouge">Options</code> table column unique, and run another migration.</p>
+
+<p>Change the field declaration in the <code class="highlighter-rouge">Options</code> model to this</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c"># Model for poll options</span>
 <span class="k">class</span> <span class="nc">Options</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
@@ -617,8 +665,7 @@ flask db upgrade</code></pre></figure>
 
 <p>Now run:</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>flask db migrate
-<span class="gp">$ </span>flask db upgrade</code></pre></figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>flask db migrate</code></pre></figure>
 
 <p>Edit the new migrations file and change the <code class="highlighter-rouge">upgrade</code> method to</p>
 
@@ -629,9 +676,9 @@ flask db upgrade</code></pre></figure>
 
     <span class="c">### end Alembic commands ###</span></code></pre></figure>
 
-<p>Don’t get it mistaken alembic isn’t as painful as this, we don’t have to edit the migrations file for every migration we do (<em>All these issues are as a result of us using SQLite and batch migrations</em>), if you use a more robust database like MYSQL or PostgreSQL you won’t come across this issue.</p>
+<p>This seems like a lot work for something simple, but don’t get it wrong. Alembic isn’t as painful to work with as this. We don’t have to edit the migrations file for every migration we do (<em>All these issues are as a result of us using SQLite and batch migrations</em>), if you use a more robust database like MySQL or PostgreSQL you’ll hardly come across migration issues like this.</p>
 
-<p>But it’s advised to always inspect the migration file before you do any migration because sometimes alembic won’t detect all the changes to you made to your model.</p>
+<p>But it’s advised to always inspect the migration file before you do any migration because sometimes alembic doesn’t detect all the changes made in a model.</p>
 
 <h3 id="link-existing-options">Link existing options</h3>
 <p>We’ve finally set a unique constraint on our <code class="highlighter-rouge">Options</code> table so duplicate entries won’t be allowed.</p>
@@ -640,35 +687,31 @@ flask db upgrade</code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">'http://localhost:5000/api/polls'</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s">"title"</span><span class="p">:</span> <span class="s">"who's the fastest footballer"</span><span class="p">,</span><span class="s">"options"</span><span class="p">:</span> <span class="p">[</span><span class="s">"Hector bellerin"</span><span class="p">,</span> <span class="s">"Gareth Bale"</span><span class="p">,</span> <span class="s">"Arjen robben"</span><span class="p">]})</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></code></pre></figure>
 
-<p>You should get a `JSONDecodeError, because we didn’t return any valid json back to the user, rather SQLAlchemy raised an exception. switch back to the flask terminal and you should see this:</p>
+<p>You should get a <code class="highlighter-rouge">JSONDecodeError</code>, because we didn’t return any valid JSON back TO inform us that a certain option in the poll already existed. Rather SQLAlchemy raised an exception. switch back to the flask terminal and you should see this:</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">exc</span><span class="o">.</span><span class="n">IntegrityError</span><span class="p">:</span> <span class="p">(</span><span class="n">sqlite3</span><span class="o">.</span><span class="n">IntegrityError</span><span class="p">)</span> <span class="n">UNIQUE</span> <span class="n">constraint</span> <span class="n">failed</span><span class="p">:</span> <span class="n">options</span><span class="o">.</span><span class="n">name</span> <span class="p">[</span><span class="n">SQL</span><span class="p">:</span> <span class="s">'INSERT INTO options (date_created, date_modified, name) VALUES (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?)'</span><span class="p">]</span> <span class="p">[</span><span class="n">parameters</span><span class="p">:</span> <span class="p">(</span><span class="s">'Hector bellerin'</span><span class="p">,)]</span></code></pre></figure>
 
 <p>This means our unique constraint worked!</p>
 
-<p>But now we need a way to link existing records to new polls. For example “Gareth bale” is a valid option for The “Fastest player in the world” and “The best footballer in the world” (hopefull when Messi and Cristiano Ronaldo retire)</p>
+<p>But instead of returning a messsage back saying <em>xxxx poll already existed</em> it’s better to link that existing option to the new polls. For example “Gareth bale” is a valid option for The “Fastest player in the world” and “The best footballer in the world” (hopefully when Messi and Cristiano Ronaldo retire).</p>
 
-<p>So if an option exists in the database instead of failing with an <code class="highlighter-rouge">IntegrityError</code> we can link the old option with a new poll</p>
+<p>We should only return a message that an option already existed when we’re trying to create an option directly not when it’s part of a poll. (Our API doesn’t support that feature currenty).</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">title</span> <span class="o">=</span> <span class="n">poll</span><span class="p">[</span><span class="s">'title'</span><span class="p">]</span>
+<p>So if an option exists in the database instead of failing with an <code class="highlighter-rouge">IntegrityError</code> or returning a message back, let’s link the old option with a new poll to be created.</p>
 
-        <span class="n">options_query</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">option</span> <span class="p">:</span> <span class="n">Options</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="nb">filter</span><span class="p">(</span><span class="n">Options</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="s">'</span><span class="si">%</span><span class="s">{}</span><span class="si">%</span><span class="s">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">option</span><span class="p">)))</span>
+<h6 id="we-only-need-to-change-one-thing-the-dictionary-comprehension-that-creates-poll-objects-from-option-objects">We only need to change one thing, the dictionary comprehension that creates Poll objects from Option objects</h6>
 
-        <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="n">Polls</span><span class="p">(</span><span class="n">option</span><span class="o">=</span><span class="n">Options</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">option</span><span class="p">))</span>
-                      <span class="k">if</span> <span class="n">options_query</span><span class="p">(</span><span class="n">option</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span>
-                      <span class="k">else</span> <span class="n">Polls</span><span class="p">(</span><span class="n">option</span><span class="o">=</span><span class="n">options_query</span><span class="p">(</span><span class="n">option</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">())</span> <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">poll</span><span class="p">[</span><span class="s">'options'</span><span class="p">]</span>
-                  <span class="p">]</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="n">Polls</span><span class="p">(</span><span class="n">option</span><span class="o">=</span><span class="n">Options</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">option</span><span class="p">))</span>
+              <span class="k">if</span> <span class="n">options_query</span><span class="p">(</span><span class="n">option</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span>
+              <span class="k">else</span> <span class="n">Polls</span><span class="p">(</span><span class="n">option</span><span class="o">=</span><span class="n">options_query</span><span class="p">(</span><span class="n">option</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">())</span> <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">poll</span><span class="p">[</span><span class="s">'options'</span><span class="p">]</span>
+          <span class="p">]</span></code></pre></figure>
 
-        <span class="n">new_topic</span> <span class="o">=</span> <span class="n">Topics</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
-
-        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_topic</span><span class="p">)</span>
-        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></code></pre></figure>
-
-<p>Pay close attention here</p>
+<p>The list comprehension reads as follows <em>Make a Poll object out of an option if that option doesn’t exist in the database (<code class="highlighter-rouge">count == 0</code>), if exists in the database (<code class="highlighter-rouge">else</code>) then get that option and make a Poll object from it.</em></p>
 
 <p>Make another post request and it should tell us the Poll was inserted successfully, even though “Gareth Bale” was part of the options</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">'http://localhost:5000/api/polls'</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s">"title"</span><span class="p">:</span> <span class="s">"who's the best footballer on the planet"</span><span class="p">,</span><span class="s">"options"</span><span class="p">:</span> <span class="p">[</span><span class="s">"Lionel Messi"</span><span class="p">,</span> <span class="s">"Gareth Bale"</span><span class="p">,</span> <span class="s">"Cristiano Ronaldo"</span><span class="p">,</span> <span class="s">"Alexis sanchez"</span><span class="p">]})</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">'http://localhost:5000/api/polls'</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s">"title"</span><span class="p">:</span> <span class="s">"who's the best footballer on the planet"</span><span class="p">,</span><span class="s">"options"</span><span class="p">:</span> <span class="p">[</span><span class="s">"Lionel Messi"</span><span class="p">,</span> <span class="s">"Gareth Bale"</span><span class="p">,</span> <span class="s">"Cristiano Ronaldo"</span><span class="p">,</span> <span class="s">"Alexis sanchez"</span><span class="p">]})</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="p">{</span><span class="s">'message'</span><span class="p">:</span> <span class="s">'Poll was created succesfully'</span><span class="p">}</span></code></pre></figure>
 
 <p>and we should get a json string telling us that it was created successfully</p>
 
@@ -698,7 +741,9 @@ flask db upgrade</code></pre></figure>
                 <span class="s">'name'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="p">}</span></code></pre></figure>
 
-<p>instead of sending the id (database id) of the record back to the user we sent back a uuid (Universally unique identification) instead. We did this for security reasons. You should expose as little information about the inner workings of your application as possible (though this makes it harder to accomplish some tasks) so that hackers cannot easily guess out the structure of your application.</p>
+<p>instead of sending the database id of the record back to the user we sent back a uuid (Universally unique identification), a randomly generated number instead. Why did we do this?</p>
+
+<p>It’s for security reasons. You should expose as little information about the inner workings and structure of your application as possible (though this makes it harder to accomplish some tasks) to make it difficult for hackers to know how your application works and prevent attacks. Your application might be secure in all the common areas where web applications can be exploited but you might be using a design pattern itself that endangers your application. If hackers know you’re using this so called <em>vulnerable</em> design pattern, they can easily adopt another approach and hack your web app or gain access to information they weren’t supposed to see.</p>
 
 <p>Let’s test it</p>
 
@@ -708,7 +753,7 @@ flask db upgrade</code></pre></figure>
 
 <p>What’s left is to make sure our users can vote</p>
 
-<p>To achieve this we’ll make another api endpoint and this time send a <code class="highlighter-rouge">PATCH</code> request. a PATCH request unlike post is used to update existing information</p>
+<p>To achieve this we’ll make another api endpoint and this time send a <code class="highlighter-rouge">PATCH</code> request. a PATCH request unlike post is used to update existing information and not to create a new one entirely</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="nd">@votr.route</span><span class="p">(</span><span class="s">'/api/poll/vote'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'PATCH'</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">api_poll_vote</span><span class="p">():</span>
@@ -736,6 +781,14 @@ flask db upgrade</code></pre></figure>
 <span class="p">{</span><span class="s">'message'</span><span class="p">:</span> <span class="s">'option or poll was not found please try again'</span><span class="p">}</span>
 <span class="o">&gt;&gt;&gt;</span></code></pre></figure>
 
+<h2 id="conclusion">Conclusion</h2>
+<p>Well, well well that’s it for this part, if you followed this tutorial through the hoops of annoying database migrations with SQLite. Then you should take sometime and congratulate yourself because you’ve just built your first REST API with flask, expanded your knowledge about SQLAlchemy and also learnt a little about alembic and how to fix migrations that go wrong.</p>
+
+<p>Our API isn’t complete yet. There is no link between the users and the polls they created or a way to track and prevent users from voting twice. Infact our API currently has no link to our Authentication system. This tutorial was meant to be a gentle introduction to building API’s with flask, so we’re still going to integrate our API with our auth system later on.</p>
+
+<p>In the next part of this series, we’re going to re-visit ReactJS and hook our UI to all the API calls we’ve been making with the requests module and then implement some basic React animations to cap it off.</p>
+
+<p>If you don’t have any questions or observations, I’ll see you in the next part.</p>
 
             </div>
 
@@ -751,7 +804,7 @@ flask db upgrade</code></pre></figure>
 
               var disqus_config = function() {
                 this.page.url = 'https://danidee10.github.io/2016/10/05/flask-by-example-5.html'; //shouldn't hardoce this
-                this.page.identifier = 'Flask by example 5 (Building a simple REST API)';
+                this.page.identifier = 'Flask by example 5 (How to build a simple REST API)';
               };
               (function() {
                 var d = document,
