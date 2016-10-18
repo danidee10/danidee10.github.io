@@ -37,13 +37,13 @@ title: "Blog"
     {% if paginator.previous_page %}
       <a href="{{ paginator.previous_page_path }}" class="previous">Previous</a>
     {% else %}
-      <span class="prev btn btn-ghost">&laquo; Previous</span>
+      <span style="color: white;" class="prev btn">&laquo; Previous</span>
     {% endif %}
     <span class="page_number ">Page: {{ paginator.page }} of {{ paginator.total_pages }}</span>
     {% if paginator.next_page %}
       <a href="{{ paginator.next_page_path }}" class="next">Next &laquo;</a>
     {% else %}
-      <span class="next btn btn-ghost">Next</span>
+      <span style="color: white;" class="next btn">Next</span>
     {% endif %}
   </div>
 </nav>
