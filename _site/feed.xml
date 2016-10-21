@@ -849,7 +849,7 @@ flask db upgrade&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;To achieve this we have to remove the default attributes we set for our state variables earlier and then implement our event handlers properly.&lt;/p&gt;
 
-&lt;script async=&quot;&quot; src=&quot;//jsfiddle.net/danidee10/5Lex6gtj/9/embed/js,html,css,result/dark/&quot;&gt;&lt;/script&gt;
+&lt;script async=&quot;&quot; src=&quot;//jsfiddle.net/danidee10/5Lex6gtj/10/embed/js,html,css,result/dark/&quot;&gt;&lt;/script&gt;
 
 &lt;p&gt;Lets talk about the event handlers we just implemented. This is where most of the hardwork is.&lt;/p&gt;
 

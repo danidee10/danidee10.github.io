@@ -114,7 +114,7 @@ touch static/js/polls.js
 
 ##### polls.js
 
-<script async src="//jsfiddle.net/danidee10/8asnq3uz/2/embed/js,html,css,result/dark/"></script>
+<script async src="//jsfiddle.net/danidee10/8asnq3uz/3/embed/js,html,css,result/dark/"></script>
 
 
 Basically, we created the two components we talked about earlier. Looking at `PollForm`, you can see that it contains a form that would be used to save our poll. But if you look at the form closely, you can see that instead of using the `class` attribute as we would do in html we're using `className`.
@@ -163,7 +163,7 @@ We're going to make the `LivePreview` form inte**Reactive**, so as the user type
 
 To achieve this we have to remove the default attributes we set for our state variables earlier and then implement our event handlers properly.
 
-<script async src="//jsfiddle.net/danidee10/5Lex6gtj/9/embed/js,html,css,result/dark/"></script>
+<script async src="//jsfiddle.net/danidee10/5Lex6gtj/10/embed/js,html,css,result/dark/"></script>
 
 Lets talk about the event handlers we just implemented. This is where most of the hardwork is.
 
