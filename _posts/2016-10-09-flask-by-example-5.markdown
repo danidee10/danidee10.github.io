@@ -804,6 +804,6 @@ Well, well well that's it for this part, if you followed this tutorial through t
 
 Our API isn't complete yet. There is no link between the users and the polls they created or a way to track and prevent users from voting twice. Infact our API currently has no link to our Authentication system. This tutorial was meant to be a gentle introduction to building API's with flask, so we're still going to integrate our API with our auth system later on.
 
-In the next part of this series, we're going to re-visit ReactJS and hook our UI to all the API calls we've been making with the requests module and then implement some basic React animations to cap it off.
+In the next part of this series, we're going to re-visit ReactJS and hook our UI to all the API calls we've been making with the requests module.
 
 If you don't have any questions or observations, I'll see you in the next part.
