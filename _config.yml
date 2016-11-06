@@ -31,7 +31,7 @@ unpublished: false
 
 # Plugins
 whitelist: []
-gems:      ['jekyll-github-metadata']
+#gems:      ['jekyll-github-metadata']
 
 # Conversion
 markdown:    kramdown
