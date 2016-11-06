@@ -1,6 +1,6 @@
 title: Osaetin daniel
 email: osaetindaniel@gmail.com
-description: An Open source blog where osaetin daniel keeps his personal findings in the ever exciting world of programming
+description: An Open source blog where i keep my findings in the ever exciting world of programming
 url: "https://danidee10.github.io"
 twitter_username: osaetindaniel
 github_username:  danidee10
@@ -36,6 +36,7 @@ whitelist: []
 # Conversion
 markdown:    kramdown
 highlighter: rouge
+linenos:     false
 lsi:         false
 excerpt_separator: "\n\n"
 
@@ -60,12 +61,14 @@ redcarpet:
   extensions: []
 
 kramdown:
-  auto_ids:       true
-  footnote_nr:    1
-  entity_output:  as_char
-  toc_levels:     1..6
-  smart_quotes:   lsquo,rsquo,ldquo,rdquo
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
   enable_coderay: false
+  smart_quotes:   lsquo,rsquo,ldquo,rdquo
+  syntax_highlighter: rouge
+  line_numbers: false
 
   coderay:
     coderay_wrap:              div
