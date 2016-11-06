@@ -34,10 +34,8 @@ whitelist: []
 #gems:      ['jekyll-github-metadata']
 
 # Conversion
-markdown:    kramdown
+markdown: kramdown
 highlighter: rouge
-linenos:     false
-lsi:         false
 excerpt_separator: "\n\n"
 
 # Serving
@@ -59,21 +57,3 @@ rdiscount:
 
 redcarpet:
   extensions: []
-
-kramdown:
-  auto_ids: true
-  footnote_nr: 1
-  entity_output: as_char
-  toc_levels: 1..6
-  enable_coderay: false
-  smart_quotes:   lsquo,rsquo,ldquo,rdquo
-  syntax_highlighter: rouge
-  line_numbers: false
-
-  coderay:
-    coderay_wrap:              div
-    coderay_line_numbers:      inline
-    coderay_line_number_start: 1
-    coderay_tab_width:         4
-    coderay_bold_every:        10
-    coderay_css:               style
