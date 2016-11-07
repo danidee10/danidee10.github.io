@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title></title>
-    <description>An Open source blog where osaetin daniel keeps his personal findings in the ever exciting world of programming</description>
+    <description>An Jekyll blog where i keep my findings in the ever exciting world of programming</description>
     <link>https://danidee10.github.io</link>
     <atom:link href="https://danidee10.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
@@ -689,20 +689,24 @@ and refreshes the UI by calling the prop that was passed to it using &lt;code cl
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;missing-features-general-advice&quot;&gt;Missing features general advice&lt;/h2&gt;
-&lt;ul class=&quot;postlist&quot;&gt;
+&lt;h2 id=&quot;missing-features-and-general-advice&quot;&gt;Missing features and general advice&lt;/h2&gt;
+&lt;ul&gt;
 
 &lt;li&gt;Users have no profile page to manage the polls they've created&lt;/li&gt;
 
+&lt;br /&gt;
+
 &lt;li&gt;Even though we disabled the vote button after voting, our users can still reload the page and vote on the same option again!
 &lt;/li&gt;
+
+&lt;br /&gt;
 
 &lt;li&gt;As our web app is still it's pretty efficient to fetch the whole chunk of json for the poll and options in one request, as your application grows this may become very inefficient as it would be pointless to load a whole lot of information that your user may not need, you'd also be putting a lot of stress on your database too
 
 &lt;br /&gt;
 
 imagine fectcing a huge list of 200k+ polls in one go. Your application would seem very slow to users with slow internet connections.
-&lt;br /&gt;
+&lt;br /&gt;&lt;br /&gt;
   &lt;ul class=&quot;postlist&quot;&gt;
 
   &lt;li&gt;
@@ -715,7 +719,9 @@ imagine fectcing a huge list of 200k+ polls in one go. Your application would se
 
   &lt;br /&gt;
 
-  The goal here is to make little requests as they're needed (returning relevant information the user is interested in) not a single expensive request that comes back with a lot of info that the user doesn't need
+&lt;blockquote&gt;
+The goal here is to make little requests as they're needed (returning relevant information the user is interested  in) not a single expensive request that comes back with a lot of info that the user doesn't need
+&lt;/blockquote&gt;
 
   &lt;/ul&gt;
 
@@ -728,7 +734,7 @@ imagine fectcing a huge list of 200k+ polls in one go. Your application would se
 &lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;Now our voting application is gradually coming to life, Users can create polls and other users can vote on them.&lt;/p&gt;
 
-&lt;p&gt;We also implemented an interactive progress bar to show the users the standings of the various options in the poll and the progress bar updates itself as the user casts their vote.&lt;/p&gt;
+&lt;p&gt;We also implemented interactive progress bars to show the users the standings of the each option in a poll.&lt;/p&gt;
 
 &lt;p&gt;We aren’t going to do a lot of “new” React stuff as we progress in this tutorial, but i hope you seen the beauty of React and have fallen in love with this amazing Javascript library.&lt;/p&gt;
 

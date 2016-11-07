@@ -746,20 +746,24 @@ Well that's all for this part, Here's a gif of me casting my vote on the Fastest
 
 <br />
 
-## Missing features general advice
-<ul class="postlist">
+## Missing features and general advice
+<ul>
 
 <li>Users have no profile page to manage the polls they've created</li>
 
+<br />
+
 <li>Even though we disabled the vote button after voting, our users can still reload the page and vote on the same option again!
 </li>
+
+<br />
 
 <li>As our web app is still it's pretty efficient to fetch the whole chunk of json for the poll and options in one request, as your application grows this may become very inefficient as it would be pointless to load a whole lot of information that your user may not need, you'd also be putting a lot of stress on your database too
 
 <br />
 
 imagine fectcing a huge list of 200k+ polls in one go. Your application would seem very slow to users with slow internet connections.
-<br />
+<br /><br />
   <ul class="postlist">
 
   <li>
@@ -772,7 +776,9 @@ imagine fectcing a huge list of 200k+ polls in one go. Your application would se
 
   <br />
 
-  The goal here is to make little requests as they're needed (returning relevant information the user is interested in) not a single expensive request that comes back with a lot of info that the user doesn't need
+<blockquote>
+The goal here is to make little requests as they're needed (returning relevant information the user is interested  in) not a single expensive request that comes back with a lot of info that the user doesn't need
+</blockquote>
 
   </ul>
 
@@ -785,8 +791,7 @@ imagine fectcing a huge list of 200k+ polls in one go. Your application would se
 ## Conclusion
 Now our voting application is gradually coming to life, Users can create polls and other users can vote on them.
 
-We also implemented an interactive progress bar to show the users the standings of the various options in the poll and the progress bar updates itself as the user casts their vote.
-
+We also implemented interactive progress bars to show the users the standings of the each option in a poll.
 
 We aren't going to do a lot of "new" React stuff as we progress in this tutorial, but i hope you seen the beauty of React and have fallen in love with this amazing Javascript library.
 
