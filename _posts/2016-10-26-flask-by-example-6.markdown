@@ -802,14 +802,14 @@ You should be strong enough to venture into the huge ecosystem of react tutorial
 <br />
 
 ### What are we hacking at next?
-In the next part we're going to build an admin panel to manage the polls as the admin user and also a control panel for users to manage their polls (You should have enough flask knowledge to this on your own don't panic if you don't everyone learns at different speed)
+In the next part, we're going to implement a new feature where users can set the duration that they want a poll to be active, after that duration expires the poll would automatically be closed.
 
-We're also going to add more control to our application to keep track of *Fraudulent* and *Overzealous* users who most likely would want to vote ona poll more than once.
+We're also going to add more control to our application to keep track of *Fraudulent* and *Overzealous* users who most likely would want to vote on a poll more than once.
 
-We're also going to implement a new feature where users can set the duration that they want a poll to be active (similar to twitter polls)
+Finally we'll build an admin panel to manage the polls as the admin user and also a dashboard for users to manage their polls (You should have enough flask knowledge to do the latter on your own. Don't panic if you don't, everyone learns at different speeds).
 
 You might want to look up [Celery](http://www.celeryproject.org/) before then.
 
-If you're enjoyed this part, please drop a comment I'd love it and you can consider sharing this post and following me on [twitter](https://twitter.com/osaetindaniel)
+If you're enjoyed this part, please drop a comment, I'd love it. You can consider sharing this post and following me on [twitter](https://twitter.com/osaetindaniel)
 
 See you in the next part. Cheers!
