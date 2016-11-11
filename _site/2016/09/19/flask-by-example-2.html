@@ -52,7 +52,7 @@ a {
 
     </style>
 
-    <link rel="canonical" href="https://danidee10.github.io/2016/09/19/flask-by-example-2.html">
+    <link rel="canonical" href="http://localhost:4000/2016/09/19/flask-by-example-2.html">
 
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -120,7 +120,7 @@ a {
 <p>Next step is to convert our schema to code.</p>
 
 <h4 id="flask-sqlalchemy">Flask SQLAlchemy</h4>
-<p>Since flask is a micro framework, it doesn’t provide any special <em>batteries</em> out of the box, so the option is left to the programmer to choose the <em>batteries</em> he wants for his application. Traditionally, before ORM’s (Object Relational mapping) came to make our lives easier, programmers wrote plain SQL and programming languages provided libraries for working with different database (Python for example has libraries for working with sqlite out of the box). You’d typically pass in a valid SQL query to the Database and then have the results returned back to you, stored in an arrays or some container data structure for the programmer to work with, but as applications and data-sets grew larger it became a huge pain to maintain or even look at code that had a lot of SQL running everywhere.</p>
+<p>Since flask is a micro framework, it doesn’t provide any special <em>batteries</em> out of the box, so the option is left to the programmer to choose the <em>batteries</em> he wants for his application. Traditionally, before ORM’s (Object Relational mapping) came to make our lives easier, programmers wrote plain SQL and programming languages provided libraries for working with different database (Python for example has libraries for working with SQLite out of the box). You’d typically pass in a valid SQL query to the Database and then have the results returned back to you, stored in an arrays or some container data structure for the programmer to work with, but as applications and data-sets grew larger it became a huge pain to maintain or even look at code that had a lot of SQL running everywhere.</p>
 
 <p>A perfect example is this:</p>
 
@@ -151,11 +151,12 @@ AND (rd.rd_numberofrooms <span class="err">&lt;</span>= (select sum(rn.reservati
 <span class="o">&gt;&gt;&gt;</span><span class="s">'Spurs'</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">dele_alli</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></code></pre></figure>
 
-<p><a href="http://www.sqlalchemy.org/">SQLAlchemy</a> is a very mature ORM that’s very popular in the python community, there are other [ORM’s]https://www.fullstackpython.com/object-relational-mappers-orms.html for python, but we’ll stick with SQLAlchemy due to it’s sheer popularity and excellent documentation.</p>
+<p><a href="http://www.sqlalchemy.org/">SQLAlchemy</a> is a very mature ORM that’s very popular in the python community, there are other <a href="https://www.fullstackpython.com/object-relational-mappers-orms.html">ORM’s</a> for python, but we’ll stick with SQLAlchemy due to it’s sheer popularity and excellent documentation.</p>
 
-<p><a href="flask-sqlalchemy.pocoo.org/2.1/">Flask SQLAlchemy</a> is a flask extension that makes it easier for us to work with SQLAlchemy directly in flask (You can use plain SQLAlchemy without the flask extension if you want to). we’re going to install it now with <code class="highlighter-rouge">pip</code>.</p>
+<p><a href="flask-sqlalchemy.pocoo.org/2.1/">Flask SQLAlchemy</a> is a flask extension that makes it easier for us to work with SQLAlchemy directly in flask (You can use plain SQLAlchemy without the flask extension if you want to).</p>
 
-<h6 id="make-sure-your-virtualenv-is-activated">Make sure your virtualenv is activated</h6>
+<p><br />
+we’re going to install it now with <code class="highlighter-rouge">pip</code>. <strong>Make sure your virtualenv is activated</strong></p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>pip install flask_sqlalchemy</code></pre></figure>
 
@@ -352,9 +353,9 @@ We were able to set up our database and get a feel of how SQLalchemy works, in t
 
             <div class="share-page">
                 Share this post on &rarr;
-                <a href="https://twitter.com/intent/tweet?text=Flask by example 2 (Designing the Database with SQLAlchemy)&url=https://danidee10.github.io/2016/09/19/flask-by-example-2.html&via=osaetindaniel&related=osaetindaniel" rel="nofollow" target="_blank" title="Share on Twitter">Twitter</a> |
-                <a href="https://facebook.com/sharer.php?u=https://danidee10.github.io/2016/09/19/flask-by-example-2.html" rel="nofollow" target="_blank" title="Share on Facebook">Facebook</a> |
-                <a href="https://plus.google.com/share?url=https://danidee10.github.io/2016/09/19/flask-by-example-2.html" rel="nofollow" target="_blank" title="Share on Google+">Google+</a>
+                <a href="https://twitter.com/intent/tweet?text=Flask by example 2 (Designing the Database with SQLAlchemy)&url=http://localhost:4000/2016/09/19/flask-by-example-2.html&via=osaetindaniel&related=osaetindaniel" rel="nofollow" target="_blank" title="Share on Twitter">Twitter</a> |
+                <a href="https://facebook.com/sharer.php?u=http://localhost:4000/2016/09/19/flask-by-example-2.html" rel="nofollow" target="_blank" title="Share on Facebook">Facebook</a> |
+                <a href="https://plus.google.com/share?url=http://localhost:4000/2016/09/19/flask-by-example-2.html" rel="nofollow" target="_blank" title="Share on Google+">Google+</a>
             </div>
 
         <hr>

@@ -52,7 +52,7 @@ a {
 
     </style>
 
-    <link rel="canonical" href="https://danidee10.github.io/2016/09/24/flask-by-example-3.html">
+    <link rel="canonical" href="http://localhost:4000/2016/09/24/flask-by-example-3.html">
 
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -262,19 +262,21 @@ You might be wondering why the password field is 200 characters long.</p>
 
 <p>Woah! that’s a lot of imports at the top of the file, Let’s discuss each of them and their functions:</p>
 
-<p><strong>request:</strong> The request object allows the client (users and their browsers) to interact with your application (server). It enables you to get data from the user easily, for example the form details from the form the user submits is stored in the <code class="highlighter-rouge">request</code> object as a dictionary called <code class="highlighter-rouge">form</code> that we can access. You can also access the type of request the user made to your route through <code class="highlighter-rouge">request.method</code>.</p>
+<p><strong><u>request</u></strong>: The request object allows the client (users and their browsers) to interact with your application (server). It enables you to get data from the user easily, for example the form details from the form the user submits is stored in the <code class="highlighter-rouge">request</code> object as a dictionary called <code class="highlighter-rouge">form</code> that we can access. You can also access the type of request the user made to your route through <code class="highlighter-rouge">request.method</code>.</p>
 
-<p><strong>NOTE:</strong> Take care when you’re trying to access values submitted in the form by the user, if you try to access a field that doesn’t exist and you don’t catch the resulting <code class="highlighter-rouge">keyError</code> exception, the request will become invalid and flask will fail with a <code class="highlighter-rouge">400 bad request</code>. for example if you try to get the username of a user which you gave a name of  <code class="highlighter-rouge">username</code> in your html template with <code class="highlighter-rouge">request.form['USERNAME']</code> instead of <code class="highlighter-rouge">request.form['username']</code>.</p>
+<p><strong>NOTE:</strong></p>
 
-<p><strong>flash:</strong> The name is a little misleading (personally i would’ve preferred <code class="highlighter-rouge">send_message</code>). It doesn’t flash (show a popup) message to the user as you would expect. what it actually does is store a message at the end of the request and them makes it accessible <strong>ONLY AND ONLY</strong> on the next request.</p>
+<p><strong><em>Take care when you’re trying to access values submitted in the form by the user, if you try to access a field that doesn’t exist and you don’t catch the resulting <code class="highlighter-rouge">keyError</code> exception, the request will become invalid and flask will fail with a <code class="highlighter-rouge">400 bad request</code>. for example if you try to get the username of a user which you gave a name of  <code class="highlighter-rouge">username</code> in your html template with <code class="highlighter-rouge">request.form['USERNAME']</code> instead of <code class="highlighter-rouge">request.form['username']</code>.</em></strong></p>
+
+<p><strong><u>flash</u>:</strong> The name is a little misleading (personally i would’ve preferred <code class="highlighter-rouge">send_message</code>). It doesn’t flash (show a popup) message to the user as you would expect. what it actually does is store a message at the end of the request and them makes it accessible <strong>ONLY AND ONLY</strong> on the next request.</p>
 
 <p>It will be discarded after that, so don’t try to store messages or data with it. Instead we can use it to pass a message to the next page we’re redirecting to, in our templates, all the <code class="highlighter-rouge">flash</code> messages can be accessed by calling  <code class="highlighter-rouge">get_flashed_messages()</code>.</p>
 
-<p><strong>redirect:</strong> It simply redirects to another page.</p>
+<p><strong><u>redirect</u>:</strong> It simply redirects to another page.</p>
 
-<p><strong>url_for:</strong> This prevents us from hardcoding the <code class="highlighter-rouge">homepage</code> route as <code class="highlighter-rouge">/</code> when calling <code class="highlighter-rouge">redirect</code>, if you hardcode it, then what happens when you decide to change the route of <code class="highlighter-rouge">home</code> from <code class="highlighter-rouge">/</code> to <code class="highlighter-rouge">/index</code>. this would break all existing links to the homepage in your application, you’ll have to go round and change all the hardcoded url’s to new url you’ve specified.</p>
+<p><strong><u>url_for</u>:</strong> This prevents us from hardcoding the <code class="highlighter-rouge">homepage</code> route as <code class="highlighter-rouge">/</code> when calling <code class="highlighter-rouge">redirect</code>, if you hardcode it, then what happens when you decide to change the route of <code class="highlighter-rouge">home</code> from <code class="highlighter-rouge">/</code> to <code class="highlighter-rouge">/index</code>. this would break all existing links to the homepage in your application, you’ll have to go round and change all the hardcoded url’s to new url you’ve specified.</p>
 
-<p><strong>generate_password_hash and check_password_hash</strong>: are helpers from <a href="http://werkzeug.pocoo.org/">werkzeug</a> for hashing and comparing a string with a password hash respectively. The hash is a one way salted hash, meaning we cannot decrypt it back. want to read more about hashing and the meaning of a salted hash read this <a href="https://www.quora.com/What-does-it-mean-to-add-a-salt-to-a-password-hash">Quora</a> post.</p>
+<p><strong><u>generate_password_hash and check_password_hash</u></strong>: are helpers from <a href="http://werkzeug.pocoo.org/">werkzeug</a> for hashing and comparing a string with a password hash respectively. The hash is a one way salted hash, meaning we cannot decrypt it back. want to read more about hashing and the meaning of a salted hash read this <a href="https://www.quora.com/What-does-it-mean-to-add-a-salt-to-a-password-hash">Quora</a> post.</p>
 
 <p>Security is a very important aspect in web applications and other applications generally (even in our daily life), it’s best to use already made solutions that have been tested and trusted by thousands of developers.</p>
 
@@ -457,8 +459,6 @@ You might be wondering why the password field is 200 characters long.</p>
 
 <p>The with statement in jinja2 is not equivalent to python’s <code class="highlighter-rouge">with</code> statement. it doesn’t do any cleanup action when you exit the block and the variables inside the <code class="highlighter-rouge"><span class="p">{</span><span class="err">%</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">%</span><span class="p">}</span></code> block are not available outside it.</p>
 
-<p>This is exactly what this user was thinking about when he asked this question on <a href="http://stackoverflow.com/questions/6432355/variable-defined-with-with-statement-available-outside-of-with-block">stackoverflow</a>.</p>
-
 <p>It simply sets a variable and creates a new scope, so all the variables used inside the <code class="highlighter-rouge"><span class="p">{</span><span class="err">%</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">%</span><span class="p">}</span></code> block  won’t be accessible outside that block.</p>
 
 <h6 id="something-like-this-in-pure-python">something like this in pure python.</h6>
@@ -592,9 +592,9 @@ staticfied ../templates/index.html <span class="o">==</span>&gt; staticfy/index.
 
             <div class="share-page">
                 Share this post on &rarr;
-                <a href="https://twitter.com/intent/tweet?text=Flask by example 3 (Templating, Authentiation and Static assets)&url=https://danidee10.github.io/2016/09/24/flask-by-example-3.html&via=osaetindaniel&related=osaetindaniel" rel="nofollow" target="_blank" title="Share on Twitter">Twitter</a> |
-                <a href="https://facebook.com/sharer.php?u=https://danidee10.github.io/2016/09/24/flask-by-example-3.html" rel="nofollow" target="_blank" title="Share on Facebook">Facebook</a> |
-                <a href="https://plus.google.com/share?url=https://danidee10.github.io/2016/09/24/flask-by-example-3.html" rel="nofollow" target="_blank" title="Share on Google+">Google+</a>
+                <a href="https://twitter.com/intent/tweet?text=Flask by example 3 (Templating, Authentiation and Static assets)&url=http://localhost:4000/2016/09/24/flask-by-example-3.html&via=osaetindaniel&related=osaetindaniel" rel="nofollow" target="_blank" title="Share on Twitter">Twitter</a> |
+                <a href="https://facebook.com/sharer.php?u=http://localhost:4000/2016/09/24/flask-by-example-3.html" rel="nofollow" target="_blank" title="Share on Facebook">Facebook</a> |
+                <a href="https://plus.google.com/share?url=http://localhost:4000/2016/09/24/flask-by-example-3.html" rel="nofollow" target="_blank" title="Share on Google+">Google+</a>
             </div>
 
         <hr>

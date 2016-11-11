@@ -20,7 +20,7 @@ Lastly, the *polls* table. this table serves as a *'join'* table (ManyToMany rel
 Next step is to convert our schema to code.
 
 #### Flask SQLAlchemy
-Since flask is a micro framework, it doesn't provide any special *batteries* out of the box, so the option is left to the programmer to choose the *batteries* he wants for his application. Traditionally, before ORM's (Object Relational mapping) came to make our lives easier, programmers wrote plain SQL and programming languages provided libraries for working with different database (Python for example has libraries for working with sqlite out of the box). You'd typically pass in a valid SQL query to the Database and then have the results returned back to you, stored in an arrays or some container data structure for the programmer to work with, but as applications and data-sets grew larger it became a huge pain to maintain or even look at code that had a lot of SQL running everywhere.
+Since flask is a micro framework, it doesn't provide any special *batteries* out of the box, so the option is left to the programmer to choose the *batteries* he wants for his application. Traditionally, before ORM's (Object Relational mapping) came to make our lives easier, programmers wrote plain SQL and programming languages provided libraries for working with different database (Python for example has libraries for working with SQLite out of the box). You'd typically pass in a valid SQL query to the Database and then have the results returned back to you, stored in an arrays or some container data structure for the programmer to work with, but as applications and data-sets grew larger it became a huge pain to maintain or even look at code that had a lot of SQL running everywhere.
 
 A perfect example is this:
 
@@ -56,11 +56,12 @@ Some people got fed up and decided to put another layer of abstraction to make w
 >>> dele_alli.save()
 {% endhighlight %}
 
-[SQLAlchemy](http://www.sqlalchemy.org/) is a very mature ORM that's very popular in the python community, there are other [ORM's]https://www.fullstackpython.com/object-relational-mappers-orms.html for python, but we'll stick with SQLAlchemy due to it's sheer popularity and excellent documentation.
+[SQLAlchemy](http://www.sqlalchemy.org/) is a very mature ORM that's very popular in the python community, there are other [ORM's](https://www.fullstackpython.com/object-relational-mappers-orms.html) for python, but we'll stick with SQLAlchemy due to it's sheer popularity and excellent documentation.
 
-[Flask SQLAlchemy](flask-sqlalchemy.pocoo.org/2.1/) is a flask extension that makes it easier for us to work with SQLAlchemy directly in flask (You can use plain SQLAlchemy without the flask extension if you want to). we're going to install it now with `pip`.
+[Flask SQLAlchemy](flask-sqlalchemy.pocoo.org/2.1/) is a flask extension that makes it easier for us to work with SQLAlchemy directly in flask (You can use plain SQLAlchemy without the flask extension if you want to).
 
-###### Make sure your virtualenv is activated
+<br />
+we're going to install it now with `pip`. **Make sure your virtualenv is activated**
 {% highlight bash %}
 $ pip install flask_sqlalchemy
 {% endhighlight %}

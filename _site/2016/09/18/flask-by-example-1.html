@@ -52,7 +52,7 @@ a {
 
     </style>
 
-    <link rel="canonical" href="https://danidee10.github.io/2016/09/18/flask-by-example-1.html">
+    <link rel="canonical" href="http://localhost:4000/2016/09/18/flask-by-example-1.html">
 
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -106,17 +106,17 @@ a {
             <div class="post-content">
               <p>Welcome everyone!, This is the beginning of a new series where we’ll learn how to use flask by building a simple Online polling application.</p>
 
-<p>This series is going to be split into several parts because of the size of the app we’re building. At the end of this series we’ll have built a polling app, where:</p>
+<p>This series is going to be split into several parts because of the size of the app we’re building. At the end of this series we’ll have built a polling app, with the following features:</p>
 
 <ul class="postlist">
-  <li>Users can login.</li>
-  <li>Vote on various topics and leave comments.</li>
-  <li>Comments can also be upvoted and downvoted so that the best comments get to the top for other users to see.</li>
+  <li>A basic authentication system.</li>
+  <li>Ability to vote on various topics</li>
+  <li>Interactive progress bars to show the percentage of votes</li>
 </ul>
 
 <p><br /></p>
 
-<p>We’re going to use <a href="http://flask.pocoo.org">Flask</a> as our backend, <a href="http://getbootstrap.com/">Bootstrap3</a> for our interface generally and <a href="https://facebook.github.io/react/">Reactjs</a> for other parts of our UI. the rest is just plain old html and css.</p>
+<p>We’re going to use <a href="http://flask.pocoo.org">Flask</a> as our backend, <a href="http://getbootstrap.com/">Bootstrap3</a> for our interface generally and <a href="https://facebook.github.io/react/">ReactJS</a> for other parts of our UI. the rest is just plain old html and css.</p>
 
 <p>Our polling app is going to be called <strong>Votr</strong></p>
 
@@ -143,17 +143,31 @@ a {
 <p>At the end of this tutorial, You would have:</p>
 
 <ul class="postlist">
-  <li>Built a RESTful API with flask and also learnt more about how API's work</li>
+  <li>Built a REST API with flask</li>
 
-  <li>Leveraged the power of some popular flask extensions like <a href="flask-sqlalchemy.pocoo.org/2.1/">Flask SQLAlchemy</a> and
-      <a href="https://flask-migrate.readthedocs.io/en/latest/">Flask Migrate</a></li>
+  <li>Gotten a basic understanding of python's premier ORM <a href="http://www.sqlalchemy.org/">SQLAlchemy</a></li>
+
+  <li>Leveraged the power of some popular flask extensions like <a href="flask-sqlalchemy.pocoo.org/2.1/">Flask SQLAlchemy</a>,
+      <a href="https://flask-migrate.readthedocs.io/en/latest/">Flask Migrate</a> and <a href="http://flask-admin.readthedocs.io/en/latest/">Flask-Admin</a></li>
 
   <li>Learned how to Build interactive and dynamic UI's with <a href="https://facebook.github.io/react-native/">ReactJS</a></li>
+
+  <li>How to structure your flask applications and use <a href="http://flask.pocoo.org/docs/0.11/blueprints/">Flask Blueprints</a></li>
+
+  <li>Learnt how to run background jobs with <a href="http://www.celeryproject.org/">Celery</a></li>
 </ul>
+
+<p><br /></p>
 
 <p>Here is a screenshot of the online polling app you will build.</p>
 
+<p><br /></p>
+
 <p><img src="/images/screenshot.png" alt="Votr image" /></p>
+
+<p>and a gif showing the voting process</p>
+
+<p><img src="/images/votr.gif" alt="Votr gif" /></p>
 
 <h4 id="requirements-and-setup">Requirements and setup</h4>
 <p>To follow this tutorial effectively you should have the following installed:</p>
@@ -229,9 +243,13 @@ a {
 
 <p>By default flask runs on port <code class="highlighter-rouge">5000</code> so open any browser you have an enter the address <code class="highlighter-rouge">localhost:5000</code> and sure enough <code class="highlighter-rouge">hello world</code> should be displayed.</p>
 
-<p>That’s it! our development environment is all setup with flask installed. Note that we’ll have to install other libraries (we haven’t installed react yet). but i feel it’s best to install every library we need as we go through the series, so we can understand what each library does and handle the quirks and issues that may arise when we get there.</p>
+<p>That’s it! our development environment is all setup with flask installed.</p>
+
+<p>To keep this simple, and to show you beauty of developing flask applications, we’ll install various extensions as we need them, so you’ll understand what each library does and how handle the quirks and issues that may arise when we get there.</p>
 
 <p>If you have any questions or issues with the installation process. please leave a comment below else I’ll see you in the next part where we’re going to start writing some code!</p>
+
+<p><strong>The repo for this project can be found on <a href="https://github.com/danidee10/Votr">github</a></strong></p>
 
             </div>
 
@@ -241,9 +259,9 @@ a {
 
             <div class="share-page">
                 Share this post on &rarr;
-                <a href="https://twitter.com/intent/tweet?text=Flask by example (How to build an online polling app)&url=https://danidee10.github.io/2016/09/18/flask-by-example-1.html&via=osaetindaniel&related=osaetindaniel" rel="nofollow" target="_blank" title="Share on Twitter">Twitter</a> |
-                <a href="https://facebook.com/sharer.php?u=https://danidee10.github.io/2016/09/18/flask-by-example-1.html" rel="nofollow" target="_blank" title="Share on Facebook">Facebook</a> |
-                <a href="https://plus.google.com/share?url=https://danidee10.github.io/2016/09/18/flask-by-example-1.html" rel="nofollow" target="_blank" title="Share on Google+">Google+</a>
+                <a href="https://twitter.com/intent/tweet?text=Flask by example (How to build an online polling app)&url=http://localhost:4000/2016/09/18/flask-by-example-1.html&via=osaetindaniel&related=osaetindaniel" rel="nofollow" target="_blank" title="Share on Twitter">Twitter</a> |
+                <a href="https://facebook.com/sharer.php?u=http://localhost:4000/2016/09/18/flask-by-example-1.html" rel="nofollow" target="_blank" title="Share on Facebook">Facebook</a> |
+                <a href="https://plus.google.com/share?url=http://localhost:4000/2016/09/18/flask-by-example-1.html" rel="nofollow" target="_blank" title="Share on Google+">Google+</a>
             </div>
 
         <hr>

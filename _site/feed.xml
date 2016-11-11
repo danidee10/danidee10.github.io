@@ -3,8 +3,8 @@
   <channel>
     <title></title>
     <description>An Jekyll blog where i keep my findings in the ever exciting world of programming</description>
-    <link>https://danidee10.github.io</link>
-    <atom:link href="https://danidee10.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    <link>http://localhost:4000</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
         <title>Flask by example 6 (Connecting React to a REST API)</title>
@@ -719,9 +719,8 @@ imagine fectcing a huge list of 200k+ polls in one go. Your application would se
 
   &lt;br /&gt;
 
-&lt;blockquote&gt;
-The goal here is to make little requests as they're needed (returning relevant information the user is interested  in) not a single expensive request that comes back with a lot of info that the user doesn't need
-&lt;/blockquote&gt;
+
+The goal here is to make little requests as they're needed (returning relevant information the user is interested  in) not a single expensive request that comes back with a lot of info that the user doesn't need.
 
   &lt;/ul&gt;
 
@@ -745,21 +744,17 @@ The goal here is to make little requests as they're needed (returning relevant i
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;what-are-we-hacking-at-next&quot;&gt;What are we hacking at next?&lt;/h3&gt;
-&lt;p&gt;In the next part we’re going to build an admin panel to manage the polls as the admin user and also a control panel for users to manage their polls (You should have enough flask knowledge to this on your own don’t panic if you don’t everyone learns at different speed)&lt;/p&gt;
+&lt;p&gt;In the next part, we’re also going to add more control to our application to keep track of &lt;em&gt;Fraudulent&lt;/em&gt; and &lt;em&gt;Overzealous&lt;/em&gt; users who most likely would want to vote on a poll more than once.&lt;/p&gt;
 
-&lt;p&gt;We’re also going to add more control to our application to keep track of &lt;em&gt;Fraudulent&lt;/em&gt; and &lt;em&gt;Overzealous&lt;/em&gt; users who most likely would want to vote ona poll more than once.&lt;/p&gt;
+&lt;p&gt;Finally i’ll show you how to quickly spin up an admin dashboard for your application to handle basic CRUD operations on your models with &lt;a href=&quot;http://flask-admin.readthedocs.io/en/latest/&quot;&gt;Flask-Admin&lt;/a&gt; and also how flask admin can be integrated with our existing auth system.&lt;/p&gt;
 
-&lt;p&gt;We’re also going to implement a new feature where users can set the duration that they want a poll to be active (similar to twitter polls)&lt;/p&gt;
-
-&lt;p&gt;You might want to look up &lt;a href=&quot;http://www.celeryproject.org/&quot;&gt;Celery&lt;/a&gt; before then.&lt;/p&gt;
-
-&lt;p&gt;If you’re enjoyed this part, please drop a comment I’d love it and you can consider sharing this post and following me on &lt;a href=&quot;https://twitter.com/osaetindaniel&quot;&gt;twitter&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;If you’re enjoyed this part, please drop a comment, I’d love it. You can consider sharing this post and following me on &lt;a href=&quot;https://twitter.com/osaetindaniel&quot;&gt;twitter&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;See you in the next part. Cheers!&lt;/p&gt;
 </description>
         <pubDate>Wed, 26 Oct 2016 22:35:33 +0100</pubDate>
-        <link>https://danidee10.github.io//2016/10/26/flask-by-example-6.html</link>
-        <guid isPermaLink="true">https://danidee10.github.io//2016/10/26/flask-by-example-6.html</guid>
+        <link>http://localhost:4000//2016/10/26/flask-by-example-6.html</link>
+        <guid isPermaLink="true">http://localhost:4000//2016/10/26/flask-by-example-6.html</guid>
       </item>
     
       <item>
@@ -1456,8 +1451,8 @@ flask db upgrade&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;p&gt;If you don’t have any questions or observations, I’ll see you in the next part.&lt;/p&gt;
 </description>
         <pubDate>Wed, 05 Oct 2016 22:35:33 +0100</pubDate>
-        <link>https://danidee10.github.io//2016/10/05/flask-by-example-5.html</link>
-        <guid isPermaLink="true">https://danidee10.github.io//2016/10/05/flask-by-example-5.html</guid>
+        <link>http://localhost:4000//2016/10/05/flask-by-example-5.html</link>
+        <guid isPermaLink="true">http://localhost:4000//2016/10/05/flask-by-example-5.html</guid>
       </item>
     
       <item>
@@ -1664,8 +1659,8 @@ flask db upgrade&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;p&gt;Thanks for reading!&lt;/p&gt;
 </description>
         <pubDate>Wed, 05 Oct 2016 22:35:33 +0100</pubDate>
-        <link>https://danidee10.github.io//2016/10/05/flask-by-example-4.html</link>
-        <guid isPermaLink="true">https://danidee10.github.io//2016/10/05/flask-by-example-4.html</guid>
+        <link>http://localhost:4000//2016/10/05/flask-by-example-4.html</link>
+        <guid isPermaLink="true">http://localhost:4000//2016/10/05/flask-by-example-4.html</guid>
       </item>
     
       <item>
@@ -1828,19 +1823,21 @@ You might be wondering why the password field is 200 characters long.&lt;/p&gt;
 
 &lt;p&gt;Woah! that’s a lot of imports at the top of the file, Let’s discuss each of them and their functions:&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;request:&lt;/strong&gt; The request object allows the client (users and their browsers) to interact with your application (server). It enables you to get data from the user easily, for example the form details from the form the user submits is stored in the &lt;code class=&quot;highlighter-rouge&quot;&gt;request&lt;/code&gt; object as a dictionary called &lt;code class=&quot;highlighter-rouge&quot;&gt;form&lt;/code&gt; that we can access. You can also access the type of request the user made to your route through &lt;code class=&quot;highlighter-rouge&quot;&gt;request.method&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;u&gt;request&lt;/u&gt;&lt;/strong&gt;: The request object allows the client (users and their browsers) to interact with your application (server). It enables you to get data from the user easily, for example the form details from the form the user submits is stored in the &lt;code class=&quot;highlighter-rouge&quot;&gt;request&lt;/code&gt; object as a dictionary called &lt;code class=&quot;highlighter-rouge&quot;&gt;form&lt;/code&gt; that we can access. You can also access the type of request the user made to your route through &lt;code class=&quot;highlighter-rouge&quot;&gt;request.method&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; Take care when you’re trying to access values submitted in the form by the user, if you try to access a field that doesn’t exist and you don’t catch the resulting &lt;code class=&quot;highlighter-rouge&quot;&gt;keyError&lt;/code&gt; exception, the request will become invalid and flask will fail with a &lt;code class=&quot;highlighter-rouge&quot;&gt;400 bad request&lt;/code&gt;. for example if you try to get the username of a user which you gave a name of  &lt;code class=&quot;highlighter-rouge&quot;&gt;username&lt;/code&gt; in your html template with &lt;code class=&quot;highlighter-rouge&quot;&gt;request.form['USERNAME']&lt;/code&gt; instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;request.form['username']&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;flash:&lt;/strong&gt; The name is a little misleading (personally i would’ve preferred &lt;code class=&quot;highlighter-rouge&quot;&gt;send_message&lt;/code&gt;). It doesn’t flash (show a popup) message to the user as you would expect. what it actually does is store a message at the end of the request and them makes it accessible &lt;strong&gt;ONLY AND ONLY&lt;/strong&gt; on the next request.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Take care when you’re trying to access values submitted in the form by the user, if you try to access a field that doesn’t exist and you don’t catch the resulting &lt;code class=&quot;highlighter-rouge&quot;&gt;keyError&lt;/code&gt; exception, the request will become invalid and flask will fail with a &lt;code class=&quot;highlighter-rouge&quot;&gt;400 bad request&lt;/code&gt;. for example if you try to get the username of a user which you gave a name of  &lt;code class=&quot;highlighter-rouge&quot;&gt;username&lt;/code&gt; in your html template with &lt;code class=&quot;highlighter-rouge&quot;&gt;request.form['USERNAME']&lt;/code&gt; instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;request.form['username']&lt;/code&gt;.&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;u&gt;flash&lt;/u&gt;:&lt;/strong&gt; The name is a little misleading (personally i would’ve preferred &lt;code class=&quot;highlighter-rouge&quot;&gt;send_message&lt;/code&gt;). It doesn’t flash (show a popup) message to the user as you would expect. what it actually does is store a message at the end of the request and them makes it accessible &lt;strong&gt;ONLY AND ONLY&lt;/strong&gt; on the next request.&lt;/p&gt;
 
 &lt;p&gt;It will be discarded after that, so don’t try to store messages or data with it. Instead we can use it to pass a message to the next page we’re redirecting to, in our templates, all the &lt;code class=&quot;highlighter-rouge&quot;&gt;flash&lt;/code&gt; messages can be accessed by calling  &lt;code class=&quot;highlighter-rouge&quot;&gt;get_flashed_messages()&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;redirect:&lt;/strong&gt; It simply redirects to another page.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;u&gt;redirect&lt;/u&gt;:&lt;/strong&gt; It simply redirects to another page.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;url_for:&lt;/strong&gt; This prevents us from hardcoding the &lt;code class=&quot;highlighter-rouge&quot;&gt;homepage&lt;/code&gt; route as &lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt; when calling &lt;code class=&quot;highlighter-rouge&quot;&gt;redirect&lt;/code&gt;, if you hardcode it, then what happens when you decide to change the route of &lt;code class=&quot;highlighter-rouge&quot;&gt;home&lt;/code&gt; from &lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;/index&lt;/code&gt;. this would break all existing links to the homepage in your application, you’ll have to go round and change all the hardcoded url’s to new url you’ve specified.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;u&gt;url_for&lt;/u&gt;:&lt;/strong&gt; This prevents us from hardcoding the &lt;code class=&quot;highlighter-rouge&quot;&gt;homepage&lt;/code&gt; route as &lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt; when calling &lt;code class=&quot;highlighter-rouge&quot;&gt;redirect&lt;/code&gt;, if you hardcode it, then what happens when you decide to change the route of &lt;code class=&quot;highlighter-rouge&quot;&gt;home&lt;/code&gt; from &lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;/index&lt;/code&gt;. this would break all existing links to the homepage in your application, you’ll have to go round and change all the hardcoded url’s to new url you’ve specified.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;generate_password_hash and check_password_hash&lt;/strong&gt;: are helpers from &lt;a href=&quot;http://werkzeug.pocoo.org/&quot;&gt;werkzeug&lt;/a&gt; for hashing and comparing a string with a password hash respectively. The hash is a one way salted hash, meaning we cannot decrypt it back. want to read more about hashing and the meaning of a salted hash read this &lt;a href=&quot;https://www.quora.com/What-does-it-mean-to-add-a-salt-to-a-password-hash&quot;&gt;Quora&lt;/a&gt; post.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;u&gt;generate_password_hash and check_password_hash&lt;/u&gt;&lt;/strong&gt;: are helpers from &lt;a href=&quot;http://werkzeug.pocoo.org/&quot;&gt;werkzeug&lt;/a&gt; for hashing and comparing a string with a password hash respectively. The hash is a one way salted hash, meaning we cannot decrypt it back. want to read more about hashing and the meaning of a salted hash read this &lt;a href=&quot;https://www.quora.com/What-does-it-mean-to-add-a-salt-to-a-password-hash&quot;&gt;Quora&lt;/a&gt; post.&lt;/p&gt;
 
 &lt;p&gt;Security is a very important aspect in web applications and other applications generally (even in our daily life), it’s best to use already made solutions that have been tested and trusted by thousands of developers.&lt;/p&gt;
 
@@ -2023,8 +2020,6 @@ You might be wondering why the password field is 200 characters long.&lt;/p&gt;
 
 &lt;p&gt;The with statement in jinja2 is not equivalent to python’s &lt;code class=&quot;highlighter-rouge&quot;&gt;with&lt;/code&gt; statement. it doesn’t do any cleanup action when you exit the block and the variables inside the &lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt; block are not available outside it.&lt;/p&gt;
 
-&lt;p&gt;This is exactly what this user was thinking about when he asked this question on &lt;a href=&quot;http://stackoverflow.com/questions/6432355/variable-defined-with-with-statement-available-outside-of-with-block&quot;&gt;stackoverflow&lt;/a&gt;.&lt;/p&gt;
-
 &lt;p&gt;It simply sets a variable and creates a new scope, so all the variables used inside the &lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt; block  won’t be accessible outside that block.&lt;/p&gt;
 
 &lt;h6 id=&quot;something-like-this-in-pure-python&quot;&gt;something like this in pure python.&lt;/h6&gt;
@@ -2151,8 +2146,8 @@ staticfied ../templates/index.html &lt;span class=&quot;o&quot;&gt;==&lt;/span&g
 &lt;p&gt;Thanks for reading, if you found Staticfy useful don’t forget to give it a star on github. Otherwise raise an issue to contribute and improve it’s development. Drop your comments if you have any question or insights about this part.&lt;/p&gt;
 </description>
         <pubDate>Sat, 24 Sep 2016 22:35:33 +0100</pubDate>
-        <link>https://danidee10.github.io//2016/09/24/flask-by-example-3.html</link>
-        <guid isPermaLink="true">https://danidee10.github.io//2016/09/24/flask-by-example-3.html</guid>
+        <link>http://localhost:4000//2016/09/24/flask-by-example-3.html</link>
+        <guid isPermaLink="true">http://localhost:4000//2016/09/24/flask-by-example-3.html</guid>
       </item>
     
       <item>
@@ -2173,7 +2168,7 @@ staticfied ../templates/index.html &lt;span class=&quot;o&quot;&gt;==&lt;/span&g
 &lt;p&gt;Next step is to convert our schema to code.&lt;/p&gt;
 
 &lt;h4 id=&quot;flask-sqlalchemy&quot;&gt;Flask SQLAlchemy&lt;/h4&gt;
-&lt;p&gt;Since flask is a micro framework, it doesn’t provide any special &lt;em&gt;batteries&lt;/em&gt; out of the box, so the option is left to the programmer to choose the &lt;em&gt;batteries&lt;/em&gt; he wants for his application. Traditionally, before ORM’s (Object Relational mapping) came to make our lives easier, programmers wrote plain SQL and programming languages provided libraries for working with different database (Python for example has libraries for working with sqlite out of the box). You’d typically pass in a valid SQL query to the Database and then have the results returned back to you, stored in an arrays or some container data structure for the programmer to work with, but as applications and data-sets grew larger it became a huge pain to maintain or even look at code that had a lot of SQL running everywhere.&lt;/p&gt;
+&lt;p&gt;Since flask is a micro framework, it doesn’t provide any special &lt;em&gt;batteries&lt;/em&gt; out of the box, so the option is left to the programmer to choose the &lt;em&gt;batteries&lt;/em&gt; he wants for his application. Traditionally, before ORM’s (Object Relational mapping) came to make our lives easier, programmers wrote plain SQL and programming languages provided libraries for working with different database (Python for example has libraries for working with SQLite out of the box). You’d typically pass in a valid SQL query to the Database and then have the results returned back to you, stored in an arrays or some container data structure for the programmer to work with, but as applications and data-sets grew larger it became a huge pain to maintain or even look at code that had a lot of SQL running everywhere.&lt;/p&gt;
 
 &lt;p&gt;A perfect example is this:&lt;/p&gt;
 
@@ -2204,11 +2199,12 @@ AND (rd.rd_numberofrooms &lt;span class=&quot;err&quot;&gt;&amp;lt;&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Spurs'&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dele_alli&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;&lt;a href=&quot;http://www.sqlalchemy.org/&quot;&gt;SQLAlchemy&lt;/a&gt; is a very mature ORM that’s very popular in the python community, there are other [ORM’s]https://www.fullstackpython.com/object-relational-mappers-orms.html for python, but we’ll stick with SQLAlchemy due to it’s sheer popularity and excellent documentation.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.sqlalchemy.org/&quot;&gt;SQLAlchemy&lt;/a&gt; is a very mature ORM that’s very popular in the python community, there are other &lt;a href=&quot;https://www.fullstackpython.com/object-relational-mappers-orms.html&quot;&gt;ORM’s&lt;/a&gt; for python, but we’ll stick with SQLAlchemy due to it’s sheer popularity and excellent documentation.&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;flask-sqlalchemy.pocoo.org/2.1/&quot;&gt;Flask SQLAlchemy&lt;/a&gt; is a flask extension that makes it easier for us to work with SQLAlchemy directly in flask (You can use plain SQLAlchemy without the flask extension if you want to). we’re going to install it now with &lt;code class=&quot;highlighter-rouge&quot;&gt;pip&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;flask-sqlalchemy.pocoo.org/2.1/&quot;&gt;Flask SQLAlchemy&lt;/a&gt; is a flask extension that makes it easier for us to work with SQLAlchemy directly in flask (You can use plain SQLAlchemy without the flask extension if you want to).&lt;/p&gt;
 
-&lt;h6 id=&quot;make-sure-your-virtualenv-is-activated&quot;&gt;Make sure your virtualenv is activated&lt;/h6&gt;
+&lt;p&gt;&lt;br /&gt;
+we’re going to install it now with &lt;code class=&quot;highlighter-rouge&quot;&gt;pip&lt;/code&gt;. &lt;strong&gt;Make sure your virtualenv is activated&lt;/strong&gt;&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;pip install flask_sqlalchemy&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
@@ -2398,25 +2394,25 @@ We were able to set up our database and get a feel of how SQLalchemy works, in t
 &lt;p&gt;If you have any questions or insights please use the comment box below. See you in the next part!&lt;/p&gt;
 </description>
         <pubDate>Mon, 19 Sep 2016 22:35:33 +0100</pubDate>
-        <link>https://danidee10.github.io//2016/09/19/flask-by-example-2.html</link>
-        <guid isPermaLink="true">https://danidee10.github.io//2016/09/19/flask-by-example-2.html</guid>
+        <link>http://localhost:4000//2016/09/19/flask-by-example-2.html</link>
+        <guid isPermaLink="true">http://localhost:4000//2016/09/19/flask-by-example-2.html</guid>
       </item>
     
       <item>
         <title>Flask by example (How to build an online polling app)</title>
         <description>&lt;p&gt;Welcome everyone!, This is the beginning of a new series where we’ll learn how to use flask by building a simple Online polling application.&lt;/p&gt;
 
-&lt;p&gt;This series is going to be split into several parts because of the size of the app we’re building. At the end of this series we’ll have built a polling app, where:&lt;/p&gt;
+&lt;p&gt;This series is going to be split into several parts because of the size of the app we’re building. At the end of this series we’ll have built a polling app, with the following features:&lt;/p&gt;
 
 &lt;ul class=&quot;postlist&quot;&gt;
-  &lt;li&gt;Users can login.&lt;/li&gt;
-  &lt;li&gt;Vote on various topics and leave comments.&lt;/li&gt;
-  &lt;li&gt;Comments can also be upvoted and downvoted so that the best comments get to the top for other users to see.&lt;/li&gt;
+  &lt;li&gt;A basic authentication system.&lt;/li&gt;
+  &lt;li&gt;Ability to vote on various topics&lt;/li&gt;
+  &lt;li&gt;Interactive progress bars to show the percentage of votes&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;We’re going to use &lt;a href=&quot;http://flask.pocoo.org&quot;&gt;Flask&lt;/a&gt; as our backend, &lt;a href=&quot;http://getbootstrap.com/&quot;&gt;Bootstrap3&lt;/a&gt; for our interface generally and &lt;a href=&quot;https://facebook.github.io/react/&quot;&gt;Reactjs&lt;/a&gt; for other parts of our UI. the rest is just plain old html and css.&lt;/p&gt;
+&lt;p&gt;We’re going to use &lt;a href=&quot;http://flask.pocoo.org&quot;&gt;Flask&lt;/a&gt; as our backend, &lt;a href=&quot;http://getbootstrap.com/&quot;&gt;Bootstrap3&lt;/a&gt; for our interface generally and &lt;a href=&quot;https://facebook.github.io/react/&quot;&gt;ReactJS&lt;/a&gt; for other parts of our UI. the rest is just plain old html and css.&lt;/p&gt;
 
 &lt;p&gt;Our polling app is going to be called &lt;strong&gt;Votr&lt;/strong&gt;&lt;/p&gt;
 
@@ -2443,17 +2439,31 @@ We were able to set up our database and get a feel of how SQLalchemy works, in t
 &lt;p&gt;At the end of this tutorial, You would have:&lt;/p&gt;
 
 &lt;ul class=&quot;postlist&quot;&gt;
-  &lt;li&gt;Built a RESTful API with flask and also learnt more about how API's work&lt;/li&gt;
+  &lt;li&gt;Built a REST API with flask&lt;/li&gt;
 
-  &lt;li&gt;Leveraged the power of some popular flask extensions like &lt;a href=&quot;flask-sqlalchemy.pocoo.org/2.1/&quot;&gt;Flask SQLAlchemy&lt;/a&gt; and
-      &lt;a href=&quot;https://flask-migrate.readthedocs.io/en/latest/&quot;&gt;Flask Migrate&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Gotten a basic understanding of python's premier ORM &lt;a href=&quot;http://www.sqlalchemy.org/&quot;&gt;SQLAlchemy&lt;/a&gt;&lt;/li&gt;
+
+  &lt;li&gt;Leveraged the power of some popular flask extensions like &lt;a href=&quot;flask-sqlalchemy.pocoo.org/2.1/&quot;&gt;Flask SQLAlchemy&lt;/a&gt;,
+      &lt;a href=&quot;https://flask-migrate.readthedocs.io/en/latest/&quot;&gt;Flask Migrate&lt;/a&gt; and &lt;a href=&quot;http://flask-admin.readthedocs.io/en/latest/&quot;&gt;Flask-Admin&lt;/a&gt;&lt;/li&gt;
 
   &lt;li&gt;Learned how to Build interactive and dynamic UI's with &lt;a href=&quot;https://facebook.github.io/react-native/&quot;&gt;ReactJS&lt;/a&gt;&lt;/li&gt;
+
+  &lt;li&gt;How to structure your flask applications and use &lt;a href=&quot;http://flask.pocoo.org/docs/0.11/blueprints/&quot;&gt;Flask Blueprints&lt;/a&gt;&lt;/li&gt;
+
+  &lt;li&gt;Learnt how to run background jobs with &lt;a href=&quot;http://www.celeryproject.org/&quot;&gt;Celery&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;Here is a screenshot of the online polling app you will build.&lt;/p&gt;
 
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
 &lt;p&gt;&lt;img src=&quot;/images/screenshot.png&quot; alt=&quot;Votr image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;and a gif showing the voting process&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/votr.gif&quot; alt=&quot;Votr gif&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;requirements-and-setup&quot;&gt;Requirements and setup&lt;/h4&gt;
 &lt;p&gt;To follow this tutorial effectively you should have the following installed:&lt;/p&gt;
@@ -2529,13 +2539,17 @@ We were able to set up our database and get a feel of how SQLalchemy works, in t
 
 &lt;p&gt;By default flask runs on port &lt;code class=&quot;highlighter-rouge&quot;&gt;5000&lt;/code&gt; so open any browser you have an enter the address &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:5000&lt;/code&gt; and sure enough &lt;code class=&quot;highlighter-rouge&quot;&gt;hello world&lt;/code&gt; should be displayed.&lt;/p&gt;
 
-&lt;p&gt;That’s it! our development environment is all setup with flask installed. Note that we’ll have to install other libraries (we haven’t installed react yet). but i feel it’s best to install every library we need as we go through the series, so we can understand what each library does and handle the quirks and issues that may arise when we get there.&lt;/p&gt;
+&lt;p&gt;That’s it! our development environment is all setup with flask installed.&lt;/p&gt;
+
+&lt;p&gt;To keep this simple, and to show you beauty of developing flask applications, we’ll install various extensions as we need them, so you’ll understand what each library does and how handle the quirks and issues that may arise when we get there.&lt;/p&gt;
 
 &lt;p&gt;If you have any questions or issues with the installation process. please leave a comment below else I’ll see you in the next part where we’re going to start writing some code!&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;The repo for this project can be found on &lt;a href=&quot;https://github.com/danidee10/Votr&quot;&gt;github&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
 </description>
         <pubDate>Sun, 18 Sep 2016 22:35:33 +0100</pubDate>
-        <link>https://danidee10.github.io//2016/09/18/flask-by-example-1.html</link>
-        <guid isPermaLink="true">https://danidee10.github.io//2016/09/18/flask-by-example-1.html</guid>
+        <link>http://localhost:4000//2016/09/18/flask-by-example-1.html</link>
+        <guid isPermaLink="true">http://localhost:4000//2016/09/18/flask-by-example-1.html</guid>
       </item>
     
       <item>
@@ -2547,8 +2561,8 @@ We were able to set up our database and get a feel of how SQLalchemy works, in t
 
 </description>
         <pubDate>Thu, 08 Sep 2016 22:35:33 +0100</pubDate>
-        <link>https://danidee10.github.io//2016/09/08/hello-world.html</link>
-        <guid isPermaLink="true">https://danidee10.github.io//2016/09/08/hello-world.html</guid>
+        <link>http://localhost:4000//2016/09/08/hello-world.html</link>
+        <guid isPermaLink="true">http://localhost:4000//2016/09/08/hello-world.html</guid>
       </item>
     
   </channel>

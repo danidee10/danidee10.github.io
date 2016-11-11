@@ -177,21 +177,23 @@ if __name__ == '__main__':
 Woah! that's a lot of imports at the top of the file, Let's discuss each of them and their functions:
 
 
-  **request:** The request object allows the client (users and their browsers) to interact with your application (server). It enables you to get data from the user easily, for example the form details from the form the user submits is stored in the `request` object as a dictionary called `form` that we can access. You can also access the type of request the user made to your route through `request.method`.
+  **<u>request</u>**: The request object allows the client (users and their browsers) to interact with your application (server). It enables you to get data from the user easily, for example the form details from the form the user submits is stored in the `request` object as a dictionary called `form` that we can access. You can also access the type of request the user made to your route through `request.method`.
 
-  **NOTE:** Take care when you're trying to access values submitted in the form by the user, if you try to access a field that doesn't exist and you don't catch the resulting `keyError` exception, the request will become invalid and flask will fail with a `400 bad request`. for example if you try to get the username of a user which you gave a name of  `username` in your html template with `request.form['USERNAME']` instead of `request.form['username']`.
+  **NOTE:**
+
+  ***Take care when you're trying to access values submitted in the form by the user, if you try to access a field that doesn't exist and you don't catch the resulting `keyError` exception, the request will become invalid and flask will fail with a `400 bad request`. for example if you try to get the username of a user which you gave a name of  `username` in your html template with `request.form['USERNAME']` instead of `request.form['username']`.***
 
 
-  **flash:** The name is a little misleading (personally i would've preferred `send_message`). It doesn't flash (show a popup) message to the user as you would expect. what it actually does is store a message at the end of the request and them makes it accessible **ONLY AND ONLY** on the next request.
+  **<u>flash</u>:** The name is a little misleading (personally i would've preferred `send_message`). It doesn't flash (show a popup) message to the user as you would expect. what it actually does is store a message at the end of the request and them makes it accessible **ONLY AND ONLY** on the next request.
 
   It will be discarded after that, so don't try to store messages or data with it. Instead we can use it to pass a message to the next page we're redirecting to, in our templates, all the `flash` messages can be accessed by calling  `get_flashed_messages()`.
 
-  **redirect:** It simply redirects to another page.
+  **<u>redirect</u>:** It simply redirects to another page.
 
-  **url_for:** This prevents us from hardcoding the `homepage` route as `/` when calling `redirect`, if you hardcode it, then what happens when you decide to change the route of `home` from `/` to `/index`. this would break all existing links to the homepage in your application, you'll have to go round and change all the hardcoded url's to new url you've specified.
+  **<u>url_for</u>:** This prevents us from hardcoding the `homepage` route as `/` when calling `redirect`, if you hardcode it, then what happens when you decide to change the route of `home` from `/` to `/index`. this would break all existing links to the homepage in your application, you'll have to go round and change all the hardcoded url's to new url you've specified.
 
 
-  **generate_password_hash and check_password_hash**: are helpers from [werkzeug](http://werkzeug.pocoo.org/) for hashing and comparing a string with a password hash respectively. The hash is a one way salted hash, meaning we cannot decrypt it back. want to read more about hashing and the meaning of a salted hash read this [Quora](https://www.quora.com/What-does-it-mean-to-add-a-salt-to-a-password-hash) post.
+  **<u>generate_password_hash and check_password_hash</u>**: are helpers from [werkzeug](http://werkzeug.pocoo.org/) for hashing and comparing a string with a password hash respectively. The hash is a one way salted hash, meaning we cannot decrypt it back. want to read more about hashing and the meaning of a salted hash read this [Quora](https://www.quora.com/What-does-it-mean-to-add-a-salt-to-a-password-hash) post.
 
   Security is a very important aspect in web applications and other applications generally (even in our daily life), it's best to use already made solutions that have been tested and trusted by thousands of developers.
 
@@ -384,8 +386,6 @@ We also used the same technique for menu items to display a `"signup"` or `"crea
 Earlier we talked about `flash` messages and their use. Just above the login form we're displaying all the flashed messages if anyone is present, you can use a context manager **Wrong!!!**
 
 The with statement in jinja2 is not equivalent to python's `with` statement. it doesn't do any cleanup action when you exit the block and the variables inside the {% raw %}`{% with %}`{% endraw %} block are not available outside it.
-
-This is exactly what this user was thinking about when he asked this question on [stackoverflow](http://stackoverflow.com/questions/6432355/variable-defined-with-with-statement-available-outside-of-with-block).
 
 It simply sets a variable and creates a new scope, so all the variables used inside the {% raw %}`{% with %}`{% endraw %} block  won't be accessible outside that block.
 

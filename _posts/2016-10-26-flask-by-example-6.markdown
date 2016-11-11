@@ -776,9 +776,8 @@ imagine fectcing a huge list of 200k+ polls in one go. Your application would se
 
   <br />
 
-<blockquote>
-The goal here is to make little requests as they're needed (returning relevant information the user is interested  in) not a single expensive request that comes back with a lot of info that the user doesn't need
-</blockquote>
+
+The goal here is to make little requests as they're needed (returning relevant information the user is interested  in) not a single expensive request that comes back with a lot of info that the user doesn't need.
 
   </ul>
 
@@ -802,13 +801,9 @@ You should be strong enough to venture into the huge ecosystem of react tutorial
 <br />
 
 ### What are we hacking at next?
-In the next part, we're going to implement a new feature where users can set the duration that they want a poll to be active, after that duration expires the poll would automatically be closed.
+In the next part, we're also going to add more control to our application to keep track of *Fraudulent* and *Overzealous* users who most likely would want to vote on a poll more than once.
 
-We're also going to add more control to our application to keep track of *Fraudulent* and *Overzealous* users who most likely would want to vote on a poll more than once.
-
-Finally we'll build an admin panel to manage the polls as the admin user and also a dashboard for users to manage their polls (You should have enough flask knowledge to do the latter on your own. Don't panic if you don't, everyone learns at different speeds).
-
-You might want to look up [Celery](http://www.celeryproject.org/) before then.
+Finally i'll show you how to quickly spin up an admin dashboard for your application to handle basic CRUD operations on your models with [Flask-Admin](http://flask-admin.readthedocs.io/en/latest/) and also how flask admin can be integrated with our existing auth system.
 
 If you're enjoyed this part, please drop a comment, I'd love it. You can consider sharing this post and following me on [twitter](https://twitter.com/osaetindaniel)
 

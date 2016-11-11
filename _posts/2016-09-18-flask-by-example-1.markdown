@@ -6,17 +6,17 @@ date: 2016-09-18T22:35:33+01:00
 
 Welcome everyone!, This is the beginning of a new series where we'll learn how to use flask by building a simple Online polling application.
 
-This series is going to be split into several parts because of the size of the app we're building. At the end of this series we'll have built a polling app, where:
+This series is going to be split into several parts because of the size of the app we're building. At the end of this series we'll have built a polling app, with the following features:
 
 <ul class="postlist">
-  <li>Users can login.</li>
-  <li>Vote on various topics and leave comments.</li>
-  <li>Comments can also be upvoted and downvoted so that the best comments get to the top for other users to see.</li>
+  <li>A basic authentication system.</li>
+  <li>Ability to vote on various topics</li>
+  <li>Interactive progress bars to show the percentage of votes</li>
 </ul>
 
 <br />
 
-We're going to use [Flask](http://flask.pocoo.org) as our backend, [Bootstrap3](http://getbootstrap.com/) for our interface generally and [Reactjs](https://facebook.github.io/react/) for other parts of our UI. the rest is just plain old html and css.
+We're going to use [Flask](http://flask.pocoo.org) as our backend, [Bootstrap3](http://getbootstrap.com/) for our interface generally and [ReactJS](https://facebook.github.io/react/) for other parts of our UI. the rest is just plain old html and css.
 
 Our polling app is going to be called **Votr**
 
@@ -43,19 +43,33 @@ It's also for those who've heard about how simple and straight forward flask is,
 At the end of this tutorial, You would have:
 
 <ul class="postlist">
-  <li>Built a RESTful API with flask and also learnt more about how API's work</li>
+  <li>Built a REST API with flask</li>
 
-  <li>Leveraged the power of some popular flask extensions like <a href="flask-sqlalchemy.pocoo.org/2.1/">Flask SQLAlchemy</a> and
-      <a href="https://flask-migrate.readthedocs.io/en/latest/">Flask Migrate</a></li>
+  <li>Gotten a basic understanding of python's premier ORM <a href="http://www.sqlalchemy.org/">SQLAlchemy</a></li>
+
+  <li>Leveraged the power of some popular flask extensions like <a href="flask-sqlalchemy.pocoo.org/2.1/">Flask SQLAlchemy</a>,
+      <a href="https://flask-migrate.readthedocs.io/en/latest/">Flask Migrate</a> and <a href="http://flask-admin.readthedocs.io/en/latest/">Flask-Admin</a></li>
 
   <li>Learned how to Build interactive and dynamic UI's with <a href="https://facebook.github.io/react-native/">ReactJS</a></li>
+
+  <li>How to structure your flask applications and use <a href="http://flask.pocoo.org/docs/0.11/blueprints/">Flask Blueprints</a></li>
+
+  <li>Learnt how to run background jobs with <a href="http://www.celeryproject.org/">Celery</a></li>
 </ul>
 
+<br />
+
 Here is a screenshot of the online polling app you will build.
+
+<br />
 
 
 ![Votr image](/images/screenshot.png)
 
+
+and a gif showing the voting process
+
+![Votr gif](/images/votr.gif)
 
 #### Requirements and setup
 To follow this tutorial effectively you should have the following installed:
@@ -144,6 +158,10 @@ $ python3 votr.py
 
 By default flask runs on port `5000` so open any browser you have an enter the address `localhost:5000` and sure enough `hello world` should be displayed.
 
-That's it! our development environment is all setup with flask installed. Note that we'll have to install other libraries (we haven't installed react yet). but i feel it's best to install every library we need as we go through the series, so we can understand what each library does and handle the quirks and issues that may arise when we get there.
+That's it! our development environment is all setup with flask installed.
+
+To keep this simple, and to show you beauty of developing flask applications, we'll install various extensions as we need them, so you'll understand what each library does and how handle the quirks and issues that may arise when we get there.
 
 If you have any questions or issues with the installation process. please leave a comment below else I'll see you in the next part where we're going to start writing some code!
+
+**The repo for this project can be found on [github](https://github.com/danidee10/Votr)**
