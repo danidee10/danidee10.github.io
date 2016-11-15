@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Flask by example 2 (Designing the Database with SQLAlchemy)
+title: Flask by example 2 (Design and manipulate the database with SQLAlchemy)
 date: 2016-09-19T22:35:33+01:00
 ---
 
