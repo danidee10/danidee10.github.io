@@ -121,9 +121,8 @@ class Polls(Base):
         return self.option.name
 {% endhighlight %}
 
-To properly use `flask_sqlalchemy`, we have to create a configuration file which tells flask the type of database we're making use of and how to connect it, we can also use our configuration file to store site-wide information (Like the password to our admin account!). we're going to use sqlite as the database for votr because it's lightweight and easy to setup.
+To properly use `flask_sqlalchemy`, we have to create a configuration file which tells flask the type of database we're making use of and how to connect it, we can also use our configuration file to store site-wide information. We're going to use sqlite as the database for votr because it's lightweight and easy to setup.
 
-But seriously never store passwords or sensitive information of any kind in a plain file or unencrypted in your database. Never!
 
 ###### Create a new file `config.py` and include the following
 
