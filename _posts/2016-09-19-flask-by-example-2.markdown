@@ -165,36 +165,17 @@ if __name__ == '__main__':
 
 {% endhighlight %}
 
-We imported the `db` we created in our `models.py` file, and called `db.init_app(votr)` and `db.create_all(app=votr)` to bind sqlalchemy to our flask app and create the database tables we specified in our `models.py` file. Note that `db.create_all` doesn't actually create our database, it would simply create the required tables we specified in our `models.py` file on an existing database (Remember our `config.py` file where we specified the location of our database).
+We imported the `db` we created in our `models.py` file, and called `db.init_app(votr)` and `db.create_all(app=votr)` to create the database for us. The database would exist at the path we provided with the `SQLALCHEMY_DATABASE_URI` variable in our configuration file.
 
-We're going to create that db file now.
 
-###### If you have python installed properly you should have sqlite3, if for some reason you don't have it, you can install it with:
-
-{% highlight bash %}
-$ sudo apt-get install sqlite3
-{% endhighlight %}
-
-###### Now lets create our database
-{% highlight bash %}
-$ sqlite3
-SQLite version 3.14.2 2016-09-12 18:50:49
-Enter ".help" for usage hints.
-Connected to a transient in-memory database.
-Use ".open FILENAME" to reopen on a persistent database.
-sqlite> .save votr.db
-sqlite>
-{% endhighlight %}
-
-###### Press Ctrl + D or Ctrl + C to exit.
-
-###### This creates a new db called `votr.db` in the `votr` directory, now run the `votr.py` with python.
+**Now run**
 
 {% highlight bash %}
 $ python3 votr.py
 {% endhighlight %}
 
-###### This should create all the models we specified in our `models.py` file as tables in our database, we can confirm that by using sqlite3 again from the terminal.
+
+###### This should create all database and all the models we specified in `models.py` as tables, we can confirm that by using sqlite3 from the terminal.
 
 {% highlight bash %}
 $ sqlite3
