@@ -50,6 +50,10 @@ a {
   font-style: italic;
 }
 
+code {
+  font-size: 15px;
+}
+
     </style>
 
     <link rel="canonical" href="http://localhost:4000/2016/09/24/flask-by-example-3.html">
@@ -274,9 +278,10 @@ You might be wondering why the password field is 200 characters long.</p>
 
 <p><strong><u>redirect</u>:</strong> It simply redirects to another page.</p>
 
-<p><strong><u>url_for</u>:</strong> This prevents us from hardcoding the <code class="highlighter-rouge">homepage</code> route as <code class="highlighter-rouge">/</code> when calling <code class="highlighter-rouge">redirect</code>, if you hardcode it, then what happens when you decide to change the route of <code class="highlighter-rouge">home</code> from <code class="highlighter-rouge">/</code> to <code class="highlighter-rouge">/index</code>. this would break all existing links to the homepage in your application, you’ll have to go round and change all the hardcoded url’s to new url you’ve specified.</p>
+<p><strong><u>url_for</u>:</strong> This prevents us from hardcoding the <code class="highlighter-rouge">homepage</code> route as <code class="highlighter-rouge">/</code> when calling <code class="highlighter-rouge">redirect</code>, if you hardcode it, then what happens when you decide to change the route of <code class="highlighter-rouge">home</code> from <code class="highlighter-rouge">/</code> to <code class="highlighter-rouge">/index</code>. this would break all existing links to the homepage in your application, you’ll have to go round and change all the hardcoded url’s to new url.</p>
 
-<p><strong><u>generate_password_hash and check_password_hash</u></strong>: are helpers from <a href="http://werkzeug.pocoo.org/">werkzeug</a> for hashing and comparing a string with a password hash respectively. The hash is a one way salted hash, meaning we cannot decrypt it back. want to read more about hashing and the meaning of a salted hash read this <a href="https://www.quora.com/What-does-it-mean-to-add-a-salt-to-a-password-hash">Quora</a> post.</p>
+<p><strong><u>generate_password_hash and check_password_hash</u></strong>: are helpers from <a href="http://werkzeug.pocoo.org/">werkzeug</a> for hashing and comparing a string with a password hash respectively. The hash is a one way <a href="https://www.quora.com/What-does-it-mean-to-add-a-salt-to-a-password-hash">salted hash</a> post.
+, meaning we cannot decrypt it to get back the original string that was entered by the user.</p>
 
 <p>Security is a very important aspect in web applications and other applications generally (even in our daily life), it’s best to use already made solutions that have been tested and trusted by thousands of developers.</p>
 
@@ -455,7 +460,9 @@ You might be wondering why the password field is 200 characters long.</p>
 
 <p>We also used the same technique for menu items to display a <code class="highlighter-rouge">"signup"</code> or <code class="highlighter-rouge">"create a poll"</code> button depending on the login state of the user.</p>
 
-<p>Earlier we talked about <code class="highlighter-rouge">flash</code> messages and their use. Just above the login form we’re displaying all the flashed messages if anyone is present, you can use a context manager <strong>Wrong!!!</strong></p>
+<p>Earlier we talked about <code class="highlighter-rouge">flash</code> messages and their use. Just above the login form we’re displaying all the flashed messages if anyone is present, you can use a context manager</p>
+
+<p><strong>Wrong!!!</strong></p>
 
 <p>The with statement in jinja2 is not equivalent to python’s <code class="highlighter-rouge">with</code> statement. it doesn’t do any cleanup action when you exit the block and the variables inside the <code class="highlighter-rouge"><span class="p">{</span><span class="err">%</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">%</span><span class="p">}</span></code> block are not available outside it.</p>
 
@@ -471,7 +478,7 @@ You might be wondering why the password field is 200 characters long.</p>
 
 <p>when you call <code class="highlighter-rouge">get_flashed_messages()</code> with <code class="highlighter-rouge">with_categories</code> set to <code class="highlighter-rouge">true</code> it allows you to access the class of the message that was flashed. Based on that, we can define a css class that displays different colours of text depending on the class of message that was flashed (Yeah you guessed right!, green for success and red for errors, and probably yellow for warnings).</p>
 
-<p>Jinja2 doesn’t actually mirror python as a language in all it’s constructs, some statements might be slightly different from their counterparts in pure python, so watch out for this if something doesn’t work as you expect it to work.</p>
+<p>Jinja2 doesn’t actually mirror python as a language in all it’s constructs, some statements might be slightly different from their counterparts in pure python, so watch out for this if something doesn’t work as you expect it to.</p>
 
 <h3 id="signup-template">Signup template</h3>
 
@@ -561,7 +568,7 @@ staticfied ../templates/signup.html <span class="o">==</span>&gt; staticfy/signu
 
 staticfied ../templates/index.html <span class="o">==</span>&gt; staticfy/index.html</code></pre></figure>
 
-<p>It should create a folder called <code class="highlighter-rouge">staticfy</code> containing two new files (with the same name as our original templates), whose static links have been converted to their flask equivalents.</p>
+<p>It should create a folder called <code class="highlighter-rouge">staticfy</code> containing two new files (with the same name as our original templates), whose html links have been converted to their flask equivalents.</p>
 
 <p>copy the new files over to replace the old files.</p>
 
@@ -582,7 +589,9 @@ staticfied ../templates/index.html <span class="o">==</span>&gt; staticfy/index.
 
 <p>All the custom css and the complete source code for this project can be found on <a href="https://github.com/danidee10/Staticfy">github</a>, feel free to fork it and play with it.</p>
 
-<p>Thanks for reading, if you found Staticfy useful don’t forget to give it a star on github. Otherwise raise an issue to contribute and improve it’s development. Drop your comments if you have any question or insights about this part.</p>
+<p>Thanks for reading, if you found Staticfy useful don’t forget to give it a star on github. Otherwise raise an issue to contribute and improve it’s development.</p>
+
+<p>Drop your comments if you have any question or insights about this part.</p>
 
             </div>
 

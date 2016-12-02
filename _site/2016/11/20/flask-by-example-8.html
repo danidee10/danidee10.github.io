@@ -50,6 +50,10 @@ a {
   font-style: italic;
 }
 
+code {
+  font-size: 15px;
+}
+
     </style>
 
     <link rel="canonical" href="http://localhost:4000/2016/11/20/flask-by-example-8.html">
@@ -106,23 +110,23 @@ a {
             <div class="post-content">
               <h3 id="what-are-flask-blueprints">What are flask blueprints?</h3>
 
-<p>Basically, a flask blueprint is a way for you to organize your flask application into smaller and re-usable components</p>
+<p>Basically, a flask blueprint is a way for you to organize your flask application into smaller and re-usable application</p>
 
-<p>Just like a normal flask application, a blueprint defines a collection of views, templates, static assets and all the werkzeug helpers and utilities are available to it.</p>
+<p>Just like a normal flask application, a blueprint defines a collection of views, templates and static assets.</p>
 
-<p>It should be noted that a blueprint is not a re-usable ‘plug and play’ app, it cannot run on it’s own every blueprint must be registered on a real Flask application before it can be used.</p>
+<p>It should be noted that a blueprint is not a ‘plug and play’ app, it cannot run on it’s own every blueprint must be registered on a real Flask application before it can be used.</p>
 
 <h3 id="why-should-you-use-blueprints">Why should you use blueprints</h3>
 <p>The main reason why you should use blueprints is to de-couple your application into smaller re-usable components. Like i said earlier in this series it would make perfect sense to move all our api calls into a blueprint.</p>
 
-<p>This makes the code more maintainable.</p>
-
-<p>We’ve already seen this re-usability with Flask-Admin in the <a href="/2016/11/14/flask-by-example-7.html">previous tutorial</a></p>
+<p>This makes the code more maintainable and easier to debug.</p>
 
 <h3 id="how-do-you-create-a-blueprint">How do you create a blueprint</h3>
-<p>Well, the choice is really up to you, since flask is very liberal and doesn’t enforce much conventions on you. There are several ways of creating a blueprint, but personally i prefer to treat blueprints as separate python packages with everything they provide in their own folder. That way, if something goes wrong the the <code class="highlighter-rouge">api</code> blueprint for example, you already know where to start looking.</p>
+<p>Well, the choice is really up to you, since flask is very liberal and doesn’t enforce much conventions on you. There are several ways of creating a blueprint, but personally i prefer to treat blueprints as separate python packages with everything they provide in their own folder. That way, if something goes wrong with our api for example, you already know where to start looking.</p>
 
-<p>Lets create a new package and call it api <strong>Structure your application like this:</strong></p>
+<p>Lets create a new package and call it api</p>
+
+<p><strong>Your application structure should look like this:</strong></p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">.</span>
 <span class="err">├</span><span class="o">+++</span> <span class="n">api</span>
@@ -159,7 +163,7 @@ a {
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">Users</span><span class="p">,</span> <span class="n">Polls</span><span class="p">,</span> <span class="n">Topics</span><span class="p">,</span> <span class="n">Options</span><span class="p">,</span> <span class="n">UserPolls</span>
 <span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">session</span>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s">'api'</span><span class="p">,</span> <span class="n">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s">'/api'</span><span class="p">)</span>
+<span class="n">api</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s">'api'</span><span class="p">,</span> <span class="s">'api'</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s">'/api'</span><span class="p">)</span>
 
 
 <span class="nd">@api.route</span><span class="p">(</span><span class="s">'/polls'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'GET'</span><span class="p">,</span> <span class="s">'POST'</span><span class="p">])</span>
@@ -249,9 +253,9 @@ a {
 
 <p>The first argument is the blueprints name</p>
 
-<p>The second argument is very important it’s the <code class="highlighter-rouge">import_name</code> This name has to be set to the name of our package (which is also api). Flask used the <code class="highlighter-rouge">import_name</code> for some internal operations such as looking for the template folder and locating various files and objects of the main application from the blueprint.</p>
+<p>The second argument is very important it’s the <code class="highlighter-rouge">import_name</code>. This name has to be set to the name of our package (which is also api) as Flask uses the <code class="highlighter-rouge">import_name</code> for some internal operations such as locating the template folder of the blueprint and locating various files and objects of the main application from the blueprint. (This ensures that methods like <code class="highlighter-rouge">render_template</code> and <code class="highlighter-rouge">send_static_files</code> work properly and give us the actual files that we want)</p>
 
-<p>The third argument is the url prefix of the blueprint. With this we were able to remove the redundancy of prefixing all api’s url with <code class="highlighter-rouge">api</code>.</p>
+<p>The third argument is the url prefix of the blueprint. With this we were able to remove the redundancy of prefixing all our api urls with <code class="highlighter-rouge">/api</code>.</p>
 
 <p><strong>Let’s register the blueprint in votr.py</strong></p>
 
@@ -269,13 +273,15 @@ a {
 
 <span class="n">votr</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">api</span><span class="p">)</span></code></pre></figure>
 
-<p>That’s all you need to do. Your application should still function like it did before.</p>
+<p>That’s all you need to do. Reload the webpage and the application should still function like it did before.</p>
 
 <p>That’s all you need to know about blueprints, they’re really helpful when you want to refactor your flask application and split it into smaller parts. They help you to add extra routes and functions to your application without chunking the code into a single file.</p>
 
 <p>Join me in the next part where I’ll show you how to schedule and run background jobs in Flask with <a href="http://www.celeryproject.org/">Celery</a>.</p>
 
 <p>We’re going to use celery to implement a feature where users can set the time they want a poll to stay active. after which the poll would be automatically closed.</p>
+
+<p>Thanks for reading.</p>
 
             </div>
 

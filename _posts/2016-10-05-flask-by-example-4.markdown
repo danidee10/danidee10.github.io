@@ -21,7 +21,7 @@ There are various reasons on why i chose React, and this list includes "Because 
   </li>
   <br />
   <li>
-  It allows you to break down chunks of html into simple re-usable components. You'll see an example of that as we move on.
+  It allows you to break down chunks of html into simple re-usable components. This makes it easier to reason about your UI as your application grows. You'll see an example of this when we reuse the preview form for the real polls later on.
   </li>
   <br />
   <li>
@@ -31,7 +31,7 @@ There are various reasons on why i chose React, and this list includes "Because 
 
 <br />
 
-### Polling page
+### Initial Design
 We're going to make a copy of our login page and modify it to include a form which would be used to add polls to the site. we're also going to include a preview form that shows the user exactly how a poll would look like as they're creating it.
 
 {% highlight html %}
@@ -100,7 +100,7 @@ Before we proceed, it's good practice to layout the structure of the UI we have 
 
 We're going to have two components, the main component which we'll call `PollForm` is going to contain the form used to create the poll, and the second component called `LivePreview` is a form that shows us how a poll is going to look like during creation.
 
-`LivePreview` is part of the `PollForm` component because the both of them are share the state of different input fields. `PollForm` is the parent component and `LivePreview` is the child component.
+`LivePreview` is part of the `PollForm` component because it displays data that's entered in the `PollForm` component. `PollForm` is the parent component and `LivePreview` is the child component.
 
 `form_container` is just a plain div that houses the two forms.
 
@@ -141,20 +141,22 @@ Let's talk about the various methods in `polls.js`:
 
 For now title and options are static because they contain hardcoded values. If you look at the Result in the JSFiddle demo you should see a new poll. "Alex iwobi vs Dele Alli". with the two football stars as options. Ideally these values would come from `<PollForm />` and once the user changes the value of any field. React will update the UI accordingly with the new data.
 
-`title` and `options` are available to us as properties on an object called `state`. Using `this.state.title` and `this.state.options`. Treat this values as if they're immutable, don't go around doing something like this `this.state.title = 'My Title'`, It could lead to all sorts of problems as your modifications would get overridden by react when you call `setState`.This is the proper way to modify `title` using `setState`:
+`title` and `options` are "state variables" we can access them with `this.state.title` and `this.state.options`. Treat this values as if they're immutable, don't modify them like this
 
-{% highlight javascript %}
-this.setState{'title': 'My Title'}`
-{% endhighlight %}
+`this.state.title = 'My Title'`.
+
+The correct way to modify them is to use `setState` like this
+
+`this.setState({title: 'My Title'})`
 
 Calling `setState` will cause react to re-render the UI.
 
-<u><strong>LivePreview:</strong></u> This is a little different from `PollForm`. it also a render method like `PollForm` the difference here is function `options` that loops through our state array `options` using map (Similar to python's map. just that it uses a full fledged function and not an anonymous `lambda` function.) and returns radio buttons containing the elements we placed in our options array when we called `getInitialState`.
+<u><strong>LivePreview:</strong></u> This is a little different from `PollForm`. it also a render method like `PollForm` the difference here is the map function that's binded to the variable `options` that loops through all the elements of the options array and returns them as radio buttons.
 
 If you're wondering what `props` (short for properties). They are used to pass data to a component from it's parent. You can think of them as named arguments that we pass to a python function. except that function in this case is a React component. For example from the parent component `<PollForm />` we passed in the title of our poll as `title` to `LivePreview` with `<LivePreview options={this.state.title} />`. inside the render method of `LivePreview` `title` became a property, and we accessed it with `this.props.title`
 
 
-We've also added some event handlers on our input fields and buttons, we'll implement them and talk about them more in the next section.
+We've also added some event handlers on our input fields and buttons, we'll implement them and talk about them as we proceed.
 
 
 ### Making the form Reactive
@@ -173,11 +175,11 @@ Lets talk about the event handlers we just implemented. This is where most of th
 
 `handleSubmit` simply prevents the form from submitting by calling `e.preventDefault()`.
 
-We also wrapped the return statement of `options` with a condition to determine if an `option`s name is set before returning a new radio button (this was done to prevent users from nameless options to our preview form by repeatedly clicking on the Add option button).
+We also wrapped the return statement of `options` with a condition to determine if an `option`s name is set before returning a new radio button (this was done to prevent users from adding nameless options to our preview form by repeatedly clicking on the Add option button).
 
 
 ### Useful React resources and tips
-This tutorial was never meant to be a hello world introduction to React JS and if you're still confused about somethings, feel free to lookup the docs, Google and [Stackoverflow](http://stackoverflow.com/questions/tagged/reactjs) for answers to basic React questions.
+This tutorial was never meant to be a hello world introduction to React JS and if you're still confused about some things, feel free to lookup the docs, Google and [Stackoverflow](http://stackoverflow.com/questions/tagged/reactjs) for answers to basic React questions.
 
 Here is a list of useful resources and tips that personally helped me grok React faster.
 
@@ -186,16 +188,21 @@ Here is a list of useful resources and tips that personally helped me grok React
   Always model your UI down, before you start writing any code. Just like we did. This will help you to have a clear mental picture about your components about who the parent components is and what it's child(ren) is/are
   </li>
   <br />
+
   <li>
-  Buttressing my first point, i found it easier to think about React from top to bottom. Write your component first before writing the React Class.(for example "<PollForm />" should come first before writing "React.createClass" or any functional part)
+  Buttressing my first point, i found it easier to think about UI design with React from top to bottom. Take a piece of paper and draw the layout of your components and identify the components the parent components and the children, do this before writing any code, Then work your way down and start implementing the various callbacks and methods of the components.
   </li>
+
   <br />
+
   <li>
   Always use <strong>setState</strong> to trigger a UI update. There is another method called <strong>forceUpdate</strong> that forces the UI to re-render itself and it's possible to have a complex interface where you might use it. But if you see yourself relying on <strong>forceUpdate</strong> too much to update the interface, that's a warning sign that something is wrong with your UI design and your componenets aren't really interacting with each other like they should.
   </li>
+
   <br />
+
   <li>
-  React isn't going anywhere soon. so learn it!. Facebook built react and they use it heavily on <strong>FACEBOOK.COM</strong> which also means that any problem you're likely to encounter with react has already been encountered and solved by facebook which is a plus for you.
+  React isn't going anywhere soon, so learn it!. Facebook built react and they use it heavily on <strong>facebook.com</strong> which also means that any problem you're likely to encounter with react has already been encountered and solved by facebook.
   </li>
 </ul>
 

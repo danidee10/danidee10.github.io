@@ -7,26 +7,19 @@
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
-        <title>Flask by example 8 (Understanding Flask blueprints)</title>
-        <description>&lt;h3 id=&quot;what-are-flask-blueprints&quot;&gt;What are flask blueprints?&lt;/h3&gt;
-
-&lt;p&gt;Basically, a flask blueprint is a way for you to organize your flask application into smaller and re-usable components&lt;/p&gt;
-
-&lt;p&gt;Just like a normal flask application, a blueprint defines a collection of views, templates, static assets and all the werkzeug helpers and utilities are available to it.&lt;/p&gt;
-
-&lt;p&gt;It should be noted that a blueprint is not a re-usable ‘plug and play’ app, it cannot run on it’s own every blueprint must be registered on a real Flask application before it can be used.&lt;/p&gt;
+        <title>Flask by example 9 (Running background tasks with celery)</title>
+        <description>&lt;h3 id=&quot;what-is-celery&quot;&gt;What is celery?&lt;/h3&gt;
+&lt;p&gt;Celery is an asynchronous task queue written in python&lt;/p&gt;
 
 &lt;h3 id=&quot;why-should-you-use-blueprints&quot;&gt;Why should you use blueprints&lt;/h3&gt;
 &lt;p&gt;The main reason why you should use blueprints is to de-couple your application into smaller re-usable components. Like i said earlier in this series it would make perfect sense to move all our api calls into a blueprint.&lt;/p&gt;
 
-&lt;p&gt;This makes the code more maintainable.&lt;/p&gt;
-
-&lt;p&gt;We’ve already seen this re-usability with Flask-Admin in the &lt;a href=&quot;/2016/11/14/flask-by-example-7.html&quot;&gt;previous tutorial&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This makes the code more maintainable and easier to debug.&lt;/p&gt;
 
 &lt;h3 id=&quot;how-do-you-create-a-blueprint&quot;&gt;How do you create a blueprint&lt;/h3&gt;
 &lt;p&gt;Well, the choice is really up to you, since flask is very liberal and doesn’t enforce much conventions on you. There are several ways of creating a blueprint, but personally i prefer to treat blueprints as separate python packages with everything they provide in their own folder. That way, if something goes wrong the the &lt;code class=&quot;highlighter-rouge&quot;&gt;api&lt;/code&gt; blueprint for example, you already know where to start looking.&lt;/p&gt;
 
-&lt;p&gt;Lets create a new package and call it api &lt;strong&gt;Structure your application like this:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Lets create a new package and call it api &lt;strong&gt;Your application structure should look like this:&lt;/strong&gt;&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
 &lt;span class=&quot;err&quot;&gt;├&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+++&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;
@@ -63,7 +56,7 @@
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;models&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Polls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Topics&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UserPolls&lt;/span&gt;
 &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;flask&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Blueprint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jsonify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;
 
-&lt;span class=&quot;n&quot;&gt;api&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Blueprint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'api'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url_prefix&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/api'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;api&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Blueprint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'api'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'api'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url_prefix&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/api'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
 
 &lt;span class=&quot;nd&quot;&gt;@api.route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/polls'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;methods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'GET'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'POST'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
@@ -153,9 +146,9 @@
 
 &lt;p&gt;The first argument is the blueprints name&lt;/p&gt;
 
-&lt;p&gt;The second argument is very important it’s the &lt;code class=&quot;highlighter-rouge&quot;&gt;import_name&lt;/code&gt; This name has to be set to the name of our package (which is also api). Flask used the &lt;code class=&quot;highlighter-rouge&quot;&gt;import_name&lt;/code&gt; for some internal operations such as looking for the template folder and locating various files and objects of the main application from the blueprint.&lt;/p&gt;
+&lt;p&gt;The second argument is very important it’s the &lt;code class=&quot;highlighter-rouge&quot;&gt;import_name&lt;/code&gt;. This name has to be set to the name of our package (which is also api) as Flask uses the &lt;code class=&quot;highlighter-rouge&quot;&gt;import_name&lt;/code&gt; for some internal operations such as locating the template folder of the blueprint and locating various files and objects of the main application from the blueprint. (This ensures that methods like &lt;code class=&quot;highlighter-rouge&quot;&gt;render_template&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;send_static_files&lt;/code&gt; work properly and give use the actual files that we want)&lt;/p&gt;
 
-&lt;p&gt;The third argument is the url prefix of the blueprint. With this we were able to remove the redundancy of prefixing all api’s url with &lt;code class=&quot;highlighter-rouge&quot;&gt;api&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The third argument is the url prefix of the blueprint. With this we were able to remove the redundancy of prefixing all api url with &lt;code class=&quot;highlighter-rouge&quot;&gt;/api&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Let’s register the blueprint in votr.py&lt;/strong&gt;&lt;/p&gt;
 
@@ -180,6 +173,188 @@
 &lt;p&gt;Join me in the next part where I’ll show you how to schedule and run background jobs in Flask with &lt;a href=&quot;http://www.celeryproject.org/&quot;&gt;Celery&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;We’re going to use celery to implement a feature where users can set the time they want a poll to stay active. after which the poll would be automatically closed.&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 28 Nov 2016 22:35:33 +0100</pubDate>
+        <link>http://localhost:4000//2016/11/28/flask-by-example-9.html</link>
+        <guid isPermaLink="true">http://localhost:4000//2016/11/28/flask-by-example-9.html</guid>
+      </item>
+    
+      <item>
+        <title>Flask by example 8 (Understanding Flask blueprints)</title>
+        <description>&lt;h3 id=&quot;what-are-flask-blueprints&quot;&gt;What are flask blueprints?&lt;/h3&gt;
+
+&lt;p&gt;Basically, a flask blueprint is a way for you to organize your flask application into smaller and re-usable application&lt;/p&gt;
+
+&lt;p&gt;Just like a normal flask application, a blueprint defines a collection of views, templates and static assets.&lt;/p&gt;
+
+&lt;p&gt;It should be noted that a blueprint is not a ‘plug and play’ app, it cannot run on it’s own every blueprint must be registered on a real Flask application before it can be used.&lt;/p&gt;
+
+&lt;h3 id=&quot;why-should-you-use-blueprints&quot;&gt;Why should you use blueprints&lt;/h3&gt;
+&lt;p&gt;The main reason why you should use blueprints is to de-couple your application into smaller re-usable components. Like i said earlier in this series it would make perfect sense to move all our api calls into a blueprint.&lt;/p&gt;
+
+&lt;p&gt;This makes the code more maintainable and easier to debug.&lt;/p&gt;
+
+&lt;h3 id=&quot;how-do-you-create-a-blueprint&quot;&gt;How do you create a blueprint&lt;/h3&gt;
+&lt;p&gt;Well, the choice is really up to you, since flask is very liberal and doesn’t enforce much conventions on you. There are several ways of creating a blueprint, but personally i prefer to treat blueprints as separate python packages with everything they provide in their own folder. That way, if something goes wrong the the &lt;code class=&quot;highlighter-rouge&quot;&gt;api&lt;/code&gt; blueprint for example, you already know where to start looking.&lt;/p&gt;
+
+&lt;p&gt;Lets create a new package and call it api &lt;strong&gt;Your application structure should look like this:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;├&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+++&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;│  &lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+++&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__init__&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;   &lt;span class=&quot;o&quot;&gt;+++&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;migrations&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;│  &lt;/span&gt; &lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;versions&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;│  &lt;/span&gt; &lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alembic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ini&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;│  &lt;/span&gt; &lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;│  &lt;/span&gt; &lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;README&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;│  &lt;/span&gt; &lt;span class=&quot;err&quot;&gt;└──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;script&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mako&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;│  &lt;/span&gt; &lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;css&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;│  &lt;/span&gt; &lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fonts&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;│  &lt;/span&gt; &lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gifs&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;│  &lt;/span&gt; &lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;images&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;│  &lt;/span&gt; &lt;span class=&quot;err&quot;&gt;└──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;js&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;templates&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;│  &lt;/span&gt; &lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;│  &lt;/span&gt; &lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pollsbackup&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;│  &lt;/span&gt; &lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;polls&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;│  &lt;/span&gt; &lt;span class=&quot;err&quot;&gt;└──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;signup&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;admin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;LICENSE&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;README&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;md&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;requirements&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;txt&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;votr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;├──&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;votr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;strong&gt;Open &lt;code class=&quot;highlighter-rouge&quot;&gt;api.py&lt;/code&gt; and include the following&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;models&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Polls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Topics&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UserPolls&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;flask&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Blueprint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jsonify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;api&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Blueprint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'api'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'api'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url_prefix&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/api'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+
+&lt;span class=&quot;nd&quot;&gt;@api.route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/polls'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;methods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'GET'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'POST'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# retrieves/adds polls from/to the database&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;api_polls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;method&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'POST'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;# get the poll and save it in the database&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;poll&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;# simple validation to check if all values are properly secret&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;poll&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jsonify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'message'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'value for {} is empty'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)})&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;title&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;poll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'title'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;options_query&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;option&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Options&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Options&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;like&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;option&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;options&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Polls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;option&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                   &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;options_query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;option&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+                   &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Polls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;options_query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;option&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;option&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;poll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'options'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+                   &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;new_topic&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Topics&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new_topic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;commit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jsonify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'message'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'Poll was created succesfully'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;# it's a GET request, return dict representations of the API&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;polls&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Topics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Polls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;order_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Topics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;desc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;all&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;all_polls&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Polls'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;poll&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;poll&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;polls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]}&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jsonify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;all_polls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+
+&lt;span class=&quot;nd&quot;&gt;@api.route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/polls/options'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;api_polls_options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;all_options&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;option&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Options&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;all&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()]&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jsonify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;all_options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+
+&lt;span class=&quot;nd&quot;&gt;@api.route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/poll/vote'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;methods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'PATCH'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;api_poll_vote&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;poll&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;poll_title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;option&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;poll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'poll_title'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;poll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'option'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;join_tables&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Polls&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Topics&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;# Get topic and username from the database&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;topic&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Topics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;poll_title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Users&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'user'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;# filter options&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;option&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;join_tables&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Topics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;like&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;poll_title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Options&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;like&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;option&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;# check if the user has voted on this poll&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;poll_count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UserPolls&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;topic_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;topic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;poll_count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jsonify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'message'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'Sorry! multiple votes are not allowed'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;option&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;# record user and poll&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;user_poll&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UserPolls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;topic_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;topic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user_poll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;# increment vote_count by 1 if the option was found&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vote_count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;commit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jsonify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'message'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'Thank you for voting'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jsonify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'message'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'option or poll was not found please try again'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+
+
+&lt;span class=&quot;nd&quot;&gt;@api.route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/poll/&amp;lt;poll_name&amp;gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;api_poll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;poll_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;poll&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Topics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Topics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;like&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;poll_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jsonify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Polls'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;poll&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()]})&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;poll&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jsonify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'message'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'poll not found'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;Blueprint&lt;/code&gt; class takes three basic arguments:&lt;/p&gt;
+
+&lt;p&gt;The first argument is the blueprints name&lt;/p&gt;
+
+&lt;p&gt;The second argument is very important it’s the &lt;code class=&quot;highlighter-rouge&quot;&gt;import_name&lt;/code&gt;. This name has to be set to the name of our package (which is also api) as Flask uses the &lt;code class=&quot;highlighter-rouge&quot;&gt;import_name&lt;/code&gt; for some internal operations such as locating the template folder of the blueprint and locating various files and objects of the main application from the blueprint. (This ensures that methods like &lt;code class=&quot;highlighter-rouge&quot;&gt;render_template&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;send_static_files&lt;/code&gt; work properly and give use the actual files that we want)&lt;/p&gt;
+
+&lt;p&gt;The third argument is the url prefix of the blueprint. With this we were able to remove the redundancy of prefixing all api url with &lt;code class=&quot;highlighter-rouge&quot;&gt;/api&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Let’s register the blueprint in votr.py&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;flask&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;render_template&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;redirect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url_for&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;werkzeug.security&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;generate_password_hash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;check_password_hash&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;flask_migrate&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Migrate&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;models&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Polls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Topics&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UserPolls&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;flask_admin&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Admin&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;admin&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AdminView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TopicView&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Blueprints&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;api.api&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;votr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;votr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;register_blueprint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;That’s all you need to do. Your application should still function like it did before.&lt;/p&gt;
+
+&lt;p&gt;That’s all you need to know about blueprints, they’re really helpful when you want to refactor your flask application and split it into smaller parts. They help you to add extra routes and functions to your application without chunking the code into a single file.&lt;/p&gt;
+
+&lt;p&gt;Join me in the next part where I’ll show you how to schedule and run background jobs in Flask with &lt;a href=&quot;http://www.celeryproject.org/&quot;&gt;Celery&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;We’re going to use celery to implement a feature where users can set the time they want a poll to stay active. after which the poll would be automatically closed.&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading.&lt;/p&gt;
 </description>
         <pubDate>Sun, 20 Nov 2016 22:35:33 +0100</pubDate>
         <link>http://localhost:4000//2016/11/20/flask-by-example-8.html</link>
@@ -2795,9 +2970,7 @@ we’re going to install it now with &lt;code class=&quot;highlighter-rouge&quot
         &lt;span class=&quot;c&quot;&gt;# a user friendly way to view our objects in the terminal&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;To properly use &lt;code class=&quot;highlighter-rouge&quot;&gt;flask_sqlalchemy&lt;/code&gt;, we have to create a configuration file which tells flask the type of database we’re making use of and how to connect it, we can also use our configuration file to store site-wide information (Like the password to our admin account!). we’re going to use sqlite as the database for votr because it’s lightweight and easy to setup.&lt;/p&gt;
-
-&lt;p&gt;But seriously never store passwords or sensitive information of any kind in a plain file or unencrypted in your database. Never!&lt;/p&gt;
+&lt;p&gt;To properly use &lt;code class=&quot;highlighter-rouge&quot;&gt;flask_sqlalchemy&lt;/code&gt;, we have to create a configuration file which tells flask the type of database we’re making use of and how to connect it, we can also use our configuration file to store site-wide information. We’re going to use sqlite as the database for votr because it’s lightweight and easy to setup.&lt;/p&gt;
 
 &lt;h6 id=&quot;create-a-new-file-configpy-and-include-the-following&quot;&gt;Create a new file &lt;code class=&quot;highlighter-rouge&quot;&gt;config.py&lt;/code&gt; and include the following&lt;/h6&gt;
 
@@ -2834,31 +3007,13 @@ For now we’ll just keep everything simple.&lt;/p&gt;
 &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'__main__'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;votr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;We imported the &lt;code class=&quot;highlighter-rouge&quot;&gt;db&lt;/code&gt; we created in our &lt;code class=&quot;highlighter-rouge&quot;&gt;models.py&lt;/code&gt; file, and called &lt;code class=&quot;highlighter-rouge&quot;&gt;db.init_app(votr)&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;db.create_all(app=votr)&lt;/code&gt; to bind sqlalchemy to our flask app and create the database tables we specified in our &lt;code class=&quot;highlighter-rouge&quot;&gt;models.py&lt;/code&gt; file. Note that &lt;code class=&quot;highlighter-rouge&quot;&gt;db.create_all&lt;/code&gt; doesn’t actually create our database, it would simply create the required tables we specified in our &lt;code class=&quot;highlighter-rouge&quot;&gt;models.py&lt;/code&gt; file on an existing database (Remember our &lt;code class=&quot;highlighter-rouge&quot;&gt;config.py&lt;/code&gt; file where we specified the location of our database).&lt;/p&gt;
+&lt;p&gt;We imported the &lt;code class=&quot;highlighter-rouge&quot;&gt;db&lt;/code&gt; we created in our &lt;code class=&quot;highlighter-rouge&quot;&gt;models.py&lt;/code&gt; file, and called &lt;code class=&quot;highlighter-rouge&quot;&gt;db.init_app(votr)&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;db.create_all(app=votr)&lt;/code&gt; to create the database for us. The database would exist at the path we provided with the &lt;code class=&quot;highlighter-rouge&quot;&gt;SQLALCHEMY_DATABASE_URI&lt;/code&gt; variable in our configuration file.&lt;/p&gt;
 
-&lt;p&gt;We’re going to create that db file now.&lt;/p&gt;
-
-&lt;h6 id=&quot;if-you-have-python-installed-properly-you-should-have-sqlite3-if-for-some-reason-you-dont-have-it-you-can-install-it-with&quot;&gt;If you have python installed properly you should have sqlite3, if for some reason you don’t have it, you can install it with:&lt;/h6&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo apt-get install sqlite3&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h6 id=&quot;now-lets-create-our-database&quot;&gt;Now lets create our database&lt;/h6&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sqlite3
-SQLite version 3.14.2 2016-09-12 18:50:49
-Enter &lt;span class=&quot;s2&quot;&gt;&quot;.help&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;usage hints.
-Connected to a transient &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;-memory database.
-Use &lt;span class=&quot;s2&quot;&gt;&quot;.open FILENAME&quot;&lt;/span&gt; to reopen on a persistent database.
-&lt;span class=&quot;gp&quot;&gt;sqlite&amp;gt; &lt;/span&gt;.save votr.db
-sqlite&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h6 id=&quot;press-ctrl--d-or-ctrl--c-to-exit&quot;&gt;Press Ctrl + D or Ctrl + C to exit.&lt;/h6&gt;
-
-&lt;h6 id=&quot;this-creates-a-new-db-called-votrdb-in-the-votr-directory-now-run-the-votrpy-with-python&quot;&gt;This creates a new db called &lt;code class=&quot;highlighter-rouge&quot;&gt;votr.db&lt;/code&gt; in the &lt;code class=&quot;highlighter-rouge&quot;&gt;votr&lt;/code&gt; directory, now run the &lt;code class=&quot;highlighter-rouge&quot;&gt;votr.py&lt;/code&gt; with python.&lt;/h6&gt;
+&lt;p&gt;&lt;strong&gt;Now run&lt;/strong&gt;&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python3 votr.py&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;h6 id=&quot;this-should-create-all-the-models-we-specified-in-our-modelspy-file-as-tables-in-our-database-we-can-confirm-that-by-using-sqlite3-again-from-the-terminal&quot;&gt;This should create all the models we specified in our &lt;code class=&quot;highlighter-rouge&quot;&gt;models.py&lt;/code&gt; file as tables in our database, we can confirm that by using sqlite3 again from the terminal.&lt;/h6&gt;
+&lt;h6 id=&quot;this-should-create-all-database-and-all-the-models-we-specified-in-modelspy-as-tables-we-can-confirm-that-by-using-sqlite3-from-the-terminal&quot;&gt;This should create all database and all the models we specified in &lt;code class=&quot;highlighter-rouge&quot;&gt;models.py&lt;/code&gt; as tables, we can confirm that by using sqlite3 from the terminal.&lt;/h6&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sqlite3
 SQLite version 3.14.2 2016-09-12 18:50:49

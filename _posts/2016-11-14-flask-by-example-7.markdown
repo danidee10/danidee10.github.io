@@ -4,19 +4,19 @@ title: Flask by example 7 (Spin up an Admin dashboard quickly and easily with Fl
 date: 2016-11-14T22:35:33+01:00
 ---
 
-Welcome to part 7 of this tutorial, in this part we're going to build an admin dashboard for our application which would serve provide basic `CRUD` functionality for the models in our database.
+Welcome to part 7 of this series, in this part we're going to build an admin dashboard for our application which would provide basic `CRUD` functionality for the models in our database.
 
-Go ahead and install flask admin from pip
+**Go ahead and install flask admin from pip**
 
 {% highlight shell %}
 pip install flask-admin
 {% endhighlight %}
 
-It's very easy to use flask-admin, just import the `Admin` class, create a new object out of it, and set the application to our current application
+It's very easy to use flask-admin, just import the `Admin` class, create a new object with it, and pass in our flask application object as the first parameter, the name argument is the name that's displayed on the admin homepage, it defaults to the application name.
 
-After that you can add different models by "adding" new `ModelView` objects to the application.
+After that you can add different models by by creating `ModelView` objects.
 
-This `ModelView` objects would show up as different menu's in our admin dashboard
+Our Model objects would show up as different menus in the admin dashboard.
 
 **Add the following to votr.py**
 {% highlight python %}
@@ -39,7 +39,7 @@ You can add your models and play around the the admin. create, delete and modify
 ## Adding authentication to flask admin
 After playing around with flask admin, you'd have noticed that something very important is missing...**Authentication**
 
-Now, there are several ways of adding authentication to flask admin, but i'm going to show you how to integrate our Authentication system with flask admin.
+Now, there are several ways of adding authentication to flask admin, but I'm going to show you how to integrate our current Authentication system with flask admin.
 
 First of all, it would make more sense to keep all our "admin stuff" in a separate file in order to keep the main application file clean. Let's call that admin file **admin.py**
 
@@ -71,7 +71,7 @@ class AdminView(ModelView):
 
 The **is_accessible** method determines if a model is accessible or not, based on a particular condition, in our case we only want to show the model to the current user, if they're logged in and their username equals **"Administrator"**
 
-In the **inaccessible_callback** method, we're simply saying if the model is not accessible redirect the user back to the homepage. The next argument is used to take the admin user back to the last page they tried to access.
+In the **inaccessible_callback** method, we're simply saying if the model is not accessible redirect the user back to the homepage. The `next` argument is used to take the admin user back to the last page they tried to access.
 
 To make use of this parameter, just change the return statement in your login route to:
 
@@ -79,7 +79,7 @@ To make use of this parameter, just change the return statement in your login ro
 return redirect(request.args.get('next') or url_for('home'))
 {% endhighlight %}
 
-and the url the login form on the homepage points to:
+and the action url of the login form on the homepage:
 
 {% highlight html %}
 {% raw %}
@@ -118,20 +118,20 @@ The important line here is:
 admin = Admin(votr, name='Dashboard', index_view=AdminView(Topics, db.session, url='/admin', endpoint='admin'))
 {% endhighlight %}
 
-specifically the `index_view` argument, we're telling flask admin that we want the **Topics** model to serve as the default view for our application instead of the blank home page and then we also specified that the url for the `Topic` model should be `http[s]://hostname:port/admin` instead of the default `http[s]://hostname:port/admin/topics`
+with the `index_view` argument, we're telling flask admin that we want the **Topics** model to serve as the default view for our application instead of the blank homepage you saw earlier, the url parameter changes the url for the topic model to `/admin` instead of the default which was `/admin/topics`
 
 Finally we're setting the `endpoint` to **admin**
 
 That's all!, with this information flask admin is able to build the blueprints with our models (*Internally flask admin uses introspection to get the details about the models passed to it and creates blueprints on the fly*)
 
-Flask admin should be protected from others whose username doesn't equal **Administrator**. Our username field is actually unique, so this means that we only have one admin user.
+The admin page should also be protected from users whose username doesn't equal **Administrator**. Our username field is actually unique, so this means that we can only have one admin user.
 
-If you want to add other admin users, you can add more usernames to check for in the `is_accessible` method or better still add a boolean field to your user model to determine if the user is an admin user or not. I'll leave you to your imagination here
+To create other admin users, you can add more usernames to check for in the `is_accessible` method or better still add a boolean field to your user model to determine if the user is an admin user or not. I'll leave you to your imagination here.
 
 <br />
 
 ### Protecting the polls from multiple votes
-In the last part, we talked about prevent users from voting multiple times, to do this we'll have to add a new model to track a user and the polls he has voted on, and then on every request `/api/vote` we can simply check if he's voted on that poll before and then abort the request with a custom message or allow the request like we've always done
+In the last part, we talked about adding a new feature that prevents users from voting multiple times on a poll. To do this we'll have to add a new model to track a user and the polls they've has voted on, and then on every request to `/api/vote` we can simply check if they voted on that poll before and then abort the request with a custom message or allow the request if they haven't.
 
 **Add a new model called UserPolls in votr.py**
 
@@ -152,7 +152,7 @@ after doing that run the [migrations and upgrade the database]({% post_url 2016-
 
 
 
-**IMPORTANT: before running the migrations, make sure you comment out the `db.create_all` in `votr.py` if you don't SQLAlchemy would create the new table from you and Alembic won't be able to detect any change in the database schema**
+**IMPORTANT: before running the migrations, make sure you comment out the `db.create_all` in `votr.py` if you don't SQLAlchemy, would create the new table from you and Alembic won't be able to detect any change in the database schema when you try to run the database migration**
 
 
 **Modify the /api/vote endpoint to incorporate the new changes**
@@ -192,24 +192,24 @@ def api_poll_vote():
     return jsonify({'message': 'option or poll was not found please try again'})
 {% endhighlight %}
 
-That's all, a user shouldn't be able to vote on a poll more than once, if they try that they should see a popup in their browser telling them that multiple votes are not allowed
+That's all, a user shouldn't be able to vote on a poll more than once, if they try that they should see a popup in their browser telling them that "multiple votes are not allowed".
 
 <br />
 
 ### Customizing Flask-Admin
-Out of the box, flask admin gives us a pretty usable interface and reasonable defaults, but that doesn't mean it's not flexible. flask admin customize it and add extra behaviour, flask admin allows us make different enhancements ranging from ui enhancements (Search boxes, filters) to behavioural enhancements.
+Out of the box, flask admin gives us a pretty usable interface and reasonable defaults, but that doesn't mean it's not flexible. flask admin allows us make different enhancements ranging from ui enhancements (display order, theming) to behavioural enhancements. (search boxes, filters).
 
-We're going to add some new features to the admin page
+We're going to add some new features to the admin page:
 
 <ul class="postlist">
 
+  <li>Change the order in which the columns are displayed for the Topics model</li>
+
   <li>A search box to search for poll by their title</li>
 
-  <li>A filter to show opened/closed polls</li>
+  <li>A filter on the status field so we can see all open or closed polls at any point in time</li>
 
-  <li>Sort the Topics by the date they were created</li>
-
-  <li>Add a filter on the status field so we can see all open or closed polls at any point in time</li>
+  <li>Make the date field for Topics sortable</li>
 
   <li>Change the default date format to something more readable</li>
 
@@ -233,15 +233,15 @@ class TopicView(AdminView):
     column_filters = ('status',)
 {% endhighlight %}
 
-**<u>column_list:</u>** This is used to list the various columns in the order you want them
+**<u>column_list:</u>** This is used to list the various columns in the order you want them.
 
-**<u>column_searchable_list:</u>** Columns that you want to be searchable in the model
+**<u>column_searchable_list:</u>** Columns that you want to be searchable in the model.
 
-**<u>column_default_sort:</u>** The column that the view should be sorted with by default (when the view is loaded for the first time). The second parameter `True` tells flask-admin to sort it in descending order
+**<u>column_default_sort:</u>** The column that the view should be sorted with by default (when the view is loaded for the first time). The second parameter `True` tells flask-admin to sort it in descending order.
 
-**<u>column_filters:</u>** List of columns that can be used to filter
+**<u>column_filters:</u>** List of columns that can be used to filter.
 
-Notice that we created a new class, so let's change the `index_view` argument for the `Admin` object in **votr.py** to use our new class
+Notice that we created a new class `TopicView` that inherits from `AdminView`, so let's change the `index_view` argument for the `Admin` object in **votr.py** to use the new class.
 
 {% highlight python %}
 # new top level imports
@@ -288,18 +288,18 @@ class AdminView(ModelView):
 
 We put it in the constructor of `AdminView` because we want to re-use this date format in all our models including `Topics` which already inherits from `AdminView`
 
-You should also note that we can define flask admin variables as class variables like we did for the first four customizations or as instance variables like we're doing  with `self.column_type_formatters`. so if you don't need it in the constructor `column_type_formatters` is just fine
+You should also note that we can define flask admin variables as class variables like we did for the first four customizations or as instance variables like we're doing  with `self.column_type_formatters`. so if you want other models to inherit a customization you can create the property as an instance variable.
 
 `column_formatters` expects a dictionary of Object types as the key and the corresponding display value we want as the value
 
-`typefmt.BASE_FORMATTERS` provides sane defaults for the various types of field formatters our model should have this list includes formatters for `lists`, `dicts`, `bools` and other python data types.
+`typefmt.BASE_FORMATTERS` provides sane default formats for the various types of fields our model has. This list includes formatters for `lists`, `dicts`, `bools` and other python data types.
 
-We simply updated the dictionary with our own custom format for datetime objects and left the rest to flask admin
+We simply updated the dictionary with our own custom format for datetime objects and left the rest to flask admin to handle.
 
 
 To accomplish the last improvement, We have to make use of a feature in SQLAlchemy called [hybrid_property](http://docs.sqlalchemy.org/en/latest/orm/extensions/hybrid.html)
 
-A `hybrid_property` can be thought of as a computable column. At the database layer the column doesn't exist but we can use it ***almost*** like we use other columns in our model.
+A `hybrid_property` can be thought of as a computable column. At the database layer, the column doesn't exist but we can use it ***almost*** like any other field in our model.
 
 Let's modify the `Topics` model in the **models.py** file
 
@@ -349,13 +349,13 @@ The key part of the hybrid_property is the the decorator `@total_vote_count.expr
 
 The expression must return `SQL` that would be used by flask-admin to sort the column properly, if you don't need the sorting you can just leave out the expression part.
 
-So this this case we're returning SQL that's similar to this:
+So in this case we're returning SQL that's similar to this:
 
 {% highlight sql %}
 SELECT sum(polls.vote_count) AS sum_1 FROM polls, topics WHERE polls.topic_id = topics.id
 {% endhighlight %}
 
-So with that information, flask-admin would be able to sort the total_vote_count column with it's total votes
+So with that information, flask-admin would be able to sort the Topics by the total number of votes they have.
 
 Don't forget to add this to the `TopicView` class in `admin.py`
 
@@ -369,10 +369,11 @@ and modify `colum_list` to show the new column
 column_list = ('title', 'date_created', 'date_modified', 'total_vote_count', 'status')
 {% endhighlight %}
 
-We also modified the `to_json` method of the model to use the new `total_vote_count` property
 
+**Note: The `to_json` method of the model has been modified to use the new hybrid property**
 
 <br />
+
 We've come to the end of this part, this post was a gentle introduction to flask-admin and what you can do with it.
 you also saw how you can restrict each user to a single vote on a poll.
 

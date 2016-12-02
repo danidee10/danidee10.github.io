@@ -190,10 +190,11 @@ Woah! that's a lot of imports at the top of the file, Let's discuss each of them
 
   **<u>redirect</u>:** It simply redirects to another page.
 
-  **<u>url_for</u>:** This prevents us from hardcoding the `homepage` route as `/` when calling `redirect`, if you hardcode it, then what happens when you decide to change the route of `home` from `/` to `/index`. this would break all existing links to the homepage in your application, you'll have to go round and change all the hardcoded url's to new url you've specified.
+  **<u>url_for</u>:** This prevents us from hardcoding the `homepage` route as `/` when calling `redirect`, if you hardcode it, then what happens when you decide to change the route of `home` from `/` to `/index`. this would break all existing links to the homepage in your application, you'll have to go round and change all the hardcoded url's to new url.
 
 
-  **<u>generate_password_hash and check_password_hash</u>**: are helpers from [werkzeug](http://werkzeug.pocoo.org/) for hashing and comparing a string with a password hash respectively. The hash is a one way salted hash, meaning we cannot decrypt it back. want to read more about hashing and the meaning of a salted hash read this [Quora](https://www.quora.com/What-does-it-mean-to-add-a-salt-to-a-password-hash) post.
+  **<u>generate_password_hash and check_password_hash</u>**: are helpers from [werkzeug](http://werkzeug.pocoo.org/) for hashing and comparing a string with a password hash respectively. The hash is a one way [salted hash](https://www.quora.com/What-does-it-mean-to-add-a-salt-to-a-password-hash) post.
+, meaning we cannot decrypt it to get back the original string that was entered by the user.
 
   Security is a very important aspect in web applications and other applications generally (even in our daily life), it's best to use already made solutions that have been tested and trusted by thousands of developers.
 
@@ -383,7 +384,9 @@ At the top of the file, we can display different menu items for users if they're
 
 We also used the same technique for menu items to display a `"signup"` or `"create a poll"` button depending on the login state of the user.
 
-Earlier we talked about `flash` messages and their use. Just above the login form we're displaying all the flashed messages if anyone is present, you can use a context manager **Wrong!!!**
+Earlier we talked about `flash` messages and their use. Just above the login form we're displaying all the flashed messages if anyone is present, you can use a context manager
+
+**Wrong!!!**
 
 The with statement in jinja2 is not equivalent to python's `with` statement. it doesn't do any cleanup action when you exit the block and the variables inside the {% raw %}`{% with %}`{% endraw %} block are not available outside it.
 
@@ -401,7 +404,7 @@ print(num) # num is only accessible inside the function
 
 when you call `get_flashed_messages()` with `with_categories` set to `true` it allows you to access the class of the message that was flashed. Based on that, we can define a css class that displays different colours of text depending on the class of message that was flashed (Yeah you guessed right!, green for success and red for errors, and probably yellow for warnings).
 
-Jinja2 doesn't actually mirror python as a language in all it's constructs, some statements might be slightly different from their counterparts in pure python, so watch out for this if something doesn't work as you expect it to work.
+Jinja2 doesn't actually mirror python as a language in all it's constructs, some statements might be slightly different from their counterparts in pure python, so watch out for this if something doesn't work as you expect it to.
 
 ### Signup template
 
@@ -503,7 +506,7 @@ staticfied ../templates/signup.html ==> staticfy/signup.html
 staticfied ../templates/index.html ==> staticfy/index.html
 {% endhighlight %}
 
-It should create a folder called `staticfy` containing two new files (with the same name as our original templates), whose static links have been converted to their flask equivalents.
+It should create a folder called `staticfy` containing two new files (with the same name as our original templates), whose html links have been converted to their flask equivalents.
 
 copy the new files over to replace the old files.
 
@@ -526,4 +529,6 @@ In the next part we're going to design the poll form, and the actual voting form
 
 All the custom css and the complete source code for this project can be found on [github](https://github.com/danidee10/Staticfy), feel free to fork it and play with it.
 
-Thanks for reading, if you found Staticfy useful don't forget to give it a star on github. Otherwise raise an issue to contribute and improve it's development. Drop your comments if you have any question or insights about this part.
+Thanks for reading, if you found Staticfy useful don't forget to give it a star on github. Otherwise raise an issue to contribute and improve it's development.
+
+Drop your comments if you have any question or insights about this part.

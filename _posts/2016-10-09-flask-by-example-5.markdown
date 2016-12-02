@@ -25,21 +25,19 @@ The main reason why need an API is because client-side Javascript libraries like
 
 Currently this is how our form declaration looks with React
 
-#### With React
+**With React**
 {% highlight html %}
 <form id="poll_form" className="form-signin" onSubmit={this.handleSubmit}>
 {% endhighlight %}
 
-without React we have this
-
-#### Without React
+**Without react we have this**
 {% highlight html %}
 <form id="poll_form" className="form-signin" method="POST" action="/polls">
 {% endhighlight %}
 
-When the `handleSubmit` function is eventually called a lot of "DOM changing" processes would have gone on in the other methods `handleOptionAdd`, `handleOptionChange` and `handleTitleChange` (Adding options and setting the Title of the poll) that the DOM wouldn't know about.
+When the `handleSubmit` function in called a lot of "DOM changing" processes would have gone on in the other methods `handleOptionAdd`, `handleOptionChange` and `handleTitleChange` (Adding options and setting the Title of the poll) that the external DOM wouldn't know about. React has it's own virtual DOM to efficiently keep track of all these changes. When you submit the form normally, you might find out that some information that show up in the form are missing on the server.
 
- I urge you to experiment and  submit the form you created in the previous part without using the `onSubmit` handler and see what happens when you print `request.form` in flask.
+ I urge you to experiment and submit the form you created in the previous part without using the `onSubmit` handler and see what details are submitted to the server when your print `request.form` in flask.
 
 So in summary an API serves as a common interface for the client and the server to talk to each other reliably.
 
@@ -62,7 +60,7 @@ Our API is going to perform two basic functions at this stage:
 
 <br />
 
-## JSON STRUCTURE FOR GET REQUESTS
+### JSON STRUCTURE FOR GET REQUESTS
 
 {% highlight javascript %}
 {
@@ -96,7 +94,7 @@ Our API is going to perform two basic functions at this stage:
 }
 {% endhighlight %}
 
-This is how we want to return polls back to the client when they make a request to *get some or all the polls* in our database. Let's call this structure our *dream API*
+This is how we want to return polls back to the client when they make a request to *get some or all the polls* in our database. Let's call this structure our *Dream API*
 
 If the JSON structure looks scary to you, just think of it as a collection of python dictionaries and lists and the structure should become clearer to you.
 
@@ -104,7 +102,7 @@ You can also check the validity of this JSON and any JSON string online with [JS
 
 Moving forward, we're going to separate our API routes from our main application routes by prefixing the url with `/api`
 
-*hint: We're goint to refactor the whole codebase at the end of this series and make our API into a flask blueprint. if you don't know what a blueprint is in flask this might be a good time to [check it out](http://flask.pocoo.org/docs/0.11/blueprints/)*
+*hint: We're goint to refactor the whole codebase in a future part of this series and make our API into a flask blueprint. if you don't know what a blueprint is in flask this might be a good time to [check it out](http://flask.pocoo.org/docs/0.11/blueprints/)*
 
 
 
@@ -127,19 +125,16 @@ def api_polls():
         # get all the topics in the database
         topics = Topics.query.all()
         for topic in topics:
-            # for each topic get the all polls that are it's children
+            # for each topic get the all options that are associated with it
             all_polls[topic.title] = {'options': [poll.option.name for poll in Polls.query.filter_by(topic=topic)]}
-
-        #print(jsonify(json_list=Topics.query.join(Polls).all()))
-        print(all_polls)
 
         return jsonify(all_polls)
 {% endhighlight %}
 
 
-In the POST request, we aren't really doing anything, we just get the JSON the user sent with `request.get_json()` and then return the details back to show us that our API works. request.get_json() is a helper method provided that flask that gets the JSON data from the request and converts it to a python dictionary for us. It's similar to calling json.loads on a JSON string.
+In the POST request, we aren't really doing anything, we just get the JSON the user sent with `request.get_json()` and then return the details back to show us that our API works. `request.get_json()` is a helper method provided that flask that gets the JSON data from the request and converts it to a python dictionary for us. It's similar to calling json.loads on a JSON string but does some extra things under the hood.
 
-Earlier, our aim was to return a JSON string containing the poll and various details associated with it. This is exactly what we implemented in the GET request. To acheive that we queried the database for all the existing Topics and then for each topic we fetched the associated polls (`Polls.query.filter_by(topic=topic)`), after that we appended the results in the format we wanted and then used another flask helper function called `jsonify` to convert the string to JSON. jsonify is also similar to python's json.dumps but it does more for you behind the scenes that pure json.dumps won't do.
+Earlier, our aim was to return a JSON string containing the poll and various details associated with it. This is exactly what we implemented in the GET request. To acheive that we queried the database for all the existing Topics and then for each topic we fetched the associated polls (`Polls.query.filter_by(topic=topic)`), after that we appended the results in the format we wanted and then used another flask helper function called `jsonify` to convert the string to JSON. jsonify is also similar to python's json.dumps but like `request.get_json` it does more than what meets the eye.
 
 Okay our should work properly but we could still improve it by leveraging the power of SQLAlchemy and using an SQL join statement *But how do you use a join statement when you're not writing raw SQL...Simple use SQLAlchemy*
 
@@ -155,9 +150,9 @@ Okay our should work properly but we could still improve it by leveraging the po
 
 *If for some reason you have an empty database (your query returns a blank result), here's a github [gist](https://gist.github.com/danidee10/a597bbc92dbb8b5add6eea768b1bc18b) to quickly create all the records in the database at this stage. Just run each line of code in the file in a python interactive shell*
 
-Neat! we were able to fetch all the topics and their associated polls in a single query. Though you're seeing only the title of the Topic (that's `__repr__` in action). those two items are actually SQLAlchemy objects that contain all the data you need, you just need to know how to extract them from the object.
+Neat! we were able to fetch all the topics and their associated options in a single query. Though you're seeing only the title of the Topic (that's `__repr__` in action). those two items are actually SQLAlchemy objects that contain all the data you need, you just need to know how to extract them from the object.
 
-Another amazing thing about SQLAlchemy is that we can see the query it generated for us behind the scenes
+Another amazing thing about SQLAlchemy is that we can see the query it generates behind the scenes
 
 {% highlight python %}
 >>> str(Topics.query.join(Polls))     
@@ -172,6 +167,7 @@ That shows us the General SQL statment it's going to generate for us, but we can
 >>> print(ddd.statement.compile(dialect=postgresql.dialect()))
 SELECT topics.id, topics.date_created, topics.date_modified, topics.title
 FROM topics JOIN polls ON topics.id = polls.topic_id
+
 >>> from sqlalchemy.dialects import sqlite
 >>> print(ddd.statement.compile(dialect=sqlite.dialect()))
 SELECT topics.id, topics.date_created, topics.date_modified, topics.title
@@ -179,7 +175,7 @@ FROM topics JOIN polls ON topics.id = polls.topic_id
 
 {% endhighlight %}
 
-For the experienced database admins this could be pretty useful, as ORM's don't generate the most efficient SQL query sometimes (but there's no need for premature optimization at this level). And as a beginner you could also learn more about SQL as a languge. by simply writing complex queries in SQLAlchemy and inspecting the generated SQL.
+For the experienced database admins this could be pretty useful, as ORM's don't generate the most efficient SQL query sometimes (but there's no need for premature optimization at this level). And as a beginner you could also learn more about SQL as a language by inspecting the SQL generated by the SQLAlchemy statements you write.
 
 Okay, so how do we convert this complex query object into a dictionary which can be jsonified.
 
@@ -199,7 +195,7 @@ def to_json(self):
 {% endhighlight %}
 
 
-Now we can simply call `to_json` on any `Topic` to get a custom `dict` representation, which leaves us with a simple list comprehension
+Now we can simply call `to_json` on any `Topic` to get a custom `dict` representation, which leaves us with a simpler list comprehension than we had before.
 
 {% highlight bash %}
 >>> [poll.to_json() for poll in polls]
@@ -244,19 +240,19 @@ This is the kind of JSON that our API will send back to us when we query it curr
 
 What happened to our dream API, weren't we supposed to have the status of the poll included.
 
-Yes we were but we can't, because well...our database design is broken. Yes you read that right it's broken. The status of the poll is supposed to be a column on the `Topics` model, so once we set a Topic as closed all options (actually `Poll` objects in our models) associated with it are automatically closed (because their parent was). Thereby marking the poll as closed.
+Yes we were but we can't, because well...our database design is broken. Yes you read that right it's broken. The status of the poll is supposed to be a column on the `Topics` model, so once we set a Topic as closed all options (actually `Poll` objects in our models) associated with it are automatically closed. We don't need to go around marking all the `Poll` objects as closed. It's way easier to just close the `Topic` object that all the `Poll` objects are related to.
 
 But you went ahead and *brilliantly* put it in the `Polls` table (actually i misled you and congrats! you fell for it).
 
 So after cursing yourself and me, how are you going to fix this mistake. Yes you're interacting with your database with python through SQLAlchemy and you can easily cut and paste the status line into the `Topics` model. But that's not going to work.
 
-SQLAlchemy on it's own can only alter the schema of our database by adding new models, but we've found ourself in a situation where we need to delete a column from a table and then add create that column in another table. (altering two tables).
+SQLAlchemy on it's own can only alter the schema of our database by adding new models, but we've found ourself in a situation where we need to delete a column from a table and then create that column in another table. (altering two tables).
 
 SQLAlchemy and other ORM's are only an abstraction not a direct replacement for SQL, so at the end of the day you're still working with a database and SQL.
 
-The database on it's own part, knows nothing about python so it wouldn't know when we made any change to the python file containing the models. The `models.py` needs a way need a way to tell the database *hey one of the us just got updated. you need to update yourself to match our current state*
+The database on it's own part, knows nothing about python so it wouldn't know when we made any change to the python file containing the models. The `models.py` file needs a way need a way to tell the database *hey one of my models just got updated. you need to update the correesponding table in the database to match our current state*
 
-This is where [Flask-Migrate](https://flask-migrate.readthedocs.io/en/latest/) comes to the rescue and says step aside guys I'll settle this.
+This is where [Flask-Migrate](https://flask-migrate.readthedocs.io/en/latest/) comes to the rescue and says step aside guys I'll handle this.
 
 ### Flask Migrate
 Quoting the [docs](https://flask-migrate.readthedocs.io/en/latest/)
@@ -269,7 +265,7 @@ Migrations (also known as ‘schema evolution’ or ‘mutations’) are simply 
 
 Carrying out database migrations manually is very problematic, sure you could use a tool like [phpMyAdmin](https://www.phpmyadmin.net/) or [pgAdmin](https://www.pgadmin.org/)  to alter your tables, but picture this scenario - You've done a lot of migrations manually with a graphical tool or from the command line and then you realized that your initial database design was better than the one you have currently, so you decide to go three steps back to the previous state of your database.
 
- How do you go back when you have no previous history of your schema at that point in time? If you don't have a good memory or you didn't document that information down, you're screwed. You either have to design it again or design that table or tables(s) again depending on the size of your database and how much you deviated from that migration
+ How do you go back when you have no previous history of your schema at that point in time? If you don't have a good memory or you didn't document that information down, you're screwed. You either have to design the whole database again or some table(s)  again depending on the size of your database and how much has changed.
 
 This is what Flask Migrate (and other solutions for other web frameworks) are good at, with Flask migrate you can easily switch between older and newer versions of your database state at anytime. It's just like a mini `git` for your database.
 
@@ -382,7 +378,7 @@ def api_polls():
         # get the poll and save it in the database
         poll = request.get_json()
 
-        return "The title of the poll is {} and the options are {} and {}".format(poll['title'], *poll['options'])
+        return "The title of the poll is {} and the options are {} and {}".format(poll['title'], {% raw %}*poll['options']{%endraw%})
 
     else:
         # return dict representation of our API
@@ -393,9 +389,11 @@ def api_polls():
 
 {% endhighlight %}
 
-Did you notice that at the end of the file we don't have the `if __name__ == "__main__"` condition again? we don't need that statement again because there is an alternate way to run flask applications (From Flask 0.11). This new method is more flexible and enables us to easily run the new migration commands Flask Migrate has exposed to us.
+Did you notice that at the end of the file we don't have the `if __name__ == "__main__"` condition again?
 
-So you wont be running your application with `python3 votr.py` anymore instead you'll use the `flask run` command, but for that to work properly we need to setup some basic info that tells flask how to find our app and run it.
+We don't need that statement again because there is an alternate way to run flask applications (From Flask 0.11). This new method is more flexible and enables us to easily run the new migration commands Flask Migrate has exposed to us.
+
+So you wont be running your application with `python3 votr.py` anymore instead you'll use the `flask run` command, but for that to work properly we need to setup some basic info that tells flask how to find our application and how it should run it.
 
 from your terminal type in the following
 
@@ -406,14 +404,14 @@ export FLASK_DEBUG=1
 
 This set's the flask app to votr and then turns on debug mode
 
-*To prevent yourself from typing this anytime you want to work on votr (possibly after a reboot) just add those two lines
+To prevent yourself from typing this anytime you want to work on votr (possibly after a reboot) just add those two lines
 to your activate script for your virtualenv. located in the bin directory in your virtualenv's root folder.
 
-Anytime you run `source/bin/activate` the correct app and the debug mode would be set.*
+Anytime you run `source/bin/activate` the correct app and the debug mode would be set.
 
+<br>
 
-
-To run the initial database migration, use this:
+**To run the initial database migration, use this:**
 {% highlight bash %}
 flask db init
 {% endhighlight %}
@@ -460,13 +458,13 @@ You should oops!
 
 `sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) near "DROP": syntax error [SQL: 'ALTER TABLE polls DROP COLUMN status']`
 
-Don't worry this problem isn't because you did something wrong it's because SQLite doesn't support [SQL alter statements](https://www.sqlite.org/lang_altertable.html) fully. Gladly there is a workaroud in alembic > 0.7 that simulates this alter statements:
+Don't worry this problem isn't because you did something wrong it's because SQLite doesn't support [SQL alter statements](https://www.sqlite.org/lang_altertable.html) fully. Gladly there is a workaroud in alembic > 0.7 to get around this by simulating alter statements for SQLite by:
 
 <ul class="postlist">
 
   <li>Renaming the table</li>
 
-  <li>Creating a new table with the old name of the previous table with the new column</li>
+  <li>Creating a new table with the old name of the previous table that contains the new column</li>
 
   <li>Copying data over from the old table to the new one</li>
 
@@ -475,7 +473,7 @@ Don't worry this problem isn't because you did something wrong it's because SQLi
 </ul>
 
 
-This procedure is called a *Batch Migration* and it's not perfect in alembic and most times you'll still need to edit the migrations file yourself to make it work. but don't panic I'll hold your hand as we go.
+This procedure is called a *Batch Migration* and it's not perfect in alembic and most times you'll still need to edit the migrations file yourself to make it work. but don't panic I'll hold your hand as we go along.
 
 *Alembic is what actually handles the database migration, Flask Migrate is just a library that provides better integration with flask*
 
@@ -636,9 +634,9 @@ You've now provided a universal means for any client to talk to your application
 
 
 ### Another Migration
-Now we want to make sure duplicate options don't get stored in our database, to do that we're going to make the `name` field in the `Options` table column unique, and run another migration.
+Now we want to make sure duplicate options don't get stored in our database, to do that we're going to make the `name` field in the `Options` table unique, and run another migration.
 
-Change the field declaration in the `Options` model to this
+Change the field declaration in the `Options` model to this:
 
 
 {% highlight python %}
@@ -680,7 +678,7 @@ Resend the previous poll we just created
 >>> requests.post('http://localhost:5000/api/polls', json={"title": "who's the fastest footballer","options": ["Hector bellerin", "Gareth Bale", "Arjen robben"]}).json()
 {% endhighlight %}
 
-You should get a `JSONDecodeError`, because we didn't return any valid JSON back TO inform us that a certain option in the poll already existed. Rather SQLAlchemy raised an exception. switch back to the flask terminal and you should see this:
+You should get a `JSONDecodeError`, because we didn't return any valid JSON back To inform us that a certain option in the poll already existed. Rather SQLAlchemy raised an exception that couldn't be converted into a valid JSON string. switch back to the flask terminal and you should see this:
 
 {% highlight python %}
 sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: options.name [SQL: 'INSERT INTO options (date_created, date_modified, name) VALUES (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?)'] [parameters: ('Hector bellerin',)]
@@ -688,11 +686,11 @@ sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed
 
 This means our unique constraint worked!
 
-But instead of returning a messsage back saying *xxxx poll already existed* it's better to link that existing option to the new polls. For example "Gareth bale" is a valid option for The "Fastest player in the world" and "The best footballer in the world" (hopefully when Messi and Cristiano Ronaldo retire).
+But instead of returning a messsage back saying *xxxx option already exists* it's better to link that existing option to the new polls. For example "Gareth bale" is a valid option for The "Fastest player in the world" and "The best footballer in the world" (hopefully when Messi and Cristiano Ronaldo retire).
 
-We should only return a message that an option already existed when we're trying to create an option directly not when it's part of a poll. (Our API doesn't support that feature currenty).
+We should only return a message that an option already exists when we're trying to create an option directly not when a new option is part of a new poll. (Our API doesn't allow us add new options, only the admin should do that).
 
-So if an option exists in the database instead of failing with an `IntegrityError` or returning a message back, let's link the old option with a new poll to be created.
+So if an option exists in the database instead of failing with an `IntegrityError` or returning a message back, let's link the old option with the new poll to be created.
 
 ###### We only need to change one thing, the dictionary comprehension that creates Poll objects from Option objects
 
@@ -747,10 +745,12 @@ class Options(Base):
 
 instead of sending the database id of the record back to the user we sent back a uuid (Universally unique identification), a randomly generated number instead. Why did we do this?
 
-It's for security reasons. You should expose as little information about the inner workings and structure of your application as possible (though this makes it harder to accomplish some tasks) to make it difficult for hackers to know how your application works and prevent attacks. Your application might be secure in all the common areas where web applications can be exploited but you might be using a design pattern itself that endangers your application. If hackers know you're using this so called *vulnerable* design pattern, they can easily adopt another approach and hack your web app or gain access to information they weren't supposed to see.
+It's for security reasons. You should expose as little information about the inner workings and structure of your application as possible (though this makes it harder to accomplish some tasks) to make it difficult for hackers to know how your application works and prevent attacks. Your application might be secure in all the common areas where web most web applications are vulnerable, but you might expose certain information that might assist hackers in gaining access to important information or hacking your web application totally.
+
+In this case, we don't want anyone to know the total number of options we have in our database (we would have exposed that information by returning the database user id in the json string).
 
 
-Let's test it
+**Let's test the new endpoint**
 
 {% highlight python %}
 >>> requests.get('http://localhost:5000/api/polls/options').json()

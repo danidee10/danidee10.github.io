@@ -31,3 +31,7 @@ a {
   list-style: inside;
   font-style: italic;
 }
+
+code {
+  font-size: 15px;
+}

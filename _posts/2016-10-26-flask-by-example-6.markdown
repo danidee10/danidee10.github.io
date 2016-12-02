@@ -27,7 +27,7 @@ You'll also need another React addon called [React Router](https://github.com/Re
 <br />
 
 ### Saving the polls
-First off, we're going make sure our users polls are persisted to the database, when the user clicks on save poll, we want to extract the relevant data, make an ajax post request to the server get and display the result of the request (success or failure) as a good old javascript alert.
+First off all, we're going make sure our users polls are persisted to the database, when the user clicks on save poll, we want to extract the relevant data, make an ajax post request to the server, get and display the result of the request (success or failure) as a good old javascript alert.
 
 This code goes into the `handleSubmit` method of the `PollForm` component
 
@@ -65,7 +65,7 @@ handleSubmit: function(e){
 
 We created a global variable `origin` to hold the base address of the route and then used it to form the api route, after that we made a post request to our api using JQuery (You could use pure javascript if you want) and on success or failure we simply alert the user and tell them what happened.
 
-We are also going to change the button type of the `Add option` button to `"button"`. this was done to prevent the button from triggering the submit event which is default action triggered if we don't specify the function of the button.
+We are also going to change the button type of the `Add option` button to `"button"`. this was done to prevent the button from triggering the submit event which is default action triggered if we don't specify the type of the button.
 
 {% highlight html %}
 <div className="row form-group">
@@ -114,7 +114,7 @@ If you're wondering what `browserHistory` means, There's a detailed example on `
 ## Displaying the polls on the homepage
 To display the polls we're going to create two new react components (to manage state properly).
 
-These components would work together to Load polls from the server and on each vote, increment the vote counter for a poll and refresh the UI (fetch polls from the server again)
+These components would work together to Load polls from the server and on each vote, increment the vote counter for a poll and refresh the UI (by fetching polls from the server again and calling `setState`).
 
 {% highlight javascript %}
 var LivePreviewProps = React.createClass({
@@ -258,7 +258,7 @@ and refreshes the UI by calling the prop that was passed to it using `this.props
 
 React allows you to pass in methods as props to child components and then in the child component you can use those props as callbacks for various events.
 
-This is also simple way to simulate [two way data-binding](https://facebook.github.io/react/docs/two-way-binding-helpers.html) (Data flowing seamlessly between parent and child) in react ***Technically it's not*** but it enables data to flow from parent to child and vice versa.
+This is a simple way to emulate [two way data-binding](https://facebook.github.io/react/docs/two-way-binding-helpers.html) (Data flowing seamlessly between parent and child) in react ***Technically it's not*** but it enables data to flow from parent to child and vice versa.
 
 *`classContext` is a state variable we use to set the bootstrap class of the `LivePreview` component based on where it is rendered*
 
@@ -355,6 +355,7 @@ render: function(){
       return (
         <div key={option.name}>
           <input name="options" type="radio" value={option.name} onChange={this.handleOptionChange} /> {option.name}
+
           <div className="progress">
             <div className="progress-bar progress-bar-success" role="progressbar" aria-valuenow={progress}
             aria-valuemin="0" aria-valuemax="100" style={current}>
@@ -371,7 +372,7 @@ render: function(){
 
 {% endhighlight %}
 
-Pretty straight-forward math. Now we have a progress bar that shows us the percentage of votes each option has. progress bar percentage and the total vote count should update as soon as you cast your vote on any poll.
+Pretty straight-forward math. Now we have a progress bar that shows us the percentage of votes each option has. The progress bar percentage and the total vote count should update as soon as you cast your vote on any poll.
 
 <br />
 
@@ -423,7 +424,7 @@ ReactDOM.render((
 
 The new route `<Route path="/polls/:pollName" component={AllPolls} />` is basically the same as it's flask counterpart with an arbitrary value for `:pollName` for the poll name
 
-We're also re-using the `AllPolls` component, which means we'll have to make it smart enough to know which Route called it. Luckily the Route that called it is available to us as a prop.
+We're also re-using the `AllPolls` component, which means we'll have to make it smart enough to know which Route called it. Luckily that information is available to us as a prop.
 
 In this case `this.props.routeParams.pollName`
 
@@ -586,15 +587,17 @@ render: function(){
 
 Reload the view and now you should see two polls on each row on the homepage, while the preview form on the create poll page should remain centered.
 
-Now you should understand what `classContext` does for us.
+Now you should understand what `classContext` does for us if you did not before.
 
 <br />
 
 ## Improve the create poll form
 
-Remember in the previous tutorial where we prevented duplicate options in our database by linking existing options with the poll, we're going to do something similar on the front-end, but this time we're going to show them existing options as they type, so instead of typing the full name of an option they can easily see the results filtered out in real time as they type and easily pick the option from the list
+Remember in the previous tutorial where we prevented duplicate options in our database by linking existing options with the poll, we're going to do something similar on the front-end, but this time we're going to show our users existing options as they type, so instead of typing the full name of an option they can easily see the results filtered out in real time as they type and then pick one from the list
 
 Something along the lines of:
+
+![data list](/images/flask-6-datalist.png)
 
 
 
@@ -758,16 +761,18 @@ Well that's all for this part, Here's a gif of me casting my vote on the Fastest
 
 <br />
 
-<li>As our web app is still it's pretty efficient to fetch the whole chunk of json for the poll and options in one request, as your application grows this may become very inefficient as it would be pointless to load a whole lot of information that your user may not need, you'd also be putting a lot of stress on your database too
+<li>As a little web app is still it's pretty efficient to fetch the whole options in our database with one single request, as your application grows this may become very inefficient as it would be pointless to load a whole lot of information that your user may not need, you'd also be putting a lot of stress on your database too.
 
 <br />
 
-imagine fectcing a huge list of 200k+ polls in one go. Your application would seem very slow to users with slow internet connections.
+imagine fectcing a huge list of 200k+ polls or options in one go. Your application would seem very slow to users with slow internet connections.
+
+To handle this:
 <br /><br />
   <ul class="postlist">
 
   <li>
-  To handle this you might want want to limit the polls you display on the homepage and then update it as the user scrolls
+  You might want want to limit the polls you display on the homepage and then update it as the user scrolls.
   </li>
 
   <li>
@@ -777,7 +782,7 @@ imagine fectcing a huge list of 200k+ polls in one go. Your application would se
   <br />
 
 
-The goal here is to make little requests as they're needed (returning relevant information the user is interested  in) not a single expensive request that comes back with a lot of info that the user doesn't need.
+The goal here is to make little requests as they're needed (returning relevant information the user is interested in) not a single expensive request that comes back with a lot of info that the user doesn't need.
 
   </ul>
 
@@ -801,7 +806,7 @@ You should be strong enough to venture into the huge ecosystem of react tutorial
 <br />
 
 ### What are we hacking at next?
-In the next part, we're also going to add more control to our application to keep track of *Fraudulent* and *Overzealous* users who most likely would want to vote on a poll more than once.
+In the next part, we're also going to add more control to our application to keep track of *Fraudulent* and *Overzealous* users who most likely would want to vote on a poll more than once and stop them from doing that.
 
 Finally i'll show you how to quickly spin up an admin dashboard for your application to handle basic CRUD operations on your models with [Flask-Admin](http://flask-admin.readthedocs.io/en/latest/) and also how flask admin can be integrated with our existing auth system.
 

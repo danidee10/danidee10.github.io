@@ -50,6 +50,10 @@ a {
   font-style: italic;
 }
 
+code {
+  font-size: 15px;
+}
+
     </style>
 
     <link rel="canonical" href="http://localhost:4000/2016/10/26/flask-by-example-6.html">
@@ -125,7 +129,7 @@ a {
 <p><br /></p>
 
 <h3 id="saving-the-polls">Saving the polls</h3>
-<p>First off, we’re going make sure our users polls are persisted to the database, when the user clicks on save poll, we want to extract the relevant data, make an ajax post request to the server get and display the result of the request (success or failure) as a good old javascript alert.</p>
+<p>First off all, we’re going make sure our users polls are persisted to the database, when the user clicks on save poll, we want to extract the relevant data, make an ajax post request to the server, get and display the result of the request (success or failure) as a good old javascript alert.</p>
 
 <p>This code goes into the <code class="highlighter-rouge">handleSubmit</code> method of the <code class="highlighter-rouge">PollForm</code> component</p>
 
@@ -159,7 +163,7 @@ a {
 
 <p>We created a global variable <code class="highlighter-rouge">origin</code> to hold the base address of the route and then used it to form the api route, after that we made a post request to our api using JQuery (You could use pure javascript if you want) and on success or failure we simply alert the user and tell them what happened.</p>
 
-<p>We are also going to change the button type of the <code class="highlighter-rouge">Add option</code> button to <code class="highlighter-rouge">"button"</code>. this was done to prevent the button from triggering the submit event which is default action triggered if we don’t specify the function of the button.</p>
+<p>We are also going to change the button type of the <code class="highlighter-rouge">Add option</code> button to <code class="highlighter-rouge">"button"</code>. this was done to prevent the button from triggering the submit event which is default action triggered if we don’t specify the type of the button.</p>
 
 <figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">className=</span><span class="s">"row form-group"</span><span class="nt">&gt;</span>
   <span class="nt">&lt;button</span> <span class="na">className=</span><span class="s">"btn btn-lg btn-success btn-block"</span> <span class="na">type=</span><span class="s">"button"</span> <span class="na">onClick=</span><span class="s">{this.handleOptionAdd}</span><span class="nt">&gt;</span>Add option<span class="nt">&lt;/button&gt;</span>
@@ -202,7 +206,7 @@ a {
 <h2 id="displaying-the-polls-on-the-homepage">Displaying the polls on the homepage</h2>
 <p>To display the polls we’re going to create two new react components (to manage state properly).</p>
 
-<p>These components would work together to Load polls from the server and on each vote, increment the vote counter for a poll and refresh the UI (fetch polls from the server again)</p>
+<p>These components would work together to Load polls from the server and on each vote, increment the vote counter for a poll and refresh the UI (by fetching polls from the server again and calling <code class="highlighter-rouge">setState</code>).</p>
 
 <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">LivePreviewProps</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createClass</span><span class="p">({</span>
 
@@ -329,7 +333,7 @@ and refreshes the UI by calling the prop that was passed to it using <code class
 
 <p>React allows you to pass in methods as props to child components and then in the child component you can use those props as callbacks for various events.</p>
 
-<p>This is also simple way to simulate <a href="https://facebook.github.io/react/docs/two-way-binding-helpers.html">two way data-binding</a> (Data flowing seamlessly between parent and child) in react <strong><em>Technically it’s not</em></strong> but it enables data to flow from parent to child and vice versa.</p>
+<p>This is a simple way to emulate <a href="https://facebook.github.io/react/docs/two-way-binding-helpers.html">two way data-binding</a> (Data flowing seamlessly between parent and child) in react <strong><em>Technically it’s not</em></strong> but it enables data to flow from parent to child and vice versa.</p>
 
 <p><em><code class="highlighter-rouge">classContext</code> is a state variable we use to set the bootstrap class of the <code class="highlighter-rouge">LivePreview</code> component based on where it is rendered</em></p>
 
@@ -419,7 +423,8 @@ and refreshes the UI by calling the prop that was passed to it using <code class
       <span class="k">return</span> <span class="p">(</span>
         <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">option</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="o">&gt;</span>
           <span class="o">&lt;</span><span class="nx">input</span> <span class="nx">name</span><span class="o">=</span><span class="s2">"options"</span> <span class="nx">type</span><span class="o">=</span><span class="s2">"radio"</span> <span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">option</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span> <span class="nx">onChange</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">handleOptionChange</span><span class="p">}</span> <span class="sr">/&gt; {option.name</span><span class="err">}
-</span>          <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="s2">"progress"</span><span class="o">&gt;</span>
+</span>
+          <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="s2">"progress"</span><span class="o">&gt;</span>
             <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="s2">"progress-bar progress-bar-success"</span> <span class="nx">role</span><span class="o">=</span><span class="s2">"progressbar"</span> <span class="nx">aria</span><span class="o">-</span><span class="nx">valuenow</span><span class="o">=</span><span class="p">{</span><span class="nx">progress</span><span class="p">}</span>
             <span class="nx">aria</span><span class="o">-</span><span class="nx">valuemin</span><span class="o">=</span><span class="s2">"0"</span> <span class="nx">aria</span><span class="o">-</span><span class="nx">valuemax</span><span class="o">=</span><span class="s2">"100"</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">current</span><span class="p">}</span><span class="o">&gt;</span>
               <span class="p">{</span><span class="nx">progress</span><span class="p">}</span><span class="o">%</span>
@@ -433,7 +438,7 @@ and refreshes the UI by calling the prop that was passed to it using <code class
     <span class="p">}</span>
   <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span></code></pre></figure>
 
-<p>Pretty straight-forward math. Now we have a progress bar that shows us the percentage of votes each option has. progress bar percentage and the total vote count should update as soon as you cast your vote on any poll.</p>
+<p>Pretty straight-forward math. Now we have a progress bar that shows us the percentage of votes each option has. The progress bar percentage and the total vote count should update as soon as you cast your vote on any poll.</p>
 
 <p><br /></p>
 
@@ -478,7 +483,7 @@ and refreshes the UI by calling the prop that was passed to it using <code class
 
 <p>The new route <code class="highlighter-rouge">&lt;Route path="/polls/:pollName" component={AllPolls} /&gt;</code> is basically the same as it’s flask counterpart with an arbitrary value for <code class="highlighter-rouge">:pollName</code> for the poll name</p>
 
-<p>We’re also re-using the <code class="highlighter-rouge">AllPolls</code> component, which means we’ll have to make it smart enough to know which Route called it. Luckily the Route that called it is available to us as a prop.</p>
+<p>We’re also re-using the <code class="highlighter-rouge">AllPolls</code> component, which means we’ll have to make it smart enough to know which Route called it. Luckily that information is available to us as a prop.</p>
 
 <p>In this case <code class="highlighter-rouge">this.props.routeParams.pollName</code></p>
 
@@ -633,15 +638,17 @@ and refreshes the UI by calling the prop that was passed to it using <code class
 
 <p>Reload the view and now you should see two polls on each row on the homepage, while the preview form on the create poll page should remain centered.</p>
 
-<p>Now you should understand what <code class="highlighter-rouge">classContext</code> does for us.</p>
+<p>Now you should understand what <code class="highlighter-rouge">classContext</code> does for us if you did not before.</p>
 
 <p><br /></p>
 
 <h2 id="improve-the-create-poll-form">Improve the create poll form</h2>
 
-<p>Remember in the previous tutorial where we prevented duplicate options in our database by linking existing options with the poll, we’re going to do something similar on the front-end, but this time we’re going to show them existing options as they type, so instead of typing the full name of an option they can easily see the results filtered out in real time as they type and easily pick the option from the list</p>
+<p>Remember in the previous tutorial where we prevented duplicate options in our database by linking existing options with the poll, we’re going to do something similar on the front-end, but this time we’re going to show our users existing options as they type, so instead of typing the full name of an option they can easily see the results filtered out in real time as they type and then pick one from the list</p>
 
 <p>Something along the lines of:</p>
+
+<p><img src="/images/flask-6-datalist.png" alt="data list" /></p>
 
 <p>To do that, we’ll simply retrieve all the options form the api endpoint we created earlier (<code class="highlighter-rouge">'/api/poll/options'</code>)</p>
 
@@ -797,16 +804,18 @@ and refreshes the UI by calling the prop that was passed to it using <code class
 
 <br />
 
-<li>As our web app is still it's pretty efficient to fetch the whole chunk of json for the poll and options in one request, as your application grows this may become very inefficient as it would be pointless to load a whole lot of information that your user may not need, you'd also be putting a lot of stress on your database too
+<li>As a little web app is still it's pretty efficient to fetch the whole options in our database with one single request, as your application grows this may become very inefficient as it would be pointless to load a whole lot of information that your user may not need, you'd also be putting a lot of stress on your database too.
 
 <br />
 
-imagine fectcing a huge list of 200k+ polls in one go. Your application would seem very slow to users with slow internet connections.
+imagine fectcing a huge list of 200k+ polls or options in one go. Your application would seem very slow to users with slow internet connections.
+
+To handle this:
 <br /><br />
   <ul class="postlist">
 
   <li>
-  To handle this you might want want to limit the polls you display on the homepage and then update it as the user scrolls
+  You might want want to limit the polls you display on the homepage and then update it as the user scrolls.
   </li>
 
   <li>
@@ -816,7 +825,7 @@ imagine fectcing a huge list of 200k+ polls in one go. Your application would se
   <br />
 
 
-The goal here is to make little requests as they're needed (returning relevant information the user is interested  in) not a single expensive request that comes back with a lot of info that the user doesn't need.
+The goal here is to make little requests as they're needed (returning relevant information the user is interested in) not a single expensive request that comes back with a lot of info that the user doesn't need.
 
   </ul>
 
@@ -840,7 +849,7 @@ The goal here is to make little requests as they're needed (returning relevant i
 <p><br /></p>
 
 <h3 id="what-are-we-hacking-at-next">What are we hacking at next?</h3>
-<p>In the next part, we’re also going to add more control to our application to keep track of <em>Fraudulent</em> and <em>Overzealous</em> users who most likely would want to vote on a poll more than once.</p>
+<p>In the next part, we’re also going to add more control to our application to keep track of <em>Fraudulent</em> and <em>Overzealous</em> users who most likely would want to vote on a poll more than once and stop them from doing that.</p>
 
 <p>Finally i’ll show you how to quickly spin up an admin dashboard for your application to handle basic CRUD operations on your models with <a href="http://flask-admin.readthedocs.io/en/latest/">Flask-Admin</a> and also how flask admin can be integrated with our existing auth system.</p>
 

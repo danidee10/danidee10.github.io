@@ -50,6 +50,10 @@ a {
   font-style: italic;
 }
 
+code {
+  font-size: 15px;
+}
+
     </style>
 
     <link rel="canonical" href="http://localhost:4000/2016/09/19/flask-by-example-2.html">
@@ -113,9 +117,9 @@ a {
 
 <p>From the image our schema is pretty clear, we have three tables, the <em>topics</em> table contains all the various topics we’re going to be voting on, for example “<strong><em>Is Alex iwobi better than Dele Alli?</em></strong>”</p>
 
-<p>The <em>options</em> table are the voting options the users can choose when voting which would be (<strong><em>Alex iwobi</em></strong> or <strong><em>Dele Alli</em></strong>)</p>
+<p>The <em>options</em> table contains the voting options the users can choose when voting which would be (<strong><em>Alex iwobi</em></strong> or <strong><em>Dele Alli</em></strong>)</p>
 
-<p>Lastly, the <em>polls</em> table. this table serves as a <em>‘join’</em> table (ManyToMany relationship) between <em>topics</em> and <em>options</em>, this table is needed because of the nature of the voting system where each option can belong to more than one topic at the same time, (we could be comparing <strong><em>Dele Alli</em></strong> to <strong><em>Messi</em></strong> at the same time as our first poll). if we don’t do this we’ll end up creating several <strong><em>Dele Alli’s</em></strong> in our tables for the other topics where his name is used which would defeat the <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY</a> principle.</p>
+<p>Lastly, the <em>polls</em> table serves as a <em>‘join’</em> table (ManyToMany relationship) between <em>topics</em> and <em>options</em>, this table is needed because of the nature of the voting system where each option can belong to more than one topic at the same time, (we could be comparing <strong><em>Dele Alli</em></strong> to <strong><em>Messi</em></strong> at the same time as our first poll). if we don’t do this we’ll end up creating several <strong><em>Dele Alli’s</em></strong> in our tables for the other topics where his name is used which would defeat the <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY</a> principle.</p>
 
 <p>Next step is to convert our schema to code.</p>
 
@@ -213,9 +217,7 @@ we’re going to install it now with <code class="highlighter-rouge">pip</code>.
         <span class="c"># a user friendly way to view our objects in the terminal</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">option</span><span class="o">.</span><span class="n">name</span></code></pre></figure>
 
-<p>To properly use <code class="highlighter-rouge">flask_sqlalchemy</code>, we have to create a configuration file which tells flask the type of database we’re making use of and how to connect it, we can also use our configuration file to store site-wide information (Like the password to our admin account!). we’re going to use sqlite as the database for votr because it’s lightweight and easy to setup.</p>
-
-<p>But seriously never store passwords or sensitive information of any kind in a plain file or unencrypted in your database. Never!</p>
+<p>To properly use <code class="highlighter-rouge">flask_sqlalchemy</code>, we have to create a configuration file which tells flask the type of database we’re making use of and how to connect it, we can also use our configuration file to store site-wide information. We’re going to use sqlite as the database for votr because it’s lightweight and easy to setup.</p>
 
 <h6 id="create-a-new-file-configpy-and-include-the-following">Create a new file <code class="highlighter-rouge">config.py</code> and include the following</h6>
 
@@ -252,31 +254,13 @@ For now we’ll just keep everything simple.</p>
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
     <span class="n">votr</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></code></pre></figure>
 
-<p>We imported the <code class="highlighter-rouge">db</code> we created in our <code class="highlighter-rouge">models.py</code> file, and called <code class="highlighter-rouge">db.init_app(votr)</code> and <code class="highlighter-rouge">db.create_all(app=votr)</code> to bind sqlalchemy to our flask app and create the database tables we specified in our <code class="highlighter-rouge">models.py</code> file. Note that <code class="highlighter-rouge">db.create_all</code> doesn’t actually create our database, it would simply create the required tables we specified in our <code class="highlighter-rouge">models.py</code> file on an existing database (Remember our <code class="highlighter-rouge">config.py</code> file where we specified the location of our database).</p>
+<p>We imported the <code class="highlighter-rouge">db</code> we created in our <code class="highlighter-rouge">models.py</code> file, and called <code class="highlighter-rouge">db.init_app(votr)</code> and <code class="highlighter-rouge">db.create_all(app=votr)</code> to create the database for us. The database would exist at the path we provided with the <code class="highlighter-rouge">SQLALCHEMY_DATABASE_URI</code> variable in our configuration file.</p>
 
-<p>We’re going to create that db file now.</p>
-
-<h6 id="if-you-have-python-installed-properly-you-should-have-sqlite3-if-for-some-reason-you-dont-have-it-you-can-install-it-with">If you have python installed properly you should have sqlite3, if for some reason you don’t have it, you can install it with:</h6>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>sudo apt-get install sqlite3</code></pre></figure>
-
-<h6 id="now-lets-create-our-database">Now lets create our database</h6>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>sqlite3
-SQLite version 3.14.2 2016-09-12 18:50:49
-Enter <span class="s2">".help"</span> <span class="k">for </span>usage hints.
-Connected to a transient <span class="k">in</span>-memory database.
-Use <span class="s2">".open FILENAME"</span> to reopen on a persistent database.
-<span class="gp">sqlite&gt; </span>.save votr.db
-sqlite&gt;</code></pre></figure>
-
-<h6 id="press-ctrl--d-or-ctrl--c-to-exit">Press Ctrl + D or Ctrl + C to exit.</h6>
-
-<h6 id="this-creates-a-new-db-called-votrdb-in-the-votr-directory-now-run-the-votrpy-with-python">This creates a new db called <code class="highlighter-rouge">votr.db</code> in the <code class="highlighter-rouge">votr</code> directory, now run the <code class="highlighter-rouge">votr.py</code> with python.</h6>
+<p><strong>Now run</strong></p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>python3 votr.py</code></pre></figure>
 
-<h6 id="this-should-create-all-the-models-we-specified-in-our-modelspy-file-as-tables-in-our-database-we-can-confirm-that-by-using-sqlite3-again-from-the-terminal">This should create all the models we specified in our <code class="highlighter-rouge">models.py</code> file as tables in our database, we can confirm that by using sqlite3 again from the terminal.</h6>
+<h6 id="this-should-create-all-database-and-all-the-models-we-specified-in-modelspy-as-tables-we-can-confirm-that-by-using-sqlite3-from-the-terminal">This should create all database and all the models we specified in <code class="highlighter-rouge">models.py</code> as tables, we can confirm that by using sqlite3 from the terminal.</h6>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>sqlite3
 SQLite version 3.14.2 2016-09-12 18:50:49
@@ -339,7 +323,7 @@ options  polls    topics</code></pre></figure>
 <p>This shows that you can pass in a list of options to a topic, thanks to <code class="highlighter-rouge">backref</code> again!</p>
 
 <p>Well that’s it for this part!
-We were able to set up our database and get a feel of how SQLalchemy works, in the next part we’re going to build the front-end for our users, so they can login and add polls to votr.</p>
+We were able to set up our database and get a feel of how SQLAlchemy works, in the next part we’re going to build the front-end for our users, so they can login and add polls to votr.</p>
 
 <p>SQLAlchemy can be quite confusing sometimes, but if you stick with it and just take things one step at a time it’s only going to get easier. To see more examples of long SQL queries checkout this <a href="https://www.quora.com/Whats-the-most-complex-SQL-query-you-ever-wrote">quora</a> post.</p>
 

@@ -50,6 +50,10 @@ a {
   font-style: italic;
 }
 
+code {
+  font-size: 15px;
+}
+
     </style>
 
     <link rel="canonical" href="http://localhost:4000/2016/09/18/flask-by-example-1.html">
@@ -116,7 +120,7 @@ a {
 
 <p><br /></p>
 
-<p>We’re going to use <a href="http://flask.pocoo.org">Flask</a> as our backend, <a href="http://getbootstrap.com/">Bootstrap3</a> for our interface generally and <a href="https://facebook.github.io/react/">ReactJS</a> for other parts of our UI. the rest is just plain old html and css.</p>
+<p>We’re going to use <a href="http://flask.pocoo.org">Flask</a> as our backend, <a href="http://getbootstrap.com/">Bootstrap3</a> for our layout and basic styling and <a href="https://facebook.github.io/react/">ReactJS</a> to enhance our UI and make it more interactive.</p>
 
 <p>Our polling app is going to be called <strong>Votr</strong></p>
 
@@ -125,13 +129,19 @@ a {
 <h4 id="why-flask">Why flask?</h4>
 <p><img src="/images/flask.jpg" alt="Flask" /></p>
 
-<p>Quoting the flask <a href="http://flask.pocoo.org">docs</a> <strong><em>Flask is a microframework for Python based on Werkzeug, Jinja 2 and good intentions</em></strong>. Most people are quick to dismiss microframeworks like flask as not being powerful compared to django or other <em>batteries included</em> web frameworks which isn’t correct. so what does micro mean?</p>
+<p>Quoting the flask <a href="http://flask.pocoo.org">docs</a></p>
+
+<blockquote>
+  <p>Flask is a microframework for Python based on Werkzeug, Jinja 2 and good intentions</p>
+</blockquote>
+
+<p>Most people are quick to dismiss microframeworks like flask as not being powerful compared to django or other <em>batteries included</em> web frameworks which isn’t correct. so what does micro mean?</p>
 
 <p>Micro means that the framework was designed to be as minimal as possible and just do what a basic web framework should do, while being extensible without making assumptions and including features that may not be used by everyone. Now What does this mean to you as a developer?, it means that you can build your web app from scratch and then as your need more features for your app you can simply install the required libraries and plugins you need (You can even roll out a new flask plugin and share it with the world if you’re feeling adventrous ).</p>
 
-<p>At the end of the day you’ll get a better understanding of how different parts of your web app ticks because you actually added those ‘parts’ yourself (get it? web development one drop at a time). instead of using a web framework for over a year only for you to discover that feature <code class="highlighter-rouge">x</code> existed like 2 years earlier! and you’ve been doing things the wrong way.</p>
+<p>At the end of the day you’ll get a better understanding of how different parts of your web app ticks because you actually added those ‘parts’ yourself (get it? web development one drop at a time). instead of using a web framework for over a year only for you to discover that feature <code class="highlighter-rouge">x</code> existed like 2 years earlier! and you’ve been doing things the hard way.</p>
 
-<p>So if you’re a newbie in building web apps with python and you’ve been frustrated by django, I’ll recommend you stick with flask, and then when you’re comfortable with it. you can move on to django or another full featured framework. Using flask will help you understand most of the design decision and approaches django uses.</p>
+<p>So if you’re a newbie in building web apps with python and you’ve been frustrated by django, I’ll recommend you stick with flask, and then when you’re comfortable with it, you can move on to django or another full featured framework. Using flask will help you understand most of the design decision and approaches django uses.</p>
 
 <p><br /></p>
 
@@ -182,7 +192,7 @@ a {
 
 <p>I’ll also assume you have basic knowledge of html and css and that you’re running Linux (what have you been doing with your life if you aren’t).</p>
 
-<p>Also when i refer to Linux i’m referring to Ubuntu or some other Ubuntu based distro like Linux mint or elementary. User’s of other distro’s should be able to follow along without any problems because most of the libraries you’d be installing would be done with pip. Everything should also work on windows, if you know your way around, but if you’re stuck with something on windows, please feel free to drop a comment or google your way out of it if you’re ashamed of yourself and feel it’s too basic :).</p>
+<p>Also when i refer to Linux I’m referring to Ubuntu or some other Ubuntu based distro like Linux mint or elementary. User’s of other distro’s should be able to follow along without any problems because most of the libraries you’d be installing would be done with pip. Everything should also work on windows, if you know your way around, but if you’re stuck with something on windows, please feel free to drop a comment or google your way out of it if you’re ashamed of yourself and feel it’s too basic :).</p>
 
 <p>If you’re on Linux, you should have python and pip installed installed by default in your distro. On windows make sure you download the python3 <code class="highlighter-rouge">exe</code> from python.org and tick the option to add python to your path.</p>
 
@@ -247,7 +257,7 @@ a {
 
 <p>To keep this simple, and to show you beauty of developing flask applications, we’ll install various extensions as we need them, so you’ll understand what each library does and how handle the quirks and issues that may arise when we get there.</p>
 
-<p>If you have any questions or issues with the installation process. please leave a comment below else I’ll see you in the next part where we’re going to start writing some code!</p>
+<p>If you have any questions or issues with the installation process. please leave a comment below else I’ll see you in the next part.</p>
 
 <p><strong>The repo for this project can be found on <a href="https://github.com/danidee10/Votr">github</a></strong></p>
 

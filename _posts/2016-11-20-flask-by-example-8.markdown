@@ -23,9 +23,11 @@ This makes the code more maintainable and easier to debug.
 
 
 ### How do you create a blueprint
-Well, the choice is really up to you, since flask is very liberal and doesn't enforce much conventions on you. There are several ways of creating a blueprint, but personally i prefer to treat blueprints as separate python packages with everything they provide in their own folder. That way, if something goes wrong the the `api` blueprint for example, you already know where to start looking.
+Well, the choice is really up to you, since flask is very liberal and doesn't enforce much conventions on you. There are several ways of creating a blueprint, but personally i prefer to treat blueprints as separate python packages with everything they provide in their own folder. That way, if something goes wrong with our api for example, you already know where to start looking.
 
-Lets create a new package and call it api **Your application structure should look like this:**
+Lets create a new package and call it api
+
+**Your application structure should look like this:**
 
 {% highlight python %}
 .
@@ -157,9 +159,9 @@ The `Blueprint` class takes three basic arguments:
 
 The first argument is the blueprints name
 
-The second argument is very important it's the `import_name`. This name has to be set to the name of our package (which is also api) as Flask uses the `import_name` for some internal operations such as locating the template folder of the blueprint and locating various files and objects of the main application from the blueprint. (This ensures that methods like `render_template` and `send_static_files` work properly and give use the actual files that we want)
+The second argument is very important it's the `import_name`. This name has to be set to the name of our package (which is also api) as Flask uses the `import_name` for some internal operations such as locating the template folder of the blueprint and locating various files and objects of the main application from the blueprint. (This ensures that methods like `render_template` and `send_static_files` work properly and give us the actual files that we want)
 
-The third argument is the url prefix of the blueprint. With this we were able to remove the redundancy of prefixing all api url with `/api`.
+The third argument is the url prefix of the blueprint. With this we were able to remove the redundancy of prefixing all our api urls with `/api`.
 
 
 **Let's register the blueprint in votr.py**
@@ -179,7 +181,7 @@ votr = Flask(__name__)
 votr.register_blueprint(api)
 {% endhighlight %}
 
-That's all you need to do. Your application should still function like it did before.
+That's all you need to do. Reload the webpage and the application should still function like it did before.
 
 That's all you need to know about blueprints, they're really helpful when you want to refactor your flask application and split it into smaller parts. They help you to add extra routes and functions to your application without chunking the code into a single file.
 

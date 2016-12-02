@@ -13,9 +13,9 @@ Now we're going to start building our database, which is the last layer in our v
 
 From the image our schema is pretty clear, we have three tables, the *topics* table contains all the various topics we're going to be voting on, for example "***Is Alex iwobi better than Dele Alli?***"
 
-The *options* table are the voting options the users can choose when voting which would be (***Alex iwobi*** or ***Dele Alli***)
+The *options* table contains the voting options the users can choose when voting which would be (***Alex iwobi*** or ***Dele Alli***)
 
-Lastly, the *polls* table. this table serves as a *'join'* table (ManyToMany relationship) between *topics* and *options*, this table is needed because of the nature of the voting system where each option can belong to more than one topic at the same time, (we could be comparing ***Dele Alli*** to ***Messi*** at the same time as our first poll). if we don't do this we'll end up creating several ***Dele Alli's*** in our tables for the other topics where his name is used which would defeat the [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle.
+Lastly, the *polls* table serves as a *'join'* table (ManyToMany relationship) between *topics* and *options*, this table is needed because of the nature of the voting system where each option can belong to more than one topic at the same time, (we could be comparing ***Dele Alli*** to ***Messi*** at the same time as our first poll). if we don't do this we'll end up creating several ***Dele Alli's*** in our tables for the other topics where his name is used which would defeat the [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle.
 
 Next step is to convert our schema to code.
 
@@ -245,7 +245,7 @@ Note that everything we've done isn't actually stored in our database yet, we'll
 This shows that you can pass in a list of options to a topic, thanks to `backref` again!
 
 Well that's it for this part!
-We were able to set up our database and get a feel of how SQLalchemy works, in the next part we're going to build the front-end for our users, so they can login and add polls to votr.
+We were able to set up our database and get a feel of how SQLAlchemy works, in the next part we're going to build the front-end for our users, so they can login and add polls to votr.
 
 SQLAlchemy can be quite confusing sometimes, but if you stick with it and just take things one step at a time it's only going to get easier. To see more examples of long SQL queries checkout this [quora](https://www.quora.com/Whats-the-most-complex-SQL-query-you-ever-wrote) post.
 
