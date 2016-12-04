@@ -58,7 +58,7 @@ pip install rabbitmq
 
 
 ### Creating the celery object
-Flask used to have an integration for celery, but from celery xxx that integration was no longer necessary.
+Flask used to have an integration for celery, but from celery 3.0 that integration was no longer necessary.
 
 **Include this at the top of votr.py**
 
@@ -205,6 +205,7 @@ Just after the new poll has been created, we imported the `close_poll` function 
 
 `eta` is formed from a UTC timestamp that we've not passed in yet. we'll add that in the next section
 
+<br>
 
 ### Adding a time picker to the react front-end
 
