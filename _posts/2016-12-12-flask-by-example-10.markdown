@@ -3,7 +3,8 @@ layout: post
 title: Flask by example 10 (Testing the application)
 date: 2016-12-12T20:31:12+01:00
 excerpt:
-      Let's think of our web application as a hotel, you have customers that stay in the hotel and order food from the hotel's restaurant. Let's also assume that we have only 3 cooks and numerous "room service staff"
+      Believe it or not, writing tests can help you structure your application properly which eventually leads to better code.
+      Some developers even advise others developers to write tests before the main program, as it helps you envision how your functions/methods are going to look and work before you start writing the main program.
 
 ---
 
@@ -50,7 +51,7 @@ To start our tests, we're going to install a test runner for python called [nose
 $ pip install nose
 {% endhighlight %}
 
-you can use the de-facto unitTest if you want to, but nose comes with a lot of sweet features. I really love the `autodiscover` feature which automatically discovers test files in your application and runs them. the filename just has to conform to this regex `((?:^|[\\b_\\.-])[Tt]est`.
+you can use the de-facto `unitTest` module if you want to, but nose comes with a lot of sweet features. I really love the `autodiscover` feature which automatically discovers test files in your application and runs them. the filename just has to conform to this regex `((?:^|[\\b_\\.-])[Tt]est`.
 
 Create a new file named `api_test` with the following content and place it in the `api` folder (You can place it anywhere you like, it's up to you).
 
