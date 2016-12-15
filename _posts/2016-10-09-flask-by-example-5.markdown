@@ -749,6 +749,8 @@ It's for security reasons. You should expose as little information about the inn
 
 In this case, we don't want anyone to know the total number of options we have in our database (we would have exposed that information by returning the database user id in the json string).
 
+*Ideally, The uuid should be saved in the database at the point of creation, to avoid re-generating a new one everytime a request is made*
+
 
 **Let's test the new endpoint**
 

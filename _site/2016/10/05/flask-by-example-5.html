@@ -756,6 +756,8 @@ flask db upgrade</code></pre></figure>
 
 <p>In this case, we don’t want anyone to know the total number of options we have in our database (we would have exposed that information by returning the database user id in the json string).</p>
 
+<p><em>Ideally, The uuid should be saved in the database at the point of creation, to avoid re-generating a new one everytime a request is made</em></p>
+
 <p><strong>Let’s test the new endpoint</strong></p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'http://localhost:5000/api/polls/options'</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
