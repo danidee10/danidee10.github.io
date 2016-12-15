@@ -526,7 +526,7 @@ I'll also like to let you know about [Flower](https://github.com/mher/flower) wh
 
 <br />
 
-In the next part, we'll be rounding off this series and talking about writing unit tests in Flask.
+In the next part, we're going to write some unit tests and discuss the importance of testing and code coverage.
 
 `untested code >= broken code`
 

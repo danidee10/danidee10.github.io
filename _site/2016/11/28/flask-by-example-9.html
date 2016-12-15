@@ -156,7 +156,7 @@ code {
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">pip</span> <span class="n">install</span> <span class="n">rabbitmq</span></code></pre></figure>
 
 <h3 id="creating-the-celery-object">Creating the celery object</h3>
-<p>Flask used to have an integration for celery, but from celery xxx that integration was no longer necessary.</p>
+<p>Flask used to have an integration for celery, but from celery 3.0 that integration was no longer necessary.</p>
 
 <p><strong>Include this at the top of votr.py</strong></p>
 
@@ -293,6 +293,8 @@ code {
 <p>Just after the new poll has been created, we imported the <code class="highlighter-rouge">close_poll</code> function from tasks.py (To avoid circular imports) and then called it’s <code class="highlighter-rouge">apply_async</code> method while passing it the estimated time (as a datetime object) we want the task to execute as <code class="highlighter-rouge">eta</code></p>
 
 <p><code class="highlighter-rouge">eta</code> is formed from a UTC timestamp that we’ve not passed in yet. we’ll add that in the next section</p>
+
+<p><br /></p>
 
 <h3 id="adding-a-time-picker-to-the-react-front-end">Adding a time picker to the react front-end</h3>
 
@@ -592,7 +594,7 @@ code {
 
 <p><br /></p>
 
-<p>In the next part, we’ll be rounding off this series and talking about writing unit tests in Flask.</p>
+<p>In the next part, we’re going to write some unit tests and discuss the importance of testing and code coverage.</p>
 
 <p><code class="highlighter-rouge">untested code &gt;= broken code</code></p>
 
