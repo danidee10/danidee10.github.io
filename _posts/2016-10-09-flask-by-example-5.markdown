@@ -2,6 +2,7 @@
 layout: post
 title: Flask by example 5 (How to build a simple REST API)
 date: 2016-10-05T22:35:33+01:00
+tags: Flask API SQLAlchemy, REST
 ---
 
 Welcome to part 5. In this part I'm going to show you how to build your own RESTful API with flask

@@ -2,6 +2,7 @@
 layout: post
 title: Flask by example 2 (Design and manipulate the database with SQLAlchemy)
 date: 2016-09-19T22:35:33+01:00
+tags: Flask React SQLAlchemy
 ---
 
 Welcome to part 2 of the series 'How to build a polling app with flask and ReactJS', in the previous tutorial, we setup our development environment and installed flask. we also wrote a basic hello world application just to see if everything was installed properly.

@@ -5,7 +5,7 @@ date: 2016-12-12T20:31:12+01:00
 excerpt:
       Believe it or not, writing tests can help you structure your application properly which eventually leads to better code.
       Some developers even advise others developers to write tests before the main program, as it helps you envision how your functions/methods are going to look and work before you start writing the main program.
-
+tags: Flask Unit-testing Testing nose
 ---
 
 ### Why testing is important

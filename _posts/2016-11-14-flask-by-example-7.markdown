@@ -2,6 +2,7 @@
 layout: post
 title: Flask by example 7 (Spin up an Admin dashboard quickly and easily with Flask-Admin)
 date: 2016-11-14T22:35:33+01:00
+tags: Flask SQLAlchemy
 ---
 
 Welcome to part 7 of this series, in this part we're going to build an admin dashboard for our application which would provide basic `CRUD` functionality for the models in our database.

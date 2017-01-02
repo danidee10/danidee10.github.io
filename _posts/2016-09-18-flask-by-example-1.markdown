@@ -2,6 +2,7 @@
 layout: post
 title: Flask by example (How to build an online polling app)
 date: 2016-09-18T22:35:33+01:00
+tags: Flask React
 ---
 
 Welcome everyone!, This is the beginning of a new series where we'll learn how to use flask by building a simple Online polling application.

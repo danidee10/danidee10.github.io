@@ -2,6 +2,7 @@
 layout: post
 title: Flask by example 3 (Templating, Authentiation and Static assets)
 date: 2016-09-24T22:35:33+01:00
+tags: Flask Jinja2 Authentication
 ---
 
 Welcome to part 3 of 'How to build an online voting app with flask', the last part was all about setting up our database with SQLAlchemy, if you missed it check it out [here]({% post_url 2016-09-19-flask-by-example-2 %}).

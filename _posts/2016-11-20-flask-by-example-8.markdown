@@ -5,6 +5,7 @@ date: 2016-11-20T22:35:33+01:00
 excerpt:
         Basically, a flask blueprint is a way for you to organize your flask application into smaller and re-usable applications
         Just like a normal flask application, a blueprint defines a collection of views, templates and static assets.
+tags: Flask Blueprints
 ---
 
 

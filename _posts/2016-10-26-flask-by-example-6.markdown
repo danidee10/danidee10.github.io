@@ -2,6 +2,7 @@
 layout: post
 title: Flask by example 6 (Connecting React to a REST API)
 date: 2016-10-26T22:35:33+01:00
+tags: Flask React
 ---
 
 In this part, we're going to be connecting our React front-end with the REST api we created previously, basically we'll make a request to the server and then our api responds with a json result, and then we use the received data to update the DOM if the request was successful or tell the user that something went wrong.

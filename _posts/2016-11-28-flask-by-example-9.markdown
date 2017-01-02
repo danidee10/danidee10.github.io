@@ -4,6 +4,7 @@ title: Flask by example 9 (Running background tasks with celery)
 date: 2016-11-28T22:35:33+01:00
 excerpt:
       Let's think of our web application as a hotel, you have customers that stay in the hotel and order food from the hotel's restaurant. Let's also assume that we have only 3 cooks and numerous "room service staff"
+tags: Flask SQLAlchemy Celery
 
 ---
 
