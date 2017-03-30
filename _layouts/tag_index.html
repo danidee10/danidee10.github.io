@@ -1,0 +1,17 @@
+---
+layout: tag_page
+---
+<h2 class="post_title">{{page.title}}</h2>
+<ul>
+  {% for post in site.posts %}
+  {% for tag in post.tags %}
+  {% if tag == page.tag %}
+  <li class="archive_list">
+    <a class="archive_list_article_link" href='{{post.url}}'>{{post.title}}</a>
+    <p class="summary">{{post.excerpt}}</p>
+  </li>
+  <hr />
+  {% endif %}
+  {% endfor %}
+  {% endfor %}
+</ul>
