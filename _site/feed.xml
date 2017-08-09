@@ -7,6 +7,87 @@
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Flask by example 11 (Deploying the application)</title>
+        <description>&lt;p&gt;This is the last part of the series, we’re finally going to deploy the application so it can be visible to the whole world.&lt;/p&gt;
+
+&lt;p&gt;There are various ways to deploy web applications, they’re several things to consider like the technologies used to build the website, the target operating system, the expected number of users/load etc&lt;/p&gt;
+
+&lt;p&gt;We’re going to use Heroku&lt;/p&gt;
+
+&lt;h3 id=&quot;why-heroku&quot;&gt;WHY HEROKU&lt;/h3&gt;
+&lt;p&gt;Heroku is a Paas (Platform as a Service). Which simply means they offer you an environment to run your app without getting into the nitty-gritty of setting up a Linux server from scratch.&lt;/p&gt;
+
+&lt;p&gt;This might not be sufficient in some cases where you need full-control of your application’s enviroment. If that’s the case you should be looking at Companies that provide Iaas (Infrastructure as a Service), Like Digital Ocean, Amazon, Linode etc&lt;/p&gt;
+
+&lt;p&gt;I chose Heroku to run the application for various reasons:&lt;/p&gt;
+
+&lt;ul class=&quot;postlist&quot;&gt;
+
+  &lt;li&gt;
+    It's very easy to get started.
+  &lt;/li&gt;
+
+  &lt;br /&gt;
+
+  &lt;li&gt;
+    It's tightly integrated with github and makes Deployment easy
+  &lt;/li&gt;
+
+  &lt;br /&gt;
+
+  &lt;li&gt;
+    and it's Free!
+  &lt;/li&gt;
+
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;lets-get-started&quot;&gt;LET’S GET STARTED&lt;/h3&gt;
+&lt;p&gt;Obviously the first thing you have to do is create an account&lt;/p&gt;
+
+&lt;p&gt;After than you have to create a new Python application, i’ve named mine votr&lt;/p&gt;
+
+&lt;image src=&quot;/images/heroku-app.png&quot; alt=&quot;Not sure&quot; /&gt;
+
+&lt;p&gt;I mentioned a tight integration with git earlier, so for the deployment we’re going to choose git, so once we make a git commit Heroku pull our new code and and apply the changes to the live app.
+There’s also an option of heroku-cli but that’s more manual. we want to push code to github and not bother ourselves about deployment.&lt;/p&gt;
+
+&lt;p&gt;So click on github and connect the votr repository, You’ll also see an option “Wait for CI to pass before deploy” you can safeley leave out that option.&lt;/p&gt;
+
+&lt;p&gt;Remember the tests we wrote in the previous part? This is where CI (Continuous integration) is useful. The major job of a CI server is to run those tests we wrote whenever new code is deployed (even if it’s a fullstop in a comment) and verify that our application is still working as expected. If any of the tests fail then heroku would not deploy the application as it would be deploying a broken version of the application.&lt;/p&gt;
+
+&lt;p&gt;Jenkins is the most popular CI server these days. But to run jenkins you’ll need your own hardware.
+Thankfully they’re also companies that provide Continuous Integration as a service. The most popular being &lt;a href=&quot;https://travis-ci.org/&quot;&gt;Travis CI&lt;/a&gt; it’s also free (for open source projects) So make sure you check it out.&lt;/p&gt;
+
+&lt;p&gt;Don’t forget to click on the “Enable deployment” button&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;If you’re a bit curious and you click on deploy branch (Which by default is the master branch) You’ll see a warning that.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;—-&amp;gt; Python app detected&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Warning: Your application is missing a Procfile. This file tells Heroku how to run your application.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Learn more: https://devcenter.heroku.com/articles/procfile&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;I won’t say much here, that link contains all you need to know about a Procfile and how to even setup one&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;getting-ready-for-deployment&quot;&gt;GETTING READY FOR DEPLOYMENT&lt;/h3&gt;
+&lt;p&gt;Before we eventually get to writing procfiles, we have to make sure our application is production ready&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;create-a-procfile&quot;&gt;CREATE A PROCFILE&lt;/h3&gt;
+</description>
+        <pubDate>Fri, 16 Dec 2016 17:31:12 +0100</pubDate>
+        <link>http://localhost:4000//2016/12/16/flask-by-example-11.html</link>
+        <guid isPermaLink="true">http://localhost:4000//2016/12/16/flask-by-example-11.html</guid>
+      </item>
+    
+      <item>
         <title>Flask by example 10 (Testing the application)</title>
         <description>&lt;h3 id=&quot;why-testing-is-important&quot;&gt;Why testing is important&lt;/h3&gt;
 
@@ -3252,7 +3333,9 @@ You might be wondering why the password field is 200 characters long.&lt;/p&gt;
 &lt;h3 id=&quot;sign-them-up&quot;&gt;Sign them up&lt;/h3&gt;
 &lt;p&gt;Import the new &lt;code class=&quot;highlighter-rouge&quot;&gt;Users&lt;/code&gt; model you just created in &lt;code class=&quot;highlighter-rouge&quot;&gt;votr.py&lt;/code&gt; and use it in your &lt;code class=&quot;highlighter-rouge&quot;&gt;signup&lt;/code&gt; route.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;flask&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;render_template&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;redirect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url_for&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;flask&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Flask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;render_template&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;redirect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;werkzeug.security&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;generate_password_hash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;check_password_hash&lt;/span&gt;
 &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;models&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Users&lt;/span&gt;
 
@@ -3583,7 +3666,7 @@ You might be wondering why the password field is 200 characters long.&lt;/p&gt;
 
 &lt;p&gt;This same re-usability applies for static files and assets like images and css, we want to make sure our links never break if we rename our &lt;code class=&quot;highlighter-rouge&quot;&gt;static&lt;/code&gt; folder to something else, or change their location, the syntax for linking to a static file is similar to that of the template url’s. You only have to specify the filename of the asset. an example is the bootstrap css link in our homepage.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ url_for('static' filename='/css/bootstrap.min.css'}}&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{{ url_for('static', filename='/css/bootstrap.min.css'}}&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;You have to repeat the same procedure and change all the links to equivalent flask url’s. This process could get very tiring and become a huge pain especially if you have a lot of templates with a lot of static links in them.&lt;/p&gt;
 
@@ -3856,166 +3939,6 @@ We were able to set up our database and get a feel of how SQLAlchemy works, in t
         <pubDate>Mon, 19 Sep 2016 22:35:33 +0100</pubDate>
         <link>http://localhost:4000//2016/09/19/flask-by-example-2.html</link>
         <guid isPermaLink="true">http://localhost:4000//2016/09/19/flask-by-example-2.html</guid>
-      </item>
-    
-      <item>
-        <title>Flask by example (How to build an online polling app)</title>
-        <description>&lt;p&gt;Welcome everyone!, This is the beginning of a new series where we’ll learn how to use flask by building a simple Online polling application.&lt;/p&gt;
-
-&lt;p&gt;This series is going to be split into several parts because of the size of the app we’re building. At the end of this series we’ll have built a polling app, with the following features:&lt;/p&gt;
-
-&lt;ul class=&quot;postlist&quot;&gt;
-  &lt;li&gt;A basic authentication system.&lt;/li&gt;
-  &lt;li&gt;Ability to vote on various topics&lt;/li&gt;
-  &lt;li&gt;Interactive progress bars to show the percentage of votes&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;We’re going to use &lt;a href=&quot;http://flask.pocoo.org&quot;&gt;Flask&lt;/a&gt; as our backend, &lt;a href=&quot;http://getbootstrap.com/&quot;&gt;Bootstrap3&lt;/a&gt; for our layout and basic styling and &lt;a href=&quot;https://facebook.github.io/react/&quot;&gt;ReactJS&lt;/a&gt; to enhance our UI and make it more interactive.&lt;/p&gt;
-
-&lt;p&gt;Our polling app is going to be called &lt;strong&gt;Votr&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;why-flask&quot;&gt;Why flask?&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&quot;/images/flask.jpg&quot; alt=&quot;Flask&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Quoting the flask &lt;a href=&quot;http://flask.pocoo.org&quot;&gt;docs&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Flask is a microframework for Python based on Werkzeug, Jinja 2 and good intentions&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Most people are quick to dismiss microframeworks like flask as not being powerful compared to django or other &lt;em&gt;batteries included&lt;/em&gt; web frameworks which isn’t correct. so what does micro mean?&lt;/p&gt;
-
-&lt;p&gt;Micro means that the framework was designed to be as minimal as possible and just do what a basic web framework should do, while being extensible without making assumptions and including features that may not be used by everyone. Now What does this mean to you as a developer?, it means that you can build your web app from scratch and then as your need more features for your app you can simply install the required libraries and plugins you need (You can even roll out a new flask plugin and share it with the world if you’re feeling adventrous ).&lt;/p&gt;
-
-&lt;p&gt;At the end of the day you’ll get a better understanding of how different parts of your web app ticks because you actually added those ‘parts’ yourself (get it? web development one drop at a time). instead of using a web framework for over a year only for you to discover that feature &lt;code class=&quot;highlighter-rouge&quot;&gt;x&lt;/code&gt; existed like 2 years earlier! and you’ve been doing things the hard way.&lt;/p&gt;
-
-&lt;p&gt;So if you’re a newbie in building web apps with python and you’ve been frustrated by django, I’ll recommend you stick with flask, and then when you’re comfortable with it, you can move on to django or another full featured framework. Using flask will help you understand most of the design decision and approaches django uses.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;goals-of-this-tutorial&quot;&gt;Goals of this tutorial&lt;/h4&gt;
-&lt;p&gt;I created this tutorial for those (Python programmers and others coming from other languages) who have tried out web development with Django and found it too confusing and difficult to grasp.&lt;/p&gt;
-
-&lt;p&gt;It’s also for those who’ve heard about how simple and straight forward flask is, followed the official docs, but don’t know how to do something &lt;em&gt;real&lt;/em&gt; with it.&lt;/p&gt;
-
-&lt;p&gt;At the end of this tutorial, You would have:&lt;/p&gt;
-
-&lt;ul class=&quot;postlist&quot;&gt;
-  &lt;li&gt;Built a REST API with flask&lt;/li&gt;
-
-  &lt;li&gt;Gotten a basic understanding of python's premier ORM &lt;a href=&quot;http://www.sqlalchemy.org/&quot;&gt;SQLAlchemy&lt;/a&gt;&lt;/li&gt;
-
-  &lt;li&gt;Leveraged the power of some popular flask extensions like &lt;a href=&quot;flask-sqlalchemy.pocoo.org/2.1/&quot;&gt;Flask SQLAlchemy&lt;/a&gt;,
-      &lt;a href=&quot;https://flask-migrate.readthedocs.io/en/latest/&quot;&gt;Flask Migrate&lt;/a&gt; and &lt;a href=&quot;http://flask-admin.readthedocs.io/en/latest/&quot;&gt;Flask-Admin&lt;/a&gt;&lt;/li&gt;
-
-  &lt;li&gt;Learned how to Build interactive and dynamic UI's with &lt;a href=&quot;https://facebook.github.io/react-native/&quot;&gt;ReactJS&lt;/a&gt;&lt;/li&gt;
-
-  &lt;li&gt;How to structure your flask applications and use &lt;a href=&quot;http://flask.pocoo.org/docs/0.11/blueprints/&quot;&gt;Flask Blueprints&lt;/a&gt;&lt;/li&gt;
-
-  &lt;li&gt;Learnt how to run background jobs with &lt;a href=&quot;http://www.celeryproject.org/&quot;&gt;Celery&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;Here is a screenshot of the online polling app you will build.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/screenshot.png&quot; alt=&quot;Votr image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;and a gif showing the voting process&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/votr.gif&quot; alt=&quot;Votr gif&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;requirements-and-setup&quot;&gt;Requirements and setup&lt;/h4&gt;
-&lt;p&gt;To follow this tutorial effectively you should have the following installed:&lt;/p&gt;
-
-&lt;ul class=&quot;postlist&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.python.org/downloads/&quot;&gt;Python 3x&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://www.virtualenv.org/en/latest/&quot;&gt;Virtualenv&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://flask.pocoo.org&quot;&gt;Flask&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;I’ll also assume you have basic knowledge of html and css and that you’re running Linux (what have you been doing with your life if you aren’t).&lt;/p&gt;
-
-&lt;p&gt;Also when i refer to Linux I’m referring to Ubuntu or some other Ubuntu based distro like Linux mint or elementary. User’s of other distro’s should be able to follow along without any problems because most of the libraries you’d be installing would be done with pip. Everything should also work on windows, if you know your way around, but if you’re stuck with something on windows, please feel free to drop a comment or google your way out of it if you’re ashamed of yourself and feel it’s too basic :).&lt;/p&gt;
-
-&lt;p&gt;If you’re on Linux, you should have python and pip installed installed by default in your distro. On windows make sure you download the python3 &lt;code class=&quot;highlighter-rouge&quot;&gt;exe&lt;/code&gt; from python.org and tick the option to add python to your path.&lt;/p&gt;
-
-&lt;p&gt;Lastly you should have basic knowledge of the Python programming language.&lt;/p&gt;
-
-&lt;p&gt;Now we’re going to install virtualenv and create a new virtual environment where our project and all it’s files and dependencies will reside.&lt;/p&gt;
-
-&lt;h3 id=&quot;installing-virtualenv&quot;&gt;Installing virtualenv&lt;/h3&gt;
-
-&lt;h6 id=&quot;install-virtualenv-with-pip&quot;&gt;Install virtualenv with pip.&lt;/h6&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo pip install virtualenv&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h6 id=&quot;create-a-new-virtualenv-with-python3-and-activate-it-you-can-skip-the--p-python3-part-if-youre-on-windows-and-you-installed-python3&quot;&gt;Create a new virtualenv with python3 and activate it, (you can skip the &lt;code class=&quot;highlighter-rouge&quot;&gt;-p python3&lt;/code&gt; part if you’re on windows and you installed python3)&lt;/h6&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;virtualenv -p python3 votr&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h6 id=&quot;activate-the-virtualenv&quot;&gt;Activate the virtualenv&lt;/h6&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;votr
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;bin/activate&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h6 id=&quot;your-new-virtualenv-is-now-installed-and-activated-you-should-see-something-like-this-in-your-terminal-prompt&quot;&gt;Your new virtualenv is now installed and activated you should see something like this in your terminal prompt&lt;/h6&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;votr&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;user@hostname votr]&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h6 id=&quot;finally-were-going-to-install-flask&quot;&gt;Finally we’re going to install flask&lt;/h6&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;pip install flask&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h4 id=&quot;everything-starts-with-hello-world&quot;&gt;Everything starts with hello world!&lt;/h4&gt;
-&lt;p&gt;We’re going to write a basic flask app that returns ‘hello world’ when we navigate to &lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt; in our browser&lt;/p&gt;
-
-&lt;h6 id=&quot;create-the-project-folder-and-votrpy&quot;&gt;Create the project folder and votr.py&lt;/h6&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mkdir votr
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;votr
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;touch votr.py&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;That will create a new directory called &lt;code class=&quot;highlighter-rouge&quot;&gt;votr&lt;/code&gt; and a file named &lt;code class=&quot;highlighter-rouge&quot;&gt;votr.py&lt;/code&gt;&lt;/p&gt;
-
-&lt;h6 id=&quot;open-votrpy-with-favourite-text-editor-and-include-the-following&quot;&gt;Open votr.py with favourite text editor and include the following&lt;/h6&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;flask&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flask&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;votr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;nd&quot;&gt;@votr.route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;home&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'hello world'&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'__main__'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;votr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h6 id=&quot;run-it-from-the-terminal-with&quot;&gt;Run it from the terminal with:&lt;/h6&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python3 votr.py&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;By default flask runs on port &lt;code class=&quot;highlighter-rouge&quot;&gt;5000&lt;/code&gt; so open any browser you have an enter the address &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:5000&lt;/code&gt; and sure enough &lt;code class=&quot;highlighter-rouge&quot;&gt;hello world&lt;/code&gt; should be displayed.&lt;/p&gt;
-
-&lt;p&gt;That’s it! our development environment is all setup with flask installed.&lt;/p&gt;
-
-&lt;p&gt;To keep this simple, and to show you beauty of developing flask applications, we’ll install various extensions as we need them, so you’ll understand what each library does and how handle the quirks and issues that may arise when we get there.&lt;/p&gt;
-
-&lt;p&gt;If you have any questions or issues with the installation process. please leave a comment below else I’ll see you in the next part.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;The repo for this project can be found on &lt;a href=&quot;https://github.com/danidee10/Votr&quot;&gt;github&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
-</description>
-        <pubDate>Sun, 18 Sep 2016 22:35:33 +0100</pubDate>
-        <link>http://localhost:4000//2016/09/18/flask-by-example-1.html</link>
-        <guid isPermaLink="true">http://localhost:4000//2016/09/18/flask-by-example-1.html</guid>
       </item>
     
   </channel>

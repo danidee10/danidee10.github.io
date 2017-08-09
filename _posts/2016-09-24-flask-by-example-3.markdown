@@ -129,7 +129,9 @@ We did this because when we hash a user's password we don't want the resulting h
 Import the new `Users` model you just created in `votr.py` and use it in your `signup` route.
 
 {% highlight python %}
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import (
+  Flask, render_template, request, flash, redirect, url_for, session
+)
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, Users
 
@@ -484,7 +486,7 @@ This same re-usability applies for static files and assets like images and css, 
 
 
 {% highlight html %}
-<link href="{% raw %}{{ url_for('static' filename='/css/bootstrap.min.css'}}{% endraw %}" rel="stylesheet">
+<link href="{% raw %}{{ url_for('static', filename='/css/bootstrap.min.css'}}{% endraw %}" rel="stylesheet">
 {% endhighlight %}
 
 

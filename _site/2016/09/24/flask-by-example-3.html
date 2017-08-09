@@ -241,7 +241,9 @@ You might be wondering why the password field is 200 characters long.</p>
 <h3 id="sign-them-up">Sign them up</h3>
 <p>Import the new <code class="highlighter-rouge">Users</code> model you just created in <code class="highlighter-rouge">votr.py</code> and use it in your <code class="highlighter-rouge">signup</code> route.</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">flash</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">url_for</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="p">(</span>
+  <span class="n">Flask</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">flash</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">session</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">werkzeug.security</span> <span class="kn">import</span> <span class="n">generate_password_hash</span><span class="p">,</span> <span class="n">check_password_hash</span>
 <span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">Users</span>
 
@@ -572,7 +574,7 @@ You might be wondering why the password field is 200 characters long.</p>
 
 <p>This same re-usability applies for static files and assets like images and css, we want to make sure our links never break if we rename our <code class="highlighter-rouge">static</code> folder to something else, or change their location, the syntax for linking to a static file is similar to that of the template url’s. You only have to specify the filename of the asset. an example is the bootstrap css link in our homepage.</p>
 
-<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"{{ url_for('static' filename='/css/bootstrap.min.css'}}"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span><span class="nt">&gt;</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"{{ url_for('static', filename='/css/bootstrap.min.css'}}"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span><span class="nt">&gt;</span></code></pre></figure>
 
 <p>You have to repeat the same procedure and change all the links to equivalent flask url’s. This process could get very tiring and become a huge pain especially if you have a lot of templates with a lot of static links in them.</p>
 
