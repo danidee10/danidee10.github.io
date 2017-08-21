@@ -27,6 +27,11 @@
    src: url('/fonts/BrandonGrotesque-Regular.ttf');
  }
 
+@font-face {
+   font-family: 'Fira Code';
+   src: url('/fonts/FiraCode-Regular.ttf');
+ }
+
 body {
   font-family: 'Verlag', sans-serif;
   font-size: 21px;
@@ -54,6 +59,15 @@ a {
   font-style: italic;
 }
 
+code {
+  font-family: 'Fira Code';
+  font-weight: bold;
+}
+
+.highlight pre, .highlight pre code {
+  font-family: 'Fira Code';
+  font-weight: normal;
+}
 
 .highlight {
   border-left: 7px solid tomato;

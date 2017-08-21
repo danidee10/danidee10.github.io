@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Posts Tagged &ldquo;API&rdquo;</title>
+    <title>Flask by example 11 (Deploying the application)</title>
     <meta name="description" content="Osaetin Daniel's blog">
     <link rel="alternate" type="application/atom+xml" title="Osaetin Daniel" href="/feed.xml" />
 
@@ -79,7 +79,7 @@ code {
 
     </style>
 
-    <link rel="canonical" href="http://localhost:4000/tags/API/">
+    <link rel="canonical" href="http://localhost:4000/2016/12/16/flask-by-example-11.html">
 
     <!-- Hotjar Tracking Code for https://danidee10.github.io -->
     <script>
@@ -133,116 +133,245 @@ code {
 
 
       <div class="sliding-panel-fade-screen"></div>
-
       <div class="container">
+
         <article role="article" class="post">
           <div class="card">
             <header class="post-header">
-              <h1 class="post-title">Posts Tagged &ldquo;API&rdquo;</h1>
-              <p class="post-meta">Nov 12, 2015</p>
+              <h1 class="post-title">Flask by example 11 (Deploying the application)</h1>
+              <p class="post-meta">December 16, 2016 | <i>Tags:  <a href="//localhost:4000/tags/Flask">Flask,</a>  <a href="//localhost:4000/tags/Heroku">Heroku,</a>  <a href="//localhost:4000/tags/Deployment">Deployment,</a> </i>
             </header>
 
             <div class="post-content">
-              <h2 class="post_title">Posts Tagged &ldquo;API&rdquo;</h2>
-<ul>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  <li class="archive_list">
-    <a class="archive_list_article_link" href='/2016/10/05/flask-by-example-5.html'>Flask by example 5 (How to build a simple REST API)</a>
-    <p class="summary"><p>Welcome to part 5. In this part I’m going to show you how to build your own RESTful API with flask</p>
+              <p>This is the last part of the series, we’re finally going to deploy the application so it can be visible to the whole world.</p>
 
-</p>
+<p>There are various ways to deploy web applications, they’re several things to consider like the technologies used to build the website, the target operating system, the expected number of users/load etc</p>
+
+<p>We’re going to use Heroku</p>
+
+<p><br /></p>
+<h3 id="why-heroku">WHY HEROKU</h3>
+<p>Heroku is a Paas (Platform as a Service). Which simply means they offer you an environment to run your app without getting into the nitty-gritty of setting up a Linux server from scratch.</p>
+
+<p>This might not be sufficient in some cases where you need full-control of your application’s enviroment. If that’s the case you should be looking at Companies that provide Iaas (Infrastructure as a Service), Like Digital Ocean, Amazon, Linode etc</p>
+
+<p>I chose Heroku to run the application for various reasons:</p>
+
+<ul class="postlist">
+
+  <li>
+    It's very easy to get started.
   </li>
-  <hr />
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+  <br />
+
+  <li>
+    It's tightly integrated with github and makes Deployment easy
+  </li>
+
+  <br />
+
+  <li>
+    and it's Free!
+  </li>
+
 </ul>
 
+<p><br /></p>
+
+<h3 id="lets-get-started">LET’S GET STARTED</h3>
+<p>Obviously the first thing you have to do is create an account</p>
+
+<p>After than you have to create a new Python application, i’ve named mine votr</p>
+
+<p><img src="/images/heroku-app.png" alt="Heroku app screen" /></p>
+
+<p>I mentioned a tight integration with git earlier, so for the deployment we’re going to choose git, so once we make a git commit Heroku pull our new code and and apply the changes to the live app.
+There’s also an option of heroku-cli but that’s more manual. we want to push code to github and not bother ourselves about deployment.</p>
+
+<p>So click on github and connect the votr repository, You’ll also see an option “Wait for CI to pass before deploy” you can safeley leave out that option.</p>
+
+<p>Remember the tests we wrote in the previous part? This is where CI (Continuous integration) is useful. The major job of a CI server is to run those tests we wrote whenever new code is deployed (even if it’s a fullstop in a comment) and verify that our application is still working as expected. If any of the tests fail then heroku would not deploy the application as it would be deploying a broken version of the application.</p>
+
+<p>Jenkins is the most popular CI server these days. But to run jenkins you’ll need your own hardware.
+Thankfully they’re also companies that provide Continuous Integration as a service. The most popular being <a href="https://travis-ci.org/">Travis CI</a> it’s also free (for open source projects) So make sure you check it out.</p>
+
+<p>Don’t forget to click on the “Enable deployment” button</p>
+
+<p><br /></p>
+
+<p>If you’re a bit curious and you click on deploy branch (Which by default is the master branch) You’ll see a warning that.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">----&gt; </span>Python app detected<span class="k">*</span>
+
+Warning: Your application is missing a Procfile. This file tells Heroku how to run your application.<span class="k">*</span>
+
+Learn more: https://devcenter.heroku.com/articles/procfile<span class="k">*</span></code></pre></figure>
+
+<p>The link in the error message contains more information about Procfiles</p>
+
+<p><br /></p>
+
+<p>Before we eventually get to writing a <code class="highlighter-rouge">Procfile</code>, we have to make sure our application is production ready.</p>
+
+<p><br /></p>
+<h3 id="dont-use-the-development-server">DON’T USE THE DEVELOPMENT SERVER</h3>
+<p>If you paid attention to the flask docs you’d have come across a section where it states <strong><em>Flask’s built-in server is not suitable for production as it doesn’t scale well and by default serves only one request at a time</em></strong></p>
+
+<p>So we need to another server to run our application. You may have heard of Apache, Nginx, IIS etc but those servers are written in other programming languages that are not python, so there’s no way for them to directly understand python and run our application. Which led to the creation of WSGI (Web Server Gateway Interface)</p>
+
+<p>Before WSGI, One python application would work with a web server let’s say Apache and when you switch to another web server e.g Nginx it wouldn’t work. So WSGI came in as a interface/standard to solve this problem. Today once an application is WSGI Compatible (Thanks to the framework itself not you) it can be run any application server that’s WSGI compatible.</p>
+
+<p>There are various WSGI servers for python. You can find them on <a href="http://wsgi.readthedocs.io/en/latest/servers.html">WSGI.org</a> In our case, we’re going to be using <a href="http://gunicorn.org/">Gunicorn</a> It’s popular, fast and is purely python based so it can easily be installed with</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">pip</span> <span class="n">install</span> <span class="n">gunicorn</span></code></pre></figure>
+
+<p>After installing gunicorn, we have to give it a <code class="highlighter-rouge">wsgi.py</code> file that tells it about our application and how it’s going to run it.</p>
+
+<p>create a new file called <code class="highlighter-rouge">wsgi.py</code> with the following content</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">votr</span> <span class="kn">import</span> <span class="n">votr</span> <span class="k">as</span> <span class="n">application</span></code></pre></figure>
+
+<p>That’s all for a basic wsgi file. We just imported our application and exposed it as “application”</p>
+
+<p>Now run gunicorn from the command line with</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">gunicorn</span> <span class="n">wsgi</span><span class="p">:</span><span class="n">application</span></code></pre></figure>
+
+<p>It should start the application now on <code class="highlighter-rouge">http://127.0.0.1:8000</code> notice that we’re referring to our application object in wsgi:<strong>application</strong> If you had just imported votr you’d have run gunicorn like this</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">gunicorn</span> <span class="n">wsgi</span><span class="p">:</span><span class="n">votr</span></code></pre></figure>
+
+<p>If you stick with the application route, you can even run it without specifying the <strong>:application</strong> option with <code class="highlighter-rouge">gunicorn wsgi</code></p>
+
+<p><br /></p>
+
+<h3 id="create-a-procfile">CREATE A PROCFILE</h3>
+<p>Now that we’ve got our application running on a capable web server, it’s time to create a <code class="highlighter-rouge">Procfile</code>, Like the wsgi.py file, the <code class="highlighter-rouge">Procfile</code> is very straight-forward.</p>
+
+<p>create a new file named <code class="highlighter-rouge">Procfile</code> with the following contents.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">web</span><span class="p">:</span> <span class="n">gunicorn</span> <span class="n">wsgi</span><span class="p">:</span><span class="n">application</span> <span class="o">--</span><span class="n">log</span><span class="o">-</span><span class="nb">file</span> <span class="o">-</span></code></pre></figure>
+
+<p>That should tell heroku to run gunicorn when we eventually deploy. We’re also being specific with the logging (We’re logging to stdout). By default gunicorn logs to stdout if you don’t specify the <code class="highlighter-rouge">--log-file</code> option.</p>
+
+<p><br /></p>
+<h3 id="deploy-to-heroku">DEPLOY TO HEROKU</h3>
+<p>Since we developed the application in python3, it would make sense to also run on python3. Heroku defaults to Python2.7 (Gosh when is python 2 going to go away!) so create a <code class="highlighter-rouge">runtime.txt</code> file to tell heroku the version of python to use</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">python</span><span class="o">-</span><span class="mf">3.6</span><span class="o">.</span><span class="mi">2</span></code></pre></figure>
+
+<p>That’s all (For now). You can push to git and heroku should automatically build and deploy your application. That’s If you connected your app to github and configured the branch to be automatically deployed. If you’ve not You can set that up under the deployment tab or manually deploy the application from the web interface.</p>
+
+<p>Yay! The application should be available now on <code class="highlighter-rouge">yourapp.heroku.com</code></p>
+
+<p><br /></p>
+<h3 id="celery-on-heroku">CELERY ON HEROKU</h3>
+<p>Heroku has support for celery and it’s as easy as adding a new entry to your <code class="highlighter-rouge">Procfile</code>, Edit your <code class="highlighter-rouge">Procfile</code> to match this</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">web</span><span class="p">:</span> <span class="n">gunicorn</span> <span class="n">wsgi</span><span class="p">:</span><span class="n">application</span> <span class="o">--</span><span class="n">log</span><span class="o">-</span><span class="nb">file</span> <span class="o">-</span>
+<span class="n">worker</span><span class="p">:</span> <span class="n">celery</span> <span class="o">-</span><span class="n">A</span> <span class="n">tasks</span><span class="o">.</span><span class="n">celery</span> <span class="n">worker</span> <span class="o">--</span><span class="n">loglevel</span><span class="o">=</span><span class="n">info</span></code></pre></figure>
+
+<p>note the difference between the two processes, the first is a web process and the other is a background worker.</p>
+
+<p>Finally you have to enable the worker from the UI under the “Resources” tab. Note that this can also be done through <code class="highlighter-rouge">heroku cli</code>.</p>
+
+<p><img src="/images/flask-10-celery.png" alt="Celery worker" /></p>
+
+<p><br /></p>
+<h3 id="rabbitmq-on-heroku">RABBITMQ ON HEROKU</h3>
+<p>It’s available as an addon called <a href="https://devcenter.heroku.com/articles/rabbitmq-bigwig">rabbit-mq-bigwig</a>. You just have to install/provision it. This can be done from the web interface or via <code class="highlighter-rouge">heroku cli</code></p>
+
+<p>We’re going to be adding it alongside postgres in the next section.</p>
+
+<p><br /></p>
+<h3 id="postgres-on-heroku">POSTGRES ON HEROKU</h3>
+<p>Everything seems to be running now, but we’re missing one last part which is the Database. SQLite is pretty okay if you don’t expect a lot of load on your site or it’s just a hobby site. But for a Real production site, You need a solid database to power it.</p>
+
+<p>At the time of writing this article, heroku provisions a free database for each python application, the url for this database is contained in an environment variable called <code class="highlighter-rouge">DATABASE_URL</code> we just have to tell our application to use that database no unnecessary setup/installation. This is the main advantage of Heroku and other PaaS. The infrastructure is managed for you.</p>
+
+<p>Create a new config file called production_config.py with the following content:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="s">"""Production config for votr on Heroku."""</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">DEBUG</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s">'production key'</span>  <span class="c"># keep secret</span>
+<span class="n">SQLALCHEMY_DATABASE_URI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">'DATABASE_URL'</span><span class="p">)</span>
+<span class="n">CELERY_BROKER</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">'RABBIT_BIGWIG_RX_URL'</span><span class="p">)</span></code></pre></figure>
+
+<p>The new config just imports values from the Debug configuration and overrides certain values that we need for production</p>
+
+<p>To use the new config file Change the config section in <code class="highlighter-rouge">votr.py</code> to</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c"># load config from the config file we created earlier</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">'APP_MODE'</span><span class="p">)</span> <span class="o">==</span> <span class="s">"PRODUCTION"</span><span class="p">:</span>
+    <span class="n">votr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="s">'config'</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">votr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="s">'production_settings'</span><span class="p">)</span></code></pre></figure>
+
+<p>Then in heroku set <code class="highlighter-rouge">APP_MODE</code> to <code class="highlighter-rouge">PRODUCTION</code>. (Under settings “Configuration Variables”)</p>
+
+<p>That’s all for the application, Deploy again and you should see the application running on yourapp.heroku.com.</p>
+
+<p><br /></p>
+
+<h3 id="heroku-cli">HEROKU CLI</h3>
+<p>Heroku offers a cli that you can use to interact with your application. The installation and usage is out of the scope of this tutorial because of the amount of options the cli has. But basically, it gives you full control over your application and provides some functionality that can’t be accessed via the web interface. A very good example of this is viewing logs of your application and running administrative tasks like Database backups and migrations. It also allows you access the heroku dyno directly so you can inspect the filesystem so it’s worth learning.</p>
+
+<p>For more info checkout <a href="https://devcenter.heroku.com/categories/command-line">Heroku’s documentation</a></p>
+
+<p><br /></p>
+
+<h3 id="thats-a-wrap">THAT’S A WRAP.</h3>
+<p>Well after 11 parts, we’ve come to the end of this tutorial on how to build an online polling application with Flask and React.</p>
+
+<p>It took a lot of effort to complete this tutorial, but i hope you found it useful and learnt a lot of concepts from all the topics discussed. Personally i learned a lot myself especially on Celery and Heroku Deployments. (I now use Heroku for a couple side projects i have)</p>
+
+<p>Though it took a lot of time (Literally forever) to release the last part of this series. I sincerely apologize but i was caught up with a lot of things, School, Work, Exploring other ideas but it feels good to finally push out an Article and i look forward to writing better articles on other technologies that i’m interested in.</p>
+
+<p>Thanks for following along. If the knowledge gained from this series has inspired you to build something, i’ll love to hear about it in the comments section.</p>
+
             </div>
+
+            <br />
+
+            <hr>
+
+            <div class="share-page">
+                Share this post on &rarr;
+                <a href="https://twitter.com/intent/tweet?text=Flask by example 11 (Deploying the application)&url=http://localhost:4000/2016/12/16/flask-by-example-11.html&via=osaetindaniel&related=osaetindaniel" rel="nofollow" target="_blank" title="Share on Twitter">Twitter</a> |
+                <a href="https://facebook.com/sharer.php?u=http://localhost:4000/2016/12/16/flask-by-example-11.html" rel="nofollow" target="_blank" title="Share on Facebook">Facebook</a> |
+                <a href="https://plus.google.com/share?url=http://localhost:4000/2016/12/16/flask-by-example-11.html" rel="nofollow" target="_blank" title="Share on Google+">Google+</a>
+            </div>
+
+        <hr>
+
+        <aside id="comments" class="disqus">
+          <div class="container">
+            <h3><i class="fa fa-comments-o"></i> Comments</h3>
+            <div id="disqus_thread"></div>
+            <script>
+
+
+
+              var disqus_config = function() {
+                this.page.url = 'https://danidee10.github.io/2016/12/16/flask-by-example-11.html'; //shouldn't hardoce this
+                this.page.identifier = 'Flask by example 11 (Deploying the application)';
+              };
+              (function() {
+                var d = document,
+                s = d.createElement('script');
+                s.src = '//osaetin-daniel.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+              })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+          </div>
+        </aside>
 
           </div>
 
