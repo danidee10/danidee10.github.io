@@ -25,6 +25,13 @@ wget -pk http://getbootstrap.com/examples/jumbotron-narrow/
 
 This would create a folder named `getbootstrap.com` that contains the template and all the required assets for it to render properly.
 
+If you're on a Mac, you might need to install `wget` with homebrew and the wget commands differ slightly
+
+{% highlight bash %}
+brew install wget
+wget -r -p -k http://getbootstrap.com/examples/jumbotron-narrow/
+{% endhighlight %}
+
 ###### Move the templates and the assets to the right folder so votr can pick them up.
 {% highlight bash %}
 $ mv getbootstrap.com/examples/jumbotron-narrow/index.html templates

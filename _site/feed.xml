@@ -3355,6 +3355,11 @@ flask db upgrade&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;This would create a folder named &lt;code class=&quot;highlighter-rouge&quot;&gt;getbootstrap.com&lt;/code&gt; that contains the template and all the required assets for it to render properly.&lt;/p&gt;
 
+&lt;p&gt;If you’re on a Mac, you might need to install &lt;code class=&quot;highlighter-rouge&quot;&gt;wget&lt;/code&gt; with homebrew and the wget commands differ slightly&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;brew install wget
+wget -r -p -k http://getbootstrap.com/examples/jumbotron-narrow/&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;h6 id=&quot;move-the-templates-and-the-assets-to-the-right-folder-so-votr-can-pick-them-up&quot;&gt;Move the templates and the assets to the right folder so votr can pick them up.&lt;/h6&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mv getbootstrap.com/examples/jumbotron-narrow/index.html templates
