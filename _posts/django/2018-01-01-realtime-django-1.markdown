@@ -22,7 +22,7 @@ If you don't understand anything, the comments are wide-open, just ask a questio
 
 Python:
 
-- django
+- django (2.0)
 - django rest framework
 - djoser
 - django-notifs

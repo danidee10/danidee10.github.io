@@ -44,6 +44,7 @@ a {
 code {
   font-family: 'Fira Code';
   font-weight: bold;
+  font-size: 13px;
 }
 
 .highlight pre, .highlight pre code {
@@ -53,8 +54,4 @@ code {
 
 .highlight {
   border-left: 7px solid tomato;
-}
-
-code {
-  font-size: 15px;
 }
