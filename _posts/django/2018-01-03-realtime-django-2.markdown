@@ -374,7 +374,6 @@ Read the django-cors-header docs to find out about other options
 
 After doing this, you should be able to create an account and sign in immediately
 
-
 ### Logout
 Since we're using a `sessionStorage` to logout simply close the browser or open a new tab. To actually persist the token between browser restarts you can switch to `localStorage`. It has the same api as the `sessionStorage` so you're just changing "session" to "local" really.
 
@@ -383,7 +382,6 @@ Then you can create a function that removes the token from the storage you decid
 {% highlight JavaScript %}
 sessionStorage.removeItem('authToken')
 {% endhighlight %}
-
 
 ### Recap
 That's all for this part, Our goal was to built a simple User Managment and auth system. We started out by installing djoser which is an excellent third party django app that provides authentication `REST` endpoints that we can call from our Vue frontend.
