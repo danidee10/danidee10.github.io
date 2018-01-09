@@ -48,6 +48,14 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+def deserialize_user(user):
+    """Deserialize user instance to JSON."""
+    return {
+        'id': user.id, 'username': user.username, 'email': user.email,
+        'first_name': user.first_name, 'last_name': user.last_name
+    }
+
+
 class TrackableDateModel(models.Model):
     """Abstract model to Track the creation/updated date for a model."""
 
@@ -85,7 +93,7 @@ class ChatSessionMessage(TrackableDateModel):
 
     def to_json(self):
         """deserialize message to JSON."""
-        return {'user_id': self.user.id, 'message': self.message}
+        return {'user': deserialize_user(self.user), 'message': self.message}
 
 
 class ChatSessionMember(TrackableDateModel):
@@ -107,7 +115,9 @@ We can easily make use of django rest framework to create them (We won't make us
 """Views for the chat app."""
 
 from django.contrib.auth import get_user_model
-from .models import ChatSession, ChatSessionMember, ChatSessionMessage
+from .models import (
+    ChatSession, ChatSessionMember, ChatSessionMessage, deserialize_user
+)
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -135,13 +145,6 @@ class JoinChatView(APIView):
     """Allow a user to join a Chat Session."""
 
     permission_classes = (permissions.IsAuthenticated,)
-
-    def deserialize_user(self, user):
-        """Deserialize user instance to JSON."""
-        return {
-            'id': user.id, 'username': user.username, 'email': user.email,
-            'first_name': user.first_name, 'last_name': user.last_name
-        }
         
     def put(self, request, *args, **kwargs):
         """Handle the POST request."""
@@ -154,16 +157,17 @@ class JoinChatView(APIView):
             user=user, chat_session=chat_session
         )
 
-        owner = self.deserialize_user(chat_session.owner)
+        owner = deserialize_user(chat_session.owner)
         members = [
-            self.deserialize_user(chat_session.user) 
+            deserialize_user(chat_session.user) 
             for chat_session in chat_session.members.all()
         ]
         members.insert(0, owner)  # Make the owner the first member
 
         return Response ({
             'status': 'SUCCESS', 'members': members,
-            'message': '%s joined that chat' % user.username
+            'message': '%s joined that chat' % user.username,
+            'user': deserialize_user(user)
         })
 
 
@@ -198,7 +202,8 @@ class ChatSessionMessageView(APIView):
         )
 
         return Response ({
-            'status': 'SUCCESS', 'uri': chat_session.uri, 'message': message
+            'status': 'SUCCESS', 'uri': chat_session.uri, 'message': message,
+            'user': deserialize_user(user)
         })
 {% endhighlight %}
 
@@ -244,33 +249,33 @@ $ curl -X POST http://127.0.0.1:8000/auth/token/create/ --data 'username=danidee
 {"auth_token":"169fcd5067cc55c500f576502637281fa367b3a6"}
 
 $ curl -X POST http://127.0.0.1:8000/api/chat/new/ -H 'Authorization: Token 169fcd5067cc55c500f576502637281fa367b3a6'
-{"status":"SUCCESS","uri":"040213b14a02451","message":"New chat session created"}%
+{"status":"SUCCESS","uri":"040213b14a02451","message":"New chat session created"}
 
 $ curl -X POST http://127.0.0.1:8000/auth/users/create/ --data 'username=daniel&password=mypassword'
-{"email":"","username":"daniel","id":2}%
+{"email":"","username":"daniel","id":2}
 
 $ curl -X POST http://127.0.0.1:8000/auth/token/create/ --data 'username=daniel&password=mypassword'
 {"auth_token":"9c3ea2d194d7236ac68d2faefba017c8426a8484"}
 
 $ curl -X PUT http://127.0.0.1:8000/api/chat/join/ --data 'uri=163f2ddfaf3a490' -H 'Authorization: Token 9c3ea2d194d7236ac68d2faefba017c8426a8484'
-{"status":"SUCCESS","members":[{"id":1,"username":"danidee","email":"osaetindaniel@gmail.com","first_name":"","last_name":""},{"id":2,"username":"daniel","email":"","first_name":"","last_name":""}],"message":"daniel joined that chat"}%
+{"status":"SUCCESS","members":[{"id":1,"username":"danidee","email":"osaetindaniel@gmail.com","first_name":"","last_name":""},{"id":2,"username":"daniel","email":"","first_name":"","last_name":""}],"message":"daniel joined that chat","user":{"id":2,"username":"daniel","email":"","first_name":"","last_name":""}}
 {% endhighlight %}
 
 Let's send some messages
 
 {% highlight python %}
 $ curl -X POST http://127.0.0.1:8000/api/chat/message/040213b14a02451/ --data 'message=Hello!' -H 'Authorization: Token 169fcd5067cc55c500f576502637281fa367b3a6'
-{"status":"SUCCESS","uri":"040213b14a02451","message":"Hello!"}%
+{"status":"SUCCESS","uri":"040213b14a02451","message":"Hello!","user":{"id":1,"username":"danidee","email":"osaetindaniel@gmail.com","first_name":"","last_name":""}}
 
 $ curl -X POST http://127.0.0.1:8000/api/chat/message/040213b14a02451/ --data 'message=Hey whatsup!' -H 'Authorization: Token 9c3ea2d194d7236ac68d2faefba017c8426a8484'
-{"status":"SUCCESS","uri":"040213b14a02451","message":"Hey whatsup!"}%
+{"status":"SUCCESS","uri":"040213b14a02451","message":"Hey whatsup! i dey","user":{"id":2,"username":"daniel","email":"","first_name":"","last_name":""}}
 {% endhighlight %}
 
 Let's request for the messages history
 
 {% highlight python %}
 $ curl http://127.0.0.1:8000/api/chat/message/040213b14a02451/ -H 'Authorization: Token 169fcd5067cc55c500f576502637281fa367b3a6'
-{"id":1,"uri":"040213b14a02451","messages":[{"user_id":1,"message":"Hello!"},{"user_id":2,"message":"Hey whatsup!"},{"user_id":2,"message":"Hey whatsup!"}]}% 
+{"id":1,"uri":"040213b14a02451","messages":[{"user":{"id":1,"username":"danidee","email":"osaetindaniel@gmail.com","first_name":"","last_name":""},"message":"Hello!"},{"user":{"id":2,"username":"daniel","email":"","first_name":"","last_name":""},"message":"Hey whatsup!"}]}
 {% endhighlight %}
 
 Congrats! if you made it this far, you've succesfully built an API that allows users to communicate with each other by starting chat sessions and inviting other users to join the session.

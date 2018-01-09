@@ -113,7 +113,7 @@ Vue.use(Router)
 const router = new Router({
   routes: [
     {
-      path: '/',
+      path: '/chat',
       name: 'Chat',
       component: Chat
     },
@@ -294,7 +294,8 @@ methods: {
 
     $.post('http://localhost:8000/auth/token/create/', credentials, (data) => {
       sessionStorage.setItem('authToken', data.auth_token)
-      this.$router.push('/')
+      sessionStorage.setItem('username', this.username)
+      this.$router.push('/chat')
     })
     .fail((response) => {
       alert(response.responseText)

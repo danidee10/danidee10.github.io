@@ -10,9 +10,11 @@ For this series we're going to build a Chat application. In my own words a "Mini
 
 ## Requirements
 
-To get the most out of this series, you should be familiar with Django (At least you've gone through the Getting started and Poll app guides).
+This tutorial is not an Introduction to `Django` or `VueJS`.
 
-You Should also be Comfortable writing JavaScript and know a thing or two about VueJS. We aren't building a complicated Vue SPA but if you have no experience with Vue. You can check it out now to see what it's all about.
+To get the most out of it, you should be familiar with Django (At least you've gone through the Getting started and Poll app guides).
+
+You Should also be Comfortable writing JavaScript and know the basics of `VueJS`. We are not building a complicated Vue SPA but if you have no experience with Vue. You can check it out and get familiar with it's principles and API's. If you're familiar with React/Angular you shouldn't have too much problem with `Vue` because it draws a lot of things from both of them (Especially React).
 
 With that out of the way, i'll do my best to breakdown and explain any sections that i feel are complex or have a lot of Magic going on.
 
