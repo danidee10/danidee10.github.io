@@ -124,7 +124,7 @@ from rest_framework.response import Response
 from rest_framework import permissions
 
 
-class NewChatSession(APIView):
+class ChatSessionView(APIView):
     """Manage Chat sessions."""
 
     permission_classes = (permissions.IsAuthenticated,)
@@ -140,24 +140,23 @@ class NewChatSession(APIView):
             'message': 'New chat session created'
         })
 
+    def patch(self, request, *args, **kwargs):
+        """Add a user to a chat session."""
+        User = get_user_model()
 
-class JoinChatView(APIView):
-    """Allow a user to join a Chat Session."""
-
-    permission_classes = (permissions.IsAuthenticated,)
-        
-    def put(self, request, *args, **kwargs):
-        """Handle the POST request."""
-        uri = request.data['uri']
-        user = request.user
+        uri = kwargs['uri']
+        username = request.data['username']
+        user = User.objects.get(username=username)
 
         chat_session = ChatSession.objects.get(uri=uri)
+        owner = chat_session.owner
 
-        chat_session.members.get_or_create(
-            user=user, chat_session=chat_session
-        )
+        if owner != user:  # Only allow non owners join the room
+            chat_session.members.get_or_create(
+                user=user, chat_session=chat_session
+            )
 
-        owner = deserialize_user(chat_session.owner)
+        owner = deserialize_user(owner)
         members = [
             deserialize_user(chat_session.user) 
             for chat_session in chat_session.members.all()
@@ -169,7 +168,7 @@ class JoinChatView(APIView):
             'message': '%s joined that chat' % user.username,
             'user': deserialize_user(user)
         })
-
+    
 
 class ChatSessionMessageView(APIView):
     """Create/Get Chat session messages."""
@@ -207,20 +206,32 @@ class ChatSessionMessageView(APIView):
         })
 {% endhighlight %}
 
+The `patch` method for the `ChatSessionView` is idempotent because making an HTTP `PATCH` request to it multiples times gives us the same outcome. That means a user can join a chat room several times but there's only going to be one instance of that user in the response (and also in our database table).
+
+Another thing to note about the patch method is that it returns the owner of the chat room as a member but in our database we never add the owner as a member of the room, we just retrieve his information and insert it into the list that's returned back to the client. There's no point duplicating information and having the owner as a member in the database.
+
+We could have easily gotten the user in the `patch` method by calling `request.user` instead we got the username from the client and used that to get the user. This causes an extra database `SELECT` but why did we do that?
+
+Let me give you a simple scenario, what happens if we decide to invite our friends by username to a chat session. With `request.user` we wouldn't be able to do that because `request.user` would refer to the current authenticated user making the request which is us. But by using usernames to join chat sessions it's a piece of cake we just need to post the username to server and it'll know how to get the user and add them to the chat room.
+
+If you decide to have the functionality of adding multiple users at once, you can modify the code to read a list of usernames and fetch them in one go from the database. It's up to you
+
+The main thing you need to have at the back of your mind is to make your code extensible in future.
+
 in the `uris.py` file include this:
 
 {% highlight python %}
-"""URI's for the chat app."""
+"""URL's for the chat app."""
 
 from django.contrib import admin
-from django.uris import path
+from django.urls import path
 
 from . import views
 
-uripatterns = [
-    path('chat/new/', views.NewChatSession.as_view()),
-    path('chat/join/', views.JoinChatView.as_view()),
-    path('chat/message/<uri>/', views.ChatSessionMessageView.as_view()),
+urlpatterns = [
+    path('chats/', views.ChatSessionView.as_view()),
+    path('chats/<uri>/', views.ChatSessionView.as_view()),
+    path('chats/<uri>/messages/', views.ChatSessionMessageView.as_view()),
 ]
 {% endhighlight %}
 
@@ -248,7 +259,7 @@ Let's try it out:
 $ curl -X POST http://127.0.0.1:8000/auth/token/create/ --data 'username=danidee&password=mypassword'
 {"auth_token":"169fcd5067cc55c500f576502637281fa367b3a6"}
 
-$ curl -X POST http://127.0.0.1:8000/api/chat/new/ -H 'Authorization: Token 169fcd5067cc55c500f576502637281fa367b3a6'
+$ curl -X POST http://127.0.0.1:8000/api/chats/ -H 'Authorization: Token 169fcd5067cc55c500f576502637281fa367b3a6'
 {"status":"SUCCESS","uri":"040213b14a02451","message":"New chat session created"}
 
 $ curl -X POST http://127.0.0.1:8000/auth/users/create/ --data 'username=daniel&password=mypassword'
@@ -257,24 +268,24 @@ $ curl -X POST http://127.0.0.1:8000/auth/users/create/ --data 'username=daniel&
 $ curl -X POST http://127.0.0.1:8000/auth/token/create/ --data 'username=daniel&password=mypassword'
 {"auth_token":"9c3ea2d194d7236ac68d2faefba017c8426a8484"}
 
-$ curl -X PUT http://127.0.0.1:8000/api/chat/join/ --data 'uri=163f2ddfaf3a490' -H 'Authorization: Token 9c3ea2d194d7236ac68d2faefba017c8426a8484'
+$ curl -X PATCH http://127.0.0.1:8000/api/chats/040213b14a02451/ --data 'username=daniel' -H 'Authorization: Token 9c3ea2d194d7236ac68d2faefba017c8426a8484'
 {"status":"SUCCESS","members":[{"id":1,"username":"danidee","email":"osaetindaniel@gmail.com","first_name":"","last_name":""},{"id":2,"username":"daniel","email":"","first_name":"","last_name":""}],"message":"daniel joined that chat","user":{"id":2,"username":"daniel","email":"","first_name":"","last_name":""}}
 {% endhighlight %}
 
 Let's send some messages
 
 {% highlight python %}
-$ curl -X POST http://127.0.0.1:8000/api/chat/message/040213b14a02451/ --data 'message=Hello!' -H 'Authorization: Token 169fcd5067cc55c500f576502637281fa367b3a6'
+$ curl -X POST http://127.0.0.1:8000/api/chats/040213b14a02451/messages/ --data 'message=Hello!' -H 'Authorization: Token 169fcd5067cc55c500f576502637281fa367b3a6'
 {"status":"SUCCESS","uri":"040213b14a02451","message":"Hello!","user":{"id":1,"username":"danidee","email":"osaetindaniel@gmail.com","first_name":"","last_name":""}}
 
-$ curl -X POST http://127.0.0.1:8000/api/chat/message/040213b14a02451/ --data 'message=Hey whatsup!' -H 'Authorization: Token 9c3ea2d194d7236ac68d2faefba017c8426a8484'
+$ curl -X POST http://127.0.0.1:8000/api/chats/040213b14a02451/messages/ --data 'message=Hey whatsup!' -H 'Authorization: Token 9c3ea2d194d7236ac68d2faefba017c8426a8484'
 {"status":"SUCCESS","uri":"040213b14a02451","message":"Hey whatsup! i dey","user":{"id":2,"username":"daniel","email":"","first_name":"","last_name":""}}
 {% endhighlight %}
 
 Let's request for the messages history
 
 {% highlight python %}
-$ curl http://127.0.0.1:8000/api/chat/message/040213b14a02451/ -H 'Authorization: Token 169fcd5067cc55c500f576502637281fa367b3a6'
+$ curl http://127.0.0.1:8000/api/chats/040213b14a02451/messages/ -H 'Authorization: Token 169fcd5067cc55c500f576502637281fa367b3a6'
 {"id":1,"uri":"040213b14a02451","messages":[{"user":{"id":1,"username":"danidee","email":"osaetindaniel@gmail.com","first_name":"","last_name":""},"message":"Hello!"},{"user":{"id":2,"username":"daniel","email":"","first_name":"","last_name":""},"message":"Hey whatsup!"}]}
 {% endhighlight %}
 

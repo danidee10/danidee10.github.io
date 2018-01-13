@@ -4,7 +4,7 @@ title: 'Realtime Django Part 4: Building a Chat application RabbitMQ and uWSGI w
 date: 2018-01-10T18:45:12+07:00
 ---
 
-In part 3, we saw how we could leverage django rest framework to build an API for our chat app, In this part we're going to connect our Vue frontend to the `API` we built. At the end of the part we should have a complete chat application with a URL that we can share to friends we want to chat with.
+In part 3, we saw how we could Leverage django rest framework to build an API for our chat app, In this part we're going to connect our Vue frontend to the `API` we built. At the end of the part we should have a complete chat application with a URL that we can share to friends we want to chat with.
 
 If that excites you buckle up, shift into high gear and let's go!
 
@@ -18,7 +18,7 @@ First, the user should click on a button "Start Chatting", on the backend, that'
 If a user opens the chat we simply add them to the chat session and fetch the message history so they can catch up on previous messages.
 
 ### Implementation
-I've gone ahead to design the Chat interface in one Vue Component using bootstrap.
+I've gone ahead to design the Chat interface in the `Chat.vue` component using bootstrap.
 
 {% highlight html %}
 <template>
@@ -137,7 +137,7 @@ export default {
   methods: {
     startChatSession () {
       this.sessionStarted = true
-      this.$router.push('/chat/chat_url/')
+      this.$router.push('/chats/chat_url/')
     }
   }
 }
@@ -256,19 +256,19 @@ In the `created` hook we retrieve the username from the `sessionStorage`. Why di
 You should only store properties that are reactive in the `data` xxxx. Vue won't watch any attribute that's added on the fly.
 
 Go on and click on the "Start chatting" button it should change the URL and present a blank page. Why?
-A blank page is shown because no routes match the url `/chat_url`. Thankfully react router allows us dynamically match and capture parameters from a URL.
+A blank page is shown because no routes match the url `/chats/chat_url`. Thankfully react router allows us dynamically match and capture parameters from a URL.
 
 Go back to the router's `index.js` file and change the `Chat` route to:
 
 {% highlight JavaScript %}
 {
-    path: '/chat/:uri?',
+    path: '/chats/:uri?',
     name: 'Chat',
     component: Chat
 },
 {% endhighlight %}
 
-The question mark at the end tells vue router that the `uri` parameter is optional so a it would match a bare `/chat`, `/chat/chat_url` even `/chat/abazaba`. Anything after the slash would be matched.
+The question mark at the end tells vue router that the `uri` parameter is optional so a it would match a bare `/chats`, `/chats/chat_url` even `/chats/abazaba`. Anything after the slash would be matched.
 
 We can also get the `uri` in the component by accessing:
 
@@ -291,16 +291,16 @@ created () {
 
 methods: {
   startChatSession () {
-    $.post('http://localhost:8000/api/chat/new/', this.$data, (data) => {
-      alert("A new session has been created you'll be redirected automatically")
-      this.sessionStarted = true
-      this.$router.push(`/chat/${data.uri}/`)
+      $.post('http://localhost:8000/api/chats/', (data) => {
+        alert("A new session has been created you'll be redirected automatically")
+        this.sessionStarted = true
+        this.$router.push(`/chats/${data.uri}/`)
+      })
 
-    })
-    .fail((response) => {
-      alert(response.responseText)
-    })
-  }
+      .fail((response) => {
+        alert(response.responseText)
+      })
+    }
 }
 {% endhighlight %}
 
@@ -409,10 +409,10 @@ export default {
 
   methods: {
     startChatSession () {
-      $.post('http://localhost:8000/api/chat/new/', (data) => {
+      $.post('http://localhost:8000/api/chats/', (data) => {
         alert("A new session has been created you'll be redirected automatically")
         this.sessionStarted = true
-        this.$router.push(`/chat/${data.uri}/`)
+        this.$router.push(`/chats/${data.uri}/`)
       })
       .fail((response) => {
         alert(response.responseText)
@@ -453,10 +453,9 @@ export default {
     ...
 
     postMessage (event) {
-      const uri = this.$route.params.uri
       const data = {message: this.message}
 
-      $.post(`http://localhost:8000/api/chat/message/${uri}/`, data, (data) => {
+      $.post(`http://localhost:8000/api/chats/${this.$route.params.uri}/messages/`, data, (data) => {
         this.messages.push(data)
         this.message = '' // clear the message after sending
       })
@@ -496,4 +495,132 @@ If everything went well, We should be able to send messages and have them show i
 ### Joining a session
 We can finally send messages but the chat is going to be pretty boring because we're just talking to ourselves. How can we invite our friends to join us?
 
-We have another problem, hit refresh in your browser and boom! we're redirected back to the "Start Chatting" page.
+We have another problem, hit refresh in your browser and boom! we're redirected back to the "Start Chatting" page. So the owner of the chat session can't resume the session neither can their friends join a session.
+
+To Fix that, we need to send a `PATCH` request to `/api/chats/` and if we can find the user in the result returned from the server then we can fetch the chat history and display it to them
+
+{% highlight html %}
+<script>
+
+const $ = window.jQuery
+
+export default {
+  data () {
+    return {
+      sessionStarted: false, messages: [], message: ''
+    }
+  },
+
+  created () {
+    this.username = sessionStorage.getItem('username')
+
+    // Setup headers for all requests
+    $.ajaxSetup({
+      headers: {
+        'Authorization': `Token ${sessionStorage.getItem('authToken')}`
+      }
+    })
+
+    if (this.$route.params.uri) {
+      this.joinChatSession()
+    }
+  },
+
+  methods: {
+    startChatSession () {
+      ...
+    },
+
+    postMessage (event) {
+      ...
+    },
+
+    joinChatSession () {
+      const uri = this.$route.params.uri
+
+      $.ajax({
+        url: `http://localhost:8000/api/chats/${uri}/`,
+        data: {username: this.username},
+        type: 'PATCH',
+        success: (data) => {
+          const user = data.members.find((member) => member.username === this.username)
+
+          if (user) {
+            // The user belongs/has joined the session
+            this.sessionStarted = true
+            this.fetchChatSessionHistory()
+          }
+        }
+      })
+    },
+
+    fetchChatSessionHistory () {
+      $.get(`http://127.0.0.1:8000/api/chats/${this.$route.params.uri}/messages/`, (data) => {
+        this.messages = data.messages
+      })
+    }
+  }
+}
+</script>
+{% endhighlight %}
+
+Now Refresh the browser and you should be able to resume the chat and see your chat history.
+
+Also open another tab, login and navigate to the chat URL. If everything went well you should have the chat history forwarded to you and you can your friends can now chat with you...Hooray! Actually you can now chat with yourself. but Hooray! that's a major accomplishment feel free to reward yourself with whatever you enjoy.
+
+*To be honest, when i finished writing this part, i took a long break and didn't continue the tutorial until the next day*
+
+We've finally established contact with the outside world from our chat application. But there's still one problem to be solved.
+
+### REALTIME MESSAGING
+
+Right now our chat application sucks because the user has to manually hit the refresh button to check for new messages. Ideally we want this process to be automatic.
+
+The solution is already at our fingertips
+
+- You have a method that fetches all messages from the server.
+- You have the `setInterval` function
+- You have JavaScript
+
+<br />
+
+You're programmer, c'mon you can do this:
+
+{% highlight JavaScript %}
+created () {
+  this.username = sessionStorage.getItem('username')
+
+  // Setup headers for all requests
+  $.ajaxSetup({
+    headers: {
+      'Authorization': `Token ${sessionStorage.getItem('authToken')}`
+    }
+  })
+
+  if (this.$route.params.uri) {
+    this.joinChatSession()
+  }
+
+  setInterval(this.fetchChatSessionHistory, 3000)
+},
+{% endhighlight %}
+
+Well that was pretty simple, we just needed to add one line to our `created` hook. `setInterval(this.fetchChatSessionHistory, 3000)` fetches the Chat history every 3 seconds. Giving the end user the illusion that our messenger is realtime.
+
+You've just implemented `polling` (We poll the chat session's chat url several times). For small applications this is fine. but if you applications with a large userbase that need to scale, polling can be horribly inefficient.
+
+Let's do a little maths:
+
+For two users in a session (Suppose they login at the same time). In 3 seconds, they'll make 2 requests In a minute, they'll make 40 requests etc etc more calculations.
+
+This would easily hurt our servers and the worst part is even when they're idle their browsers will keep on making requests whether there's a new message or not. We can monitor when they're idle by tracking the last time they typed and then calling `clearInterval` to stop polling the url but even with that, we'll still have wasted unnecessary requests since we can't predict the exact moment that a user goes idle.
+
+Also bandwidth-wise each request wastes bandwidth because they contains `headers`, `cookies and authentication information that we don't really need to send, we're only interested in messages.
+
+There has to be a more efficient way of handling this.
+
+That's the exact problem WebSockets aim to solve by opening a persistent bi-directional connection between the server and the client which means the client never needs to "ask" the server for new information. When it's available, the server simply pushes it to the client.
+
+Also, if the client needs to send information to the server, it can also uses the same communication channel.
+
+WebSockets are more efficient that polling and we're going to see how we can add WebSockets support to our chat application without really changing much of our code using `uWSGI`. See you in the next part!
