@@ -17,6 +17,11 @@
 body {
   font-family: 'Verlag', sans-serif;
   font-size: 20px;
+  background-color: #fff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 50px;
 }
 
 .container {
@@ -36,9 +41,16 @@ a {
   font-weight: bold;
 }
 
-.postlist {
-  list-style: inside;
-  font-style: italic;
+ul {
+  list-style-type: initial;
+}
+
+li{
+  margin: 10px 0;
+}
+
+li p {
+  display: inline;
 }
 
 code {
@@ -47,11 +59,36 @@ code {
   font-size: 13px;
 }
 
+figcaption {
+  color: #999;
+  text-align: center;
+  font-size: 17px;
+  margin-top: 10px;
+}
+
+.postlist {
+  list-style: inside;
+  font-style: italic;
+}
+
 .highlight pre, .highlight pre code {
   font-family: 'Fira Code';
   font-weight: normal;
+  white-space: pre-wrap;       /* css-3 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word; 
 }
 
 .highlight {
   border-left: 7px solid tomato;
+  margin: 0;
+  padding: 5px;
+  margin-bottom: 15px;
+}
+
+.post-content img {
+  display: block;
+  margin: 0 auto;
 }

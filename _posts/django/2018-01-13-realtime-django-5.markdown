@@ -1,53 +1,58 @@
 ---
 layout: post
 title: 'Realtime Django Part 5: Building a Chat application RabbitMQ and uWSGI websockets (uWSGI WebSockets)'
-date: 2018-01-12T14:30:12+08:00
+date: 2018-01-13T14:30:12+08:00
 ---
 
-Welcome to the penultimate part of this tutorial, i have a lot of fun writing this tutorial and i hope you have.
+Welcome to the penultimate part of this tutorial. I've really learnt a lot writing this tutorial and i hope you have to.
 
 In part 4, we were able to acheive our main goal of the tutorial which was to build a web based chat application with django and Vue. But we faced a major issue with scaling the application.
 
-It's not a UI/UX issue that the user can notice immediately but it's really important because if we're an overnight sensation and our app becomes very popular with lot of users talking to their friends It's going to become really slow and before you know it our server will start dropping requests that it can't handle which would leave a very bad impression of us an engineers. So what can we do?
-
 ### WebSockets
-From the last tutorial, we touched a little on WebSockets basically we know that they're bi-directional channels that stay open and allow the server to communicate instantly with the client and vice-versa. So how do we get this cool stuff into our django application.
 
-Django itself was developed at a different time in our internet history. Back then Websites/Web applications weren't as sophisticated as what we know today. It was basically "Hey i want the articles from the 1st of January 2005" and then the server goes "Don't worry bro I got you" and does some work fetching the articles and then responds "Here are the articles you asked for" and then it goes back to sleep or attend to other users (Closes the socket). You couldn't receive information without asking for it. For example the Web Server couldn't say "Someone in Lagos sent you a message here is the message". You'll need to ask the Web server. "Please let me see all my unread messages" first.
+From the last tutorial, we went through a little primer on WebSockets. we know they're bi-directional channels that stay open and allow the server to communicate instantly with the client and vice-versa.
 
-Enough of this annoying examples :-) what we can pull from this is that the communication could only be initiated from one person (The client).
+Django itself was developed at a different time in our internet history. Back then Websites/Web applications weren't as sophisticated as they are today. It was basically "Hey i want the articles from the 1st of January 2005" and then the server goes "Don't worry bro I got you" and does some work fetching the articles and then responds "Here are the articles you asked for" and then it goes back to sleep or attend to other users (Closes the socket). You couldn't receive information without asking for it. For example the Web Server couldn't say "Someone in Lagos sent you a message here is the message". You'll need to ask the Web server. "Please let me see all my unread messages" first.
 
-This was really a problem for Django and a lot of python web frameworks because the underlying protocol that governs how python applications should run `WSGI` was tied down to this `request-response` type of communication. Django developers feared the worst because NodeJS hipsters were rubbing it in their faces that django was bad for realtime systems. Something had to be done and it had to be done fast. 
+Don't mind these stupid examples :-). what we can pull from this is that the communication could only be initiated from one person (The client).
 
-So many people approached the problem from different perspectives. By new frameworks (Torando), Async engines (Gevent and Co), adding support to existing WSGI Servers (`uWSGI`). but nobody tried to modify django directly because it was going to require some drastic changes in the core of django and the `WSGI` protocol itself until someone found a workaround
+This was really a problem for Django and a lot of python web frameworks because the underlying protocol that governs how python applications should run (`WSGI`) was tied down to this `request-response` pattern of communication.
+
+So many people approached the problem from different angles
+
+- By new frameworks/web servers (E.g Tornado).
+- Async engines with websocket servers (E.g gevent)
+- By Adding support to existing WSGI Servers (`uWSGI`)
+
+Nobody tried to modify django directly because it was going to require some drastic changes in the core of django and the `WSGI` protocol.
 
 ### django channels
 
-Andrew Goodwin brought websockets to django natively with django-channels. As we speak now it's currently an official product of the django foundation. Meaning it's not going anywhere soon.
+Andrew Godwin brought websockets to django natively with `django-channels`. At the time this tutorial was written it's currently an official project of the django software foundation. Meaning it's not going anywhere soon.
 
-Django channels is good but how was he able to build it while maintaining django's compatibility with `WSGI` servers and without changing the core. Well....He compromised.
+`django-channels` introduces a new protocol called `ASGI`. It's distinctly different from `WSGI` which means that if you decide to go with django-channels for websockets for an old django application you can say bye bye to your `WSGI` Servers like gunicorn, meinheld and uWSGI any optimizations you made in the past to speed up your application would be lost. django-channels comes with it's own server (that handles WebSocket connections) called `daphne`. `daphne` can also handle normal http requests if you want it to.
 
-A new protocol called `ASGI` had to be developed for django-channels It's distinctly different from `WSGI` which means that if you decide to go with django-channels for websockets for an old django application you can say bye bye to your `WSGI` Servers like gunicorn, meinheld and uWSGI any optimizations you made in the past to speed up your application would be lost. django-channels comes with it's own server called `Daphne` It's not that bad but it's relatively young compared to other `WSGI` Servers.
-
-Also using `django-channels` in your existing application glues your application together and makes it harder to scale out to multiple machines. Because you now have one application serving two different purposes. i.e Normal requests and WebSocket requests.
-This makes server monitoring tricky and could also result in a performance bottleneck for normal http requests. 
+If you decide to go with `django-channels` you have to learn it's API and methods, You'll also need to change your deployment process.
 
 This doesn't mean django-channels is bad. It's actually the future for building realtime systems with django and it's backed by the django software foundation itself. Infact, if you're starting a new django application from scratch and you know you're going to need realtime behaviour i'll advice you to take a look at it.
 
-For existing applications, it can be a real pain to integrate it and performance is going to drop a little when you switch from your existing `WSGI` Server to Daphne.
+To scale to horizontally to multiple machines you'll still need to make use of a what `django-channels` call Channel layers. The recommended layer is the `Redis` layer. There's also a `RabbitMQ` channel layer and an IPC (Inter process Communication) Layer. These Channel layers are the glue between django and the `daphne` server. The `Redis` and `RabbitMQ` in particular are used to scale channels horizontally. The IPC channel layer quicker but it's only suitable for a single server because all the processes use a shared memory for communication.
 
+What we're going to build is very similar to the approach `django-channels` took but on a lower level. We're going to read from `RabbitMQ` directly. `django-channels` abstracts this into `Groups`. `uWSGI` would take a similar role as the `daphne` server.
 
 ### uWSGI WebSockets
 
-un-bit (The developers of uWSGI) took a different approach, they decided to integrate WebSockets into the uWSGI Core itslf. uWSGI is a very performant WSGI Web server for python (The Core is written in C).
+unbit (The developers of uWSGI) took a different approach, they decided to integrate WebSockets into the uWSGI Core itslf. uWSGI is a very performant WSGI Web server for python. It's Arguably the most popular python WSGI Server it also supports several programming languages like `Perl`, `Ruby` even `Go`.
 
-So this means that you don't need to change your stack to add WebSocket support to Django. Even if you use a different `WSGI` Server like `gunicorn` u just need to `pip install uwsgi` it's that simple.
+If you currently use `uWSGI` in your stack and you need WebSockets, you don't need to change anything. Even if you use a different `WSGI` Server like `gunicorn` you just need to `pip install uwsgi` it's that simple.
 
 If you remember the discussion we had earlier in part 3 about RabbitMQ. Remember i told you RabbitMQ is the glue between `uWSGI` and `django`.
 
-We need to create notifications and put them on the RabbitMQ Queue and then through the websockets this messages can be broadcasted directly to thousands of clients effectively.
+We need to create notifications and put them on the RabbitMQ Queue and then through the websockets this messages can be broadcasted directly to multiple users.
 
-To ease the process of creating notifications and sending them to RabbitMQ, i've created a third party django library called django-notifs. Go ahead and install it from pip with:
+To ease the process of creating notifications and sending them to RabbitMQ, i created a third party django library called [django-notifs](https://github.com/danidee10/django-notifs).
+
+It's available on Pypi.
 
 {% highlight python %}
 pip install django-notifs
@@ -69,14 +74,13 @@ INSTALLED_APPS = (
 )
 {% endhighlight %}
 
-Installing `django-notifs` install pika which is a python library for connecting to RabbitMQ (Since RabbitMQ is written in Erlang not python).
+Installing `django-notifs` also installs `pika` which is a python library for connecting to RabbitMQ.
 
 Run the migrations with `python manage.py migrate`
 
-Finally we're going to install `RabbitMQ` The instructions vary for different operating systems, so head on to the website and find out how to install it for your machine.
+Finally install `RabbitMQ` The instructions vary for different operating systems, so head on to the [installation guide](https://www.rabbitmq.com/download.html) to get the installation instructions for your Operating system.
 
-
-Now that we have our packages installed (Make sure the `RabbitMQ` server is running, if not you'll get errors) let's integrate notifications into our applications. With the inbuilt signals from `django-notifs` it's very straightforward
+Before you continue, Make sure the `RabbitMQ` server is running, if not you'll get errors when you try to connect to it from `pika`.
 
 open `views.py` and update the `ChatSessionMessageView` view:
 
@@ -117,21 +121,22 @@ class ChatSessionMessageView(APIView):
 
 Just before we return a response to the user, we send the notify signal with arguments, Most of the arguments are self explanatory.
 
-The `silent` parameter means the notification won't be persisted to the database. We're using django-notifs as an event emitter we can also pass arbitrary notification data in the `extra_data` argument as a dictionary.
+The `silent` parameter means the notification won't be persisted to the database. In other words, we're using `django-notifs` like event emitter. You can also pass arbitrary notification data in the `extra_data` argument as a dictionary.
 
 
 ### Notification channels
 
-django-notifs makes use of `channels` to deliver messages. This means that you can write your own custom channel to deliver messages via emails, SMS(Via twilio for example), infact anything you can think of. It even comes with an inbuilt websocket channel but that won't suffice for our case because it's a user to user channel. But we want to broadcast information to multiple users at the same. This pattern of communication is called Pub/Sub (Publish Subscribe) and RabbitMQ has support for this: time which is supported by RabbitMQ.
+django-notifs makes use of `channels` to deliver messages. This means that you can write your own custom channel to deliver messages via emails, SMS and infact anything you can think of. It even comes with an inbuilt websocket channel but that won't suffice for our case because it's a user to user channel. 
 
-We'll have to create a RabbitMQ `exchange`, an `exchange` is a channel that receives messages from a producer (Our application) and then broadcasts it to multiple queues. There are four different types of `exchanges` namely direct, topic, headers and fanout. We'll focus on using the `fanout` exchange it's the simplest to understand and fits our use case perfectly.
+In our case, we want to broadcast messages to multiple clients at the same. This pattern of communication is called Pub/Sub (Publish Subscribe) and RabbitMQ has support for this as `exchanges`.
+
+An `exchange` is a channel that receives messages from a producer (Our application) and then broadcasts it to multiple queues. There are four different types of `exchanges` namely direct, topic, headers and fanout. We'll make use of the `fanout` exchange it's the simplest to understand and fits our use case perfectly.
 
 This is an illustration from the RabbitMQ docs on how the fanout exchange works:
 
 ![RabbitMQ Fanout](https://www.rabbitmq.com/img/tutorials/python-three-overall.png)
 
 For more info about the different exchanges and how they can be used check out the RabbitMQ docs
-
 
 To implement the Pub/Sub pattern we'll need to write our own delivery channel.
 
@@ -183,7 +188,7 @@ We also dumped the chat message as a dictionary. We'll need all the details abou
 
 Try and send a message and it should create a new RabbitMQ exhange based on the uri for the chat session.
 
-To see the list of exchanges we have (for *nix systems):
+To see the list of exchanges we have (for *nix systems) run this in the terminal:
 
 {% highlight bash %}
 rabbitmqctl list_exchanges
@@ -199,7 +204,7 @@ amq.headers	headers
 fe662fd9de834fc	fanout  # our Exchange
 {% endhighlight %}
 
-You can see a lot of exchanges that RabbitMQ uses internally but there's our exchange at the bottom.
+You can also see some inbuilt exchanges.
 
 Now we're going to dynamically create queues and bind them to the exchange we created earlier so they can receive messages.
 
@@ -241,9 +246,9 @@ while True:
 
 Once again we connect to `RabbitMQ` using `pika` and declare the exchange again.
 
-Declaring an exchange (or queue) multiple times has no adverse effects, If the exchange didn't exist beforehand `RabbitMQ` creates it if it does it simply does nothing.
+Declaring an exchange (or queue) multiple times has no adverse effects, If the exchange didn't exist beforehand `RabbitMQ` creates it else it does nothing.
 
-The most important line in this file now is:
+Let's take a closer look at this line:
 
 `channel.queue_bind(exchange='fe662fd9de834fc', queue=queue_name)`
 
@@ -251,9 +256,9 @@ This binds the queue to the exchange. It's more like "Hey exchange, i'm interest
 
 The `queue_name` is generated randomly by `RabbitMQ` because we called `queue_declare` without passing in a name.
 
-There are different ways of consuming messages off a channel. You can use callbacks or consume manually with a `for loop` we went with the second option. We also have some unnecessary exception handling at this point but don't worry you'll see why
+There are different ways of consuming messages off a channel. You can use callbacks or consume manually with a `for loop`. we went with the second option so we can gracefully handle exceptions that might occur when we try to send the message down to the client. This will make more sense when we finally implement the WebSocket.
 
-`channel.basic_ack(method_frame.delivery_tag)` acknowledges that the client succesfully received the message and it can be removed from the queue. Without acknowledging the message, it would remain on the queue.
+`channel.basic_ack(method_frame.delivery_tag)` acknowledges that the client succesfully received the message and it can be removed from the queue. If a message is not acknowledged it would remain on the queue until the queue itself is deleted.
 
 For more info about method frames and the different types of frames check out the RabbitMQ docs.
 
@@ -273,12 +278,12 @@ b'{"user": {"id": 1, "username": "danidee", "email": "", "first_name": "", "last
 b'{"user": {"id": 12, "username": "daniel", "email": "", "first_name": "", "last_name": ""}, "message": "How are you doing"}'
 {% endhighlight %}
 
-Open up a new terminal and run the websocket file. You should be able to see new messages as they come in ***REAL TIME***. You can run more instances of the websocket file and they should all print incoming messages in their terminals.
+Open up a new terminal, run the websocket file and send more messages from the chat UI. You should still be able to see the new messages.
 
-Nice work! Now there's only one thing left sending the messages directly to the user.
-
+Nice work! Now there's only one thing left and that's sending the messages directly to the user.
 
 ### Where is the websocket?
+
 The websockets are included in the core `uwsgi` python object. First of all install `uWSGI` if you haven't already.
 
 {% highlight python %}
@@ -344,25 +349,17 @@ def application(env, start_response):
                 channel.basic_ack(method_frame.delivery_tag)
 {% endhighlight %}
 
-The `uwsgi` websocket api is very simple. We're using just three methods
+The `uwsgi` websocket api is very simple. We're using just three methods:
 
-<ul>
-  <li>
-    <strong>uwsgi.websocket_handshake:</strong> The handshake is the bridge from HTTP to WS protocol. In the handshake This method establishes tries to connect the client and the server together, if it fails for any reason an exception would be raised.
-  </li>
+- **uwsgi.websocket_handshake:** The handshake is the bridge from HTTP to WS protocol. This method           establishes tries to connect the client and the server together, if it fails for any reason an exception   would be raised.
 
-  <li>
-    <strong>uwsgi.websocket_recv_nb:</strong> This method is actually deceptive and misleading (no pun intended) because the full name is `websocket receive non blocking` but it doesn't only receive messages in a non-blocking manner it also helps to maintain the connection with the client by sending a `ping/pong`.
+- **uwsgi.websocket_recv_nb:** This method is actually deceptive and misleading (no pun intended) because    the full name is `websocket receive non blocking` but it doesn't only receive messages in a non-blocking   manner it also helps to maintain the connection with the client by sending a `ping/pong`.
 
-    The keep alive function calls this method every 30 seconds, without that the client might disconnect the connection (Typically after a minute of inactivity)
-  </li>
+  The keep alive function calls this method every 30 seconds, without that the client might disconnect the connection (Typically after a minute of inactivity)
 
-  <li>
-    <strong>uwsgi.websocket_send:</strong> You don't need a sooth-sayer to tell you about this one :-) Though the reason we need the error handler, is in case the connection is closed and we try to send a message `uwsgi.websocket_send` would raise an `OSError` and we'll kill the process and `uWSGI` will take care of restarting it for us. Also, the `else` block would never run which means we won't acknowledge the message and it would stay on the queue.
-    
-    The next time we enter the for loop and call `channel.consume` would send the unacknowledged message plus any new messages in the queue. Which means we'll never miss any message due to network connectivity.
-  </li>
-</ul>
+- **uwsgi.websocket_send:** You don't need a sooth-sayer to tell you about this one :-) Though the reason    we need the error handler, is in case the connection is closed and we try to send a message                `uwsgi.websocket_send` would raise an `OSError` and we'll kill the process and `uWSGI` will take care of   restarting it for us. Also, the `else` block would never run which means we won't acknowledge the          message and it would stay on the queue.
+
+  The next time we enter the for loop and call `channel.consume` would send the unacknowledged message plus any new messages in the queue. Which means we'll never miss any message due to network connectivity.
 
 <br />
 
@@ -375,11 +372,12 @@ Don't worry if this doesn't make any sense to you when we finally connect our Vu
 
 ### Connecting to the WebSocket with JavaScript
 
-It's impossible to talk about WebSockets in the context of a web application without JavaScript. Most modern browsers already support WebSockets so we don't need to install any library.
+It's impossible to talk about WebSockets in the context of a web application without JavaScript. Most modern browsers already support WebSockets so we don't need to install any polyfill.
+
+Let's update the `Chat` component
 
 {% highlight html %}
 <script>
-
 const $ = window.jQuery
 
 export default {
@@ -456,41 +454,40 @@ export default {
 </script>
 {% endhighlight %}
 
-Now start the `uWSGI` Server on port 8081
+Now start the `uWSGI` WebSocket Server on port 8081 and reload the browser.
 
 {% highlight bash %}
 $ uwsgi --http :8081 --module websocket --master --processes 4
 {% endhighlight %}
 
+Hooray!
 
-Hooray! Hooray! Hooray!
+![Websockets for everyone](https://memegenerator.net/img/instances/68268506/you-get-a-websocket-you-get-a-websocket-we-all-get-websockets.jpg)
+<figcaption>Hooray!</figcaption>
 
 There's still a problem. open 3 more tabs (5 active clients). The last client wouldn't be able to connect because the 4 processes we specified are tied down by other clients.
 
-*NOTE: That's a reason why we need to kill stuck processes immediately with `sys.exit(1)` because the process may not really be stuck, the user might have intentionally left the chat room and it would take uWSGI sometime to figure out that the client has disconnected before closing the connection on the server.
+***NOTE: That's a reason why we need to kill stuck processes immediately with `sys.exit(1)` because the process may not really be stuck, the user might have intentionally left the chat room and it would take uWSGI sometime to figure out that the client has disconnected before closing the connection on the server.***
 
-The --master option invokes the master process which monitors dead processes and restarts them without this, the process would die and never be restarted and it would continue until the last process dies and uWSGI exits.
-*
+***The --master option invokes the master process which monitors dead processes and restarts them without this, the process would die and never be restarted and it would continue until the last process dies and uWSGI exits.***
 
-so why is this happening? i thought you said WebSockets scale?
-
+so why is this happening?
 
 ### I thought you said WebSockets Scale
 
-Yes i said it in my head and wrote it yes. The reason our current setup won't scale is simply because of the way we're running `uWSGI`; with processes and threads like a normal python `WSGI` server runs.
+Yes i said that. The reason our current setup won't scale is simply because of the way we're running `uWSGI`; with processes and threads like a normal python `WSGI` server runs.
 
-An Easy solution would be to increase the processes but that can only take us far probably a few hundred users or less depending on your server's resources. Surely there has to be a better way
-
+An Easy solution would be to increase the processes but that can only take us to probably a few hundred users or less depending on your server's resources.
 
 ### Asynchronous IO and Concurrency
 
-Asynchronous IO deserves an entire article on it's own and if you don't have the slightest idea about what it is i'll advice you to go crazy on google and read every article you can find.
+Asynchronous IO deserves an entire article on it's own. If you don't have the slightest idea about what it is i'll advice you to go crazy on google and read every article you can find.
 
-But basically the idea behind `AsyncIO` or simply `async` is when we have multiple IO bound tasks that we need to run during the said IO Operation (In our case, sending and receiving messages), instead of the process sitting idle waiting for the process to complete it can quickly switch to another IO bound task and so on.
+Basically the idea behind `AsyncIO` or simply `async` is when we have multiple IO bound tasks that we need to run. During the said IO Operation (In our case, sending and receiving messages), instead of the process sitting idle waiting for the process to complete it can quickly switch to another IO bound task and so on.
 
-This switching is relatively quicker than process context switching because everything is run in one single process so there's no copying of variables/xxxx synchronization etc etc explain more...xxxx No time is spent waiting idly.
+This switching is relatively quicker than process context switching because everything is run in a single process so there's no copying of variables/xxxx synchronization etc etc explain more...xxxx No time is spent waiting idly.
 
-This Simple process is what makes `NodeJS` excel so much at IO bound applications because at it's core it's Asynchronous you don't need to install any special libraries or learn anything new.
+This Simple concept is what makes `NodeJS` excel so much for IO bound applications.
 
 This is not the case for python, When Python was developed most computers had only one processor so really NodeJS is benefitted from being a more modern language. But Thankfully we're not left out in the dust as python programmers if you want to bring async to python they're several libraries (even an official one `asyncio`) to help you out. Though i must admit it's not as natural and smooth as writing async code in JavaScript.
 
@@ -536,17 +533,15 @@ $ uwsgi --http :8081 --gevent 100 --module websocket --gevent-monkey-patch --mas
 
 Depending on your server's specs and configuration you can increase the number of processes and gevent threads but before doing this make sure you profile and monitor your application's performance because at a certain stage increasing numbers will cause degraded performance.
 
-`uWSGI` features a python package (installable from pip) called `uwsgitop` that can be used for monitoring it. But that's out of the scope of this tutorial. Maybe i'll write about it in the future
-
+`uWSGI` features a python package (installable from pip) called `uwsgitop` that can be used for monitoring it. But that's out of the scope of this tutorial. Maybe i'll write about it in the future.
 
 ### Scaling out to multiple servers
 
-At a certain point, we'll max out our server's resources and we'll need to scale out to multiple servers. Since our websocket server isn't coupled to our application. That's fairly easy we can easily load balance multiple servers (Each running multiple `uWSGI` processes and gevent threads) behind Nginx.
+At a certain point, we'll max out our server's resources and we'll need to scale out to multiple servers. Since our websocket server isn't coupled to our main django application. That's fairly easy becuase we can load balance multiple servers (Each running multiple `uWSGI` processes and gevent threads) behind Nginx.
 
 And before you know it, you'll be handling thousands of connections easily.
 
 You can also apply the same clustering and loadbalancing technique to RabbitMQ when you need to scale out (though not with Nginx since RabbitMQ doesn't use HTTP).
-
 
 Apart from our main aim of building a chat application, one of my silent goals was to show you that `uWSGI` is not "just a WSGI server" it's way more than that.
 
@@ -556,13 +551,21 @@ It has a lot of goodies which can be overwhelming if you're just getting started
 
 Well well well, that's all for this tutorial i hope you've accquired some new skills as you tagged along.
 
-As a bonus, i'm going to make one last part that'll briefly cover a lot of things and improvements i couldn't talk about in other parts for the sake of not derailing the tutorial. below are the things i'll cover in the next part:
+As a bonus, i'm going to make one last part containing a lot of improvements to chatire. Most of this improvements and features would have been added without derailing the tutorial. 
+
+Below are the things i'll cover in the next part:
 
 #### Frontend
+
+Implementing a loading screen. Before we determine if we should join a chat or not
+
+Displaying the username and timestamp of the message.
 
 Automatically scrolling to the bottom of the screen when messages exceed the window height.
 
 Creating a config file to store variables.
+
+Play sounds when the notification window is not focused.
 
 #### Backend
 
@@ -570,4 +573,4 @@ JSON web tokens with `djsoer`.
 
 <br>
 
-Thanks for reading and see you there!
+Thanks for reading.

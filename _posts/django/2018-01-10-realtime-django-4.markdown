@@ -1,14 +1,15 @@
 ---
 layout: post
-title: 'Realtime Django Part 4: Building a Chat application RabbitMQ and uWSGI websockets (Plug the Vue frontend to the django API)'
+title: 'Realtime Django Part 4: Build a Chat application with django, RabbitMQ and Vue.js (Plug the Vue frontend to the django API)'
 date: 2018-01-10T18:45:12+07:00
 ---
 
-In part 3, we saw how we could Leverage django rest framework to build an API for our chat app, In this part we're going to connect our Vue frontend to the `API` we built. At the end of the part we should have a complete chat application with a URL that we can share to friends we want to chat with.
+In part 3, we saw how we could Leverage django rest framework to build an API for our chat app, In this part we're going to build the Chat UI and connect it to the `API` we built earlier. At the end of the part we should have a complete chat application with a URL that we can share to friends we want to chat with.
 
 If that excites you buckle up, shift into high gear and let's go!
 
 ### UI/UX of the Chat Screen
+
 Slow down a little! Before you depart at light speed, let's have a little discussion on the UI/UX of the Chat screen.
 
 <img />
@@ -18,6 +19,7 @@ First, the user should click on a button "Start Chatting", on the backend, that'
 If a user opens the chat we simply add them to the chat session and fetch the message history so they can catch up on previous messages.
 
 ### Implementation
+
 I've gone ahead to design the Chat interface in the `Chat.vue` component using bootstrap.
 
 {% highlight html %}
@@ -120,7 +122,6 @@ I've gone ahead to design the Chat interface in the `Chat.vue` component using b
 </template>
 
 <script>
-
 const $ = window.jQuery
 
 export default {
@@ -249,14 +250,18 @@ li {
 
 It's pretty bulky (Over 200 lines of code) thanks to HTML/CSS and the dummy chat. Sadly this tutorial won't cover much about them so the only thing of interest to us is the JavaScript in this component. ***But pay attention to the markup of the dummy chat because it would be useful to us to distinguish a user's messages other messages***
 
-We created a property called `sessionStarted` we use this property of the instance to determine if a chat session has started. if it has then we'll render the Chat box.
+We created a property called `sessionStarted` this property allow us determine if a chat session is active or not. if a chat session is active, we'll render the chat box else we'll show the "Start a session" view.
 
-In the `created` hook we retrieve the username from the `sessionStorage`. Why didn't we make it part of our components `data` xxxxx?. We didn't because the username is not reactive, We don't need our UI to react/respond to changes in the value. The username is never going to change once the user is logged in.
+In the `created` hook we retrieve the username from the `sessionStorage`.
 
-You should only store properties that are reactive in the `data` xxxx. Vue won't watch any attribute that's added on the fly.
+You may ask yourself why we did not make it part of the components `data`. We didn't because the username property is not reactive, In the sens that we don't need the UI to react/respond to changes in it's value.
 
-Go on and click on the "Start chatting" button it should change the URL and present a blank page. Why?
-A blank page is shown because no routes match the url `/chats/chat_url`. Thankfully react router allows us dynamically match and capture parameters from a URL.
+As far as we are concerned, the username is never going to change once the user is logged in (It'll be weird if it did).
+
+You should only store properties that are reactive in a Component's `data`. Vue won't watch any attribute that's added outside the `data` function.
+
+Go on and click on the "Start chatting" button it should change the URL and present a blank page.
+A blank page is shown because no routes match the url `/chats/chat_url`. Thankfully Vue router allows us dynamically match and capture parameters from a URL.
 
 Go back to the router's `index.js` file and change the `Chat` route to:
 
@@ -268,13 +273,14 @@ Go back to the router's `index.js` file and change the `Chat` route to:
 },
 {% endhighlight %}
 
-The question mark at the end tells vue router that the `uri` parameter is optional so a it would match a bare `/chats`, `/chats/chat_url` even `/chats/abazaba`. Anything after the slash would be matched.
+The question mark at the end tells vue router that the `uri` parameter is optional so it would match a bare `/chats`, `/chats/chat_url` even `/chats/abazaba`. Anything after the slash would be matched.
 
 We can also get the `uri` in the component by accessing:
 
-`this.$route.params` which returns: `Object { uri: "chat_url" }` We're gonna need that pretty soon.
+`this.$route.params` which returns an object: `Object { uri: "chat_url" }`. We'll need it soon.
 
 ### Starting a new session
+
 To Start a new session, we'll simply post to the API endpoint we created in Part 3
 
 {% highlight JavaScript %}
@@ -310,7 +316,7 @@ In the `created` hook we setup the Authorization headers for all Ajax requests. 
 
 So how do we send messages?
 
-You got it? posting the endpoint we created earlier for messages, before we do that let's get rid of the dummy messages and let's make use of Vue's `data xxxx`.
+You got it. By posting the messages endpoint. Before we do that let's get rid of the dummy messages and let's store our messages in the component's data as an Array.
 
 This is the `Chat` component (without the CSS)
 
@@ -331,7 +337,7 @@ This is the `Chat` component (without the CSS)
                 <template v-if="username === message.user.username">
                   <div class="col-sm-7 offset-3">
                     <span class="card-text speech-bubble speech-bubble-user float-right text-white subtle-blue-gradient">
-                      {{ message.message }}
+                      {% raw %}{{ message.message }}{% endraw %}
                     </span>
                   </div>
                   <div class="col-sm-2">
@@ -344,7 +350,7 @@ This is the `Chat` component (without the CSS)
                   </div>
                   <div class="col-sm-7">
                     <span class="card-text speech-bubble speech-bubble-peer">
-                      {{ message.message }}
+                      {% raw %}{{ message.message }}{% endraw %}
                     </span>
                   </div>
                 </template>
@@ -429,8 +435,6 @@ You should see the messages displayed like this:
 
 We used a `v-if` directive to compare the message sender with the currently logged in user. Based on the comparision, we can determine how we want to display the message. Messages sent by the user are aligned to the right with a blue background while those sent by other users are aligned to the left with a white background.
 
-When we have multiple users it might be hard to distinguish the messages. But don't worry we'll get to that later. Our focus is to get a MVP.
-
 With all we've done, It's pretty obvious how we should handle messages. When we post a new message, we just need to add it to the messages list and Vue will take care of the UI sweet!
 
 {% highlight JavaScript %}
@@ -485,7 +489,7 @@ Let's tells Vue about it in our template:
 </form>
 {% endhighlight %}
 
-`@submit.prevent` is a short form for `v-on:submit.prevent` this `.prevent` modifier prevents the default action of the form from occuring (i.e the form won't be submitted). This is one of the reasons i love `Vue` it's sprinkled with simple helpers and just the right amount of magic.
+`@submit.prevent` is a short form for `v-on:submit.prevent` this `.prevent` modifier prevents the default action of the form from occuring (i.e the form won't be submitted). This is another reason why i love Vue.js. It's sprinkled with simple helpers and just the right amount of magic.
 
 You're free to call `event.preventDefault` in the `postMessage` method but that's not "Vue-like".
 
@@ -495,13 +499,12 @@ If everything went well, We should be able to send messages and have them show i
 ### Joining a session
 We can finally send messages but the chat is going to be pretty boring because we're just talking to ourselves. How can we invite our friends to join us?
 
-We have another problem, hit refresh in your browser and boom! we're redirected back to the "Start Chatting" page. So the owner of the chat session can't resume the session neither can their friends join a session.
+We also have another problem, hit refresh in your browser and boom! we're redirected back to the "Start Chatting" page. So the owner of the chat session can't resume the session neither can their friends join in.
 
-To Fix that, we need to send a `PATCH` request to `/api/chats/` and if we can find the user in the result returned from the server then we can fetch the chat history and display it to them
+To Fix that, we need to send a `PATCH` request to `/api/chats/` and if we can find the user in the result returned from the server that means they were succesfully added to the chat session (or they were already memebers) and we can fetch the chat history and display it to them.
 
 {% highlight html %}
 <script>
-
 const $ = window.jQuery
 
 export default {
@@ -566,21 +569,17 @@ export default {
 
 Now Refresh the browser and you should be able to resume the chat and see your chat history.
 
-Also open another tab, login and navigate to the chat URL. If everything went well you should have the chat history forwarded to you and you can your friends can now chat with you...Hooray! Actually you can now chat with yourself. but Hooray! that's a major accomplishment feel free to reward yourself with whatever you enjoy.
-
-*To be honest, when i finished writing this part, i took a long break and didn't continue the tutorial until the next day*
-
-We've finally established contact with the outside world from our chat application. But there's still one problem to be solved.
+Also open another tab, login and navigate to the chat URL. If everything went well you should have the chat history forwarded to you!
 
 ### REALTIME MESSAGING
 
 Right now our chat application sucks because the user has to manually hit the refresh button to check for new messages. Ideally we want this process to be automatic.
 
-The solution is already at our fingertips
+The solution is already at your fingertips
 
 - You have a method that fetches all messages from the server.
-- You have the `setInterval` function
-- You have JavaScript
+- You have the `setInterval` function.
+- You have JavaScript.
 
 <br />
 
@@ -605,22 +604,34 @@ created () {
 },
 {% endhighlight %}
 
-Well that was pretty simple, we just needed to add one line to our `created` hook. `setInterval(this.fetchChatSessionHistory, 3000)` fetches the Chat history every 3 seconds. Giving the end user the illusion that our messenger is realtime.
+Well that was pretty simple, we just needed to add one line to our `created` hook.
 
-You've just implemented `polling` (We poll the chat session's chat url several times). For small applications this is fine. but if you applications with a large userbase that need to scale, polling can be horribly inefficient.
+`setInterval(this.fetchChatSessionHistory, 3000)`
+
+which retrieves the Chat history every 3 seconds and gives the end user the illusion of Realtime messaging.
+
+You've just implemented `polling`. For small applications this is fine. but if your application has a large userbase, polling can be horribly inefficient. You'll see why.
+
+<br />
 
 Let's do a little maths:
 
-For two users in a session (Suppose they login at the same time). In 3 seconds, they'll make 2 requests In a minute, they'll make 40 requests etc etc more calculations.
+For two users in a session (Suppose they login at the same time). In 3 seconds, they'll make 2 requests. In a minute, they'll make 40 requests. In one hour that's 2400 requests. For just 2 users!. For 100 users active for one hour we'll have 120,000 requests.
 
-This would easily hurt our servers and the worst part is even when they're idle their browsers will keep on making requests whether there's a new message or not. We can monitor when they're idle by tracking the last time they typed and then calling `clearInterval` to stop polling the url but even with that, we'll still have wasted unnecessary requests since we can't predict the exact moment that a user goes idle.
+A decent server should be able to handle 120k requests per hour easily but the main problem here is the needless polling and unnecessary work the server has to do. (Remember each request triggers a database `SELECT` too).
+
+In the long run, this would easily hurt our servers and the worst part is even when they're idle their browsers will keep on making requests whether there's a new message or not. We can monitor when they're idle by tracking the last time they typed and then calling `clearInterval` to stop polling the url but even with that, we would still have unnecessary requests since we can't predict the exact moment that a user goes idle. They can stop typing while waiting for other users to reply it doesn't mean they're not interested in the chat.
 
 Also bandwidth-wise each request wastes bandwidth because they contains `headers`, `cookies and authentication information that we don't really need to send, we're only interested in messages.
 
 There has to be a more efficient way of handling this.
 
-That's the exact problem WebSockets aim to solve by opening a persistent bi-directional connection between the server and the client which means the client never needs to "ask" the server for new information. When it's available, the server simply pushes it to the client.
+That's the exact problem WebSockets solve by opening a persistent bi-directional connection between the server and the client which means the client never needs to ask the server for new information. When it's available, the server simply pushes it to the client.
 
-Also, if the client needs to send information to the server, it can also uses the same communication channel.
+Also, if the client needs to send information to the server, it can make use of the same connection.
 
-WebSockets are more efficient that polling and we're going to see how we can add WebSockets support to our chat application without really changing much of our code using `uWSGI`. See you in the next part!
+WebSockets are more efficient than polling and in the next part, i'll show you how you can integrate it (using `uWSGI`) to to the chat application without really changing much of the current code.
+
+<br />
+
+[Continue reading Realtime Django Part 5: uWSGI WebSockets]({{ '2018/01/13/realtime-django-5.html' | relative_url }})

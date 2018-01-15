@@ -1,83 +1,97 @@
 ---
 layout: post
-title: 'Realtime Django Part 1: Building a Chat application RabbitMQ and uWSGI websockets (Introduction and Setup)'
+title: 'Realtime Django Part 1: Build a Chat application with django, RabbitMQ and Vue.js (Introduction and Setup)'
 date: 2018-01-01T22:35:33+01:00
+tags: Django
 ---
 
-It's been a while since i published an article. Just like the Flask by Example series i did earlier i'm back with another series this time on Django.
+![Realtime Django 1.1](../../../images/django/realtime-django/realtime-django-1.1.png)
 
-For this series we're going to build a Chat application. In my own words a "Mini slack" where two users can chat with themselves. To keep it brief and simple we're focusing on text messages only no fancy code snippets or images but if you follow this article to the end, you should have enough knowledge to extend and add new functionality if you desire.
+<br />
 
-## Requirements
+## Prerequisites
 
-This tutorial is not an Introduction to `Django` or `VueJS`.
+This tutorial is not an Introduction to `Django` or `Vue`.
 
-To get the most out of it, you should be familiar with Django (At least you've gone through the Getting started and Poll app guides).
+To get the most out of it, you should be familiar with Django. It's expected that you've gone through the [Getting Started guide](https://docs.djangoproject.com/en/2.0/intro/overview/) and the [Polling app](https://docs.djangoproject.com/en/2.0/intro/tutorial01/).
 
-You Should also be Comfortable writing JavaScript and know the basics of `VueJS`. We are not building a complicated Vue SPA but if you have no experience with Vue. You can check it out and get familiar with it's principles and API's. If you're familiar with React/Angular you shouldn't have too much problem with `Vue` because it draws a lot of things from both of them (Especially React).
+You Should also be Comfortable writing JavaScript and know the basics of `Vue.js`. We are not building a complicated Vue SPA but if you're not familiar with Vue, You can check it out the [documentation](https://vuejs.org) and get familiar with it's principles and API's.
 
-With that out of the way, i'll do my best to breakdown and explain any sections that i feel are complex or have a lot of Magic going on.
+If have development experience with React or Angular you shouldn't have problems understanding Vue because it draws a lot of things from both of them (Especially React).
 
-If you don't understand anything, the comments are wide-open, just ask a question and i'll do my best to answer.
+During the course of this tutorial i'll do my best to breakdown and explain any sections that i feel are complex or have a lot of Magic going on.
+
+If you don't understand anything, the comments are wide-open. Feel free to reach out.
+
+<br />
 
 ### Libraries involved
 
-Python:
+**Python:**
 
-- django (2.0)
-- django rest framework
-- djoser
-- django-notifs
-- pika
+- [django 2.0](https://www.djangoproject.com/)
+- [djoser](http://djoser.readthedocs.io)
+- [django-notifs](https://github.com/danidee10/django-notifs)
+- [pika](https://pika.readthedocs.io)
+- [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/)
 
-<br>
+<br />
 
-JavaScript:
+**JavaScript**:
 
-- Vue
-- vue-cli
-- vue-router
+- [Vue.js](https://vuejs.org/)
+- [vue-cli](https://github.com/vuejs/vue-cli)
+- [vue-router](https://router.vuejs.org/)
 
-<br>
+<br />
 
-### What are you going to learn ?
-The main goal of this tutorial is to teach you about websockets and how you can integrate them with your django application(s).
+### What are you going to learn?
 
-That's not all, while we're at that, you'll also learn a lot about VueJS
+- The main goal of this tutorial is to teach you about WebSockets and how you can integrate them with your django application(s).
 
+- While we walk through this tutorial you'll also learn how to build your own ["mini pusher"](https://pusher.com) using `RabbitMQ` to broadcast messages in realtime to multiple clients.
+
+- That's not all, while we're at it, We'll build a simple token based auth system and you'll see how you can connect a Vue.js SPA to a django backend with `django-rest-framework`. There are a lot of Vue tutorials online but most of them are based on `Laravel` or `NodeJS`.
+
+<br />
 
 ## Installation
 
 ***Before you start make sure you create a virtual environment activate it***
 
-Go ahead and install django with
+Go ahead and install django with:
 
 {% highlight bash %}
-pip install django
+$ pip install django
 {% endhighlight %}
 
-after that let's start a new project called Chatire.
+after that let's start a new project called `chatire`.
 
 {% highlight bash %}
-django-admin startproject chatire
+$ django-admin startproject chatire
 {% endhighlight %}
 
 run the migrations
 
 {% highlight bash %}
-python manage.py migrate
+$ python manage.py migrate
 {% endhighlight %}
 
 Finally, start the django development server with:
 
 {% highlight bash %}
-python manage.py runserver
+$ python manage.py runserver
 {% endhighlight %}
 
-If everything works properly you should see this:
+If everything worked you should see this:
 
-<img />
+![Realtime Django 1.2](../../../images/django/realtime-django/realtime-django-1.2.png)
+<figcaption>The Django 2.0 landing page looks really nice!</figcaption>
 
-That wraps it up for this part, in the next part we'll start by implementing user registration and authentication with djoser.
+<br />
 
-See you in the next part.
+That wraps it up for this part, in the next part we'll implement user registration and authentication with djoser.
+
+<br />
+
+[Continue reading Realtime Django Part 2: Authentication and User Managment]({{ '2018/01/03/realtime-django-2.html' | relative_url }})

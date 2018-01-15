@@ -1,28 +1,27 @@
 ---
 layout: post
-title: 'Realtime Django Part 2: Building a Chat application RabbitMQ and uWSGI websockets (Authentication and User Management)'
+title: 'Realtime Django Part 2: Build a Chat application with django, RabbitMQ and Vue.js (Authentication and User Management)'
 date: 2018-01-03T22:35:33+01:00
 ---
 
-Welcome to the second part of this series.
-
 We're going to kick off chatire by Implementing User Management and Authentication so users can create accounts and login.
 
-Thanks to Django's excellent and Vibrant community, most of the work has been done for us. Hence we're going to be using a third-party django library called djoser
+Thanks to Django's excellent and vibrant community, most of the work has been done for us. Hence we're going to make use of a third-party django library called [djoser](http://djoser.readthedocs.io/)
 
-Go ahead and install it with:
+Let's get it from `pypi`
 
 {% highlight bash %}
 pip install djangorestframework
 pip install djoser
 {% endhighlight %}
 
-Basically djoser is an authentication app built untop django rest framework to add more functionality to django rest framework's inbuilt authentication.
+Basically, djoser is an authentication that add's more functionality to django-rest-framework's inbuilt authentication system
 
-It provides us with url endpoints that we can call from our Vue later on.
+It provides us with url endpoints for user registration, token creation, user management etc.
 
 
 ### Configuring djoser
+
 We're going with the simplest setup possible for djoser. Include the following in your `INSTALLED_APPS`
 
 {% highlight bash %}
@@ -35,9 +34,13 @@ INSTALLED_APPS = (
 )
 {% endhighlight %}
 
-Configure urls.py:
+add djoser's urls to `urls.py`:
 
 {% highlight bash %}
+from django.contrib import admin
+from django.urls import path, include
+
+
 urlpatterns = [
     ...,
     path('auth/', include('djoser.urls')),
@@ -45,7 +48,7 @@ urlpatterns = [
 ]
 {% endhighlight %}
 
-Finally, Add `rest_framework.authentication.TokenAuthentication` to Django REST Framework authentication strategies tuple:
+Finally, Add `rest_framework.authentication.TokenAuthentication` to Django REST Framework authentication classes:
 
 {% highlight python %}
 REST_FRAMEWORK = {
@@ -58,7 +61,7 @@ REST_FRAMEWORK = {
 
 Lastly, run the migrations again with `python manage.py migrate`
 
-That's it! We can create a user by posting data to `http://127.0.0.1:8000/auth/users/create/`
+That's it! The authentication endpoints are now available for use. Let's create a new user:
 
 {% highlight bash %}
 curl -X POST http://127.0.0.1:8000/auth/users/create/ --data 'username=danidee&password=mypassword'
@@ -68,13 +71,17 @@ curl -X POST http://127.0.0.1:8000/auth/users/create/ --data 'username=danidee&p
 
 Voila! we have a new user. Check out the djoser docs for the list of available endpoints and how to use them http://djoser.readthedocs.io/en/latest/base_endpoints.html
 
-# Vue
+# Vue.js
 
-Vue is a JavaScript Framework for building Reactive interfaces. Even though i'm a big fan of React (Due to React-native), I prefer Vue for developing JavaScript applications.
+Vue is a JavaScript Framework for building Reactive interfaces. Even though i'm a big fan of React (Due to React-native), I still prefer Vue for developing web applications.
 
-It's very easy to get Started and unlike React it doesn't use JSX (You can if you want to) and it has a Vibrant community with lot of plugins and tutorials available on the internet.
+One of the reasons is it's gentle learning curve, It's very easy to get started and unlike React you don't need a build pipeline (with Webpack and co) to build a production ready Vue app. You can just include an external `<script>` tag like you would do with `JQuery`.
 
-Let's start a new Vue project:
+It has a Vibrant community with lot of plugins and tutorials available on the web.
+
+We'll make use of `vue-cli` to quickly create a Vue app (instead of the `<script>` tag method). This method allows us to leverage the full power of `ES6+` and single file Vue components.
+
+Install `vue-cli` from npm:
 
 {% highlight bash %}
 npm install -g vue-cli
@@ -86,15 +93,17 @@ Let's scaffold a new project based on the webpack template with `vue-cli`
 vue init webpack chatire-frontend
 {% endhighlight %}
 
-***NoTE: Make Sure you install vue-router***
+***NoTE: Make Sure you select the "install vue-router" option***
 
 This might be the right time to grab a coffee or a quick snack because this might take sometime depending on your network speed. Our ISP's are pretty terrible in Nigeria lol.
 
-After that navigate to the new vue app and run the dev server with `npm run dev` if everything went well you should see this when you access `localhost:8080`
+After that navigate to the new vue app and run the dev server with `npm run dev`. You should see this when you access `localhost:8080`
 
-<img />
+![Realtime Django 2.1](../../../images/django/realtime-django/realtime-django-2.1.png)
 
-Talk about the folder arrangement
+Let's talk about the folder structure a little:
+
+<br />
 
 Create two new components one for the main chat screen callled `Chat.vue` and another for User Authentication and Signup we'll call that `UserAuth.vue`
 
@@ -144,12 +153,12 @@ No matter the route a user navigates to in our application this function will ch
 
 ### Design the Login/Signup page
 
-I've built a simple Login/Signup with Bootstrap 4 tabs, this is the content of `UserAuth.vue`
+I've built a simple Login/Signup page with Bootstrap 4 tabs, this is the content of `UserAuth.vue`:
 
 {% highlight html %}
 <template>
   <div class="container">
-    <h1 class="text-center">Welcome to the Chatire!</h1>
+    <h1 class="text-center">Welcome to Chatire!</h1>
     <div id="auth-container" class="row">
       <div class="col-sm-4 offset-sm-4">
         <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
@@ -207,7 +216,6 @@ I've built a simple Login/Signup with Bootstrap 4 tabs, this is the content of `
 </template>
 
 <script>
-
   const $ = window.jQuery // JQuery
 
   export default {
@@ -232,11 +240,13 @@ I've built a simple Login/Signup with Bootstrap 4 tabs, this is the content of `
 </style>
 {% endhighlight %}
 
-In the snippet above i've used `v-model` for two way data binding on all the input fields. Which means whatever is typed in those fields can be accessed on the JavaScript side with `this.field_name`.
+In the snippet above i used `v-model` for two way data binding on all the input fields. Which means whatever is typed in those fields can be accessed on the JavaScript side with `this.field_name`.
 
-Also i've created event listeners on both forms (`@submit.prevent`) that'll listen to the form submit event of each form and call the methods specified. We haven't implemented those methods yet.
+Also i've created event listeners on both forms (`@submit.prevent`) that'll listen to the form submit event of each form and call the methods specified. We haven't implemented these methods yet.
 
-Since we're using bootstrap and `jQuery` We've also defined a variable `$` that points to `jQuery` We're going to make use of `jQuery`'s ajax method soon. Feel free to use another ajax library like Axios (It's pretty popular among Vue users) if you want to decouple your application from `jQuery`.
+Since we're making use of `Bootstrap`, instead of installing `jQuery` from `npm` we defined a variable `$` that points to the global `window.jQuery`.
+
+We'll use `jQuery`'s ajax methods to communicate with the django server. Feel free to use another ajax library like [Axios](https://github.com/axios/axios) if you want to decouple your application from `jQuery`. It's pretty popular among `Vue` users.
 
 Don't forget to include bootstrap's CSS and JavaScript in the main `index.html` page.
 
@@ -267,13 +277,14 @@ Don't forget to include bootstrap's CSS and JavaScript in the main `index.html` 
 </html>
 {% endhighlight %}
 
-If you've done everything correctly, the page should look like this:
+The page should look like this:
 
-<img />
+![Realtime Django 1.2](../../../images/django/realtime-django/realtime-django-2.2.png)
+<figcaption>Pretty Decent Eh?</figcaption>
 
-### Let's Grab our token
+### Let's Grab our auth token
 
-It's time to get the token from our django server, for the signup process, we want to sign the user up and then redirect them to the Chat route.
+We want to sign the user up and then redirect them to the Chat route.
 
 To acheive that, we have to implement the `signUp` and `signIn` methods we specified earlier:
 
@@ -313,13 +324,13 @@ Now try and submit the form. Oops! It failed with:
 
 Quoting the mozilla developer's site:
 
-Cross-Origin Resource Sharing (CORS) is a mechanism that uses additional HTTP headers to let a user agent gain permission to access selected resources from a server on a different origin (domain) than the site currently in use. A user agent makes a cross-origin HTTP request when it requests a resource from a different domain, protocol, or port than the one from which the current document originated.
+> Cross-Origin Resource Sharing (CORS) is a mechanism that uses additional HTTP headers to let a user agent gain permission to access selected resources from a server on a different origin (domain) than the site currently in use. A user agent makes a cross-origin HTTP request when it requests a resource from a different domain, protocol, or port than the one from which the current document originated.
 
-Basically it's a security mechanicsm that prevents a website from making a `XmlHttpRequest` to another unless explicitly allowed.
+Basically it's a security mechanicsm that prevents a website on a domain from making a `XmlHttpRequest` to another website/webservice running on a different domain unless it's explicitly allowed to do so.
 
 In our case, even though both webservers are running on localhost, due to the fact that they're on different ports (8080 and 8000) they're seen as different domains.
 
-For the domains to match the protocol (http or https) must be the same and the ports must also be the same.
+For the domains to match the protocol (`http` or `https`) must be the same and the ports must also be the same.
 
 So how do we enable CORS in our django application? There is an excellent third-party app that handles all that for us called `django-cors-header` let's install it from pip
 
@@ -370,25 +381,31 @@ Finally set `CORS_ORIGIN_ALLOW_ALL = True`
 `CORS_ORIGIN_WHITELIST`
 
 Read the django-cors-header docs to find out about other options
+After doing this, you should be able to create an account and sign in immediately.
 
-<br />
-
-After doing this, you should be able to create an account and sign in immediately
+Behnind the scenes, `django-cors-header` uses a Middleware to add appropriate headers to each request that tells Django that the request is safe and it should be allowed.
 
 ### Logout
-Since we're using a `sessionStorage` to logout simply close the browser or open a new tab. To actually persist the token between browser restarts you can switch to `localStorage`. It has the same api as the `sessionStorage` so you're just changing "session" to "local" really.
 
-Then you can create a function that removes the token from the storage you decide to stick with by calling
+Because we use `sessionStorage` to store the auth token, we can easily logout by opening a new browser tab. To actually persist the token between browser restarts/new tabs you can switch to `localStorage`.
+It has the same api as the `sessionStorage` so you're just changing "session" to "local" really.
+
+Then you can create a function that removes the token from the storage you decide to stick with by calling `removeItem`. This is how we would do it for `sessionStorage`.
 
 {% highlight JavaScript %}
 sessionStorage.removeItem('authToken')
 {% endhighlight %}
 
 ### Recap
-That's all for this part, Our goal was to built a simple User Managment and auth system. We started out by installing djoser which is an excellent third party django app that provides authentication `REST` endpoints that we can call from our Vue frontend.
 
-We also went through how we can call those endpoints from Vue.
+That's all for this part, Our goal was to built a simple User managment and auth system. We started out by installing djoser which is an excellent third party django app that provides authentication `REST` endpoints.
 
-On the road to victory, we were stopped by `CORS` and we briefly talked about why it exists. Eventually we saw how we could enable `CORS` for our django app with `django-cors-header`.
+We also saw how we could use `jQuery`'s ajax methods to call those endpoints from Vue.
 
-In the next part, we'll build the chat interface and more importantly, we'll learn about websockets and how you can easily integrate them into your django application. Adios! and see you in the next part.
+On the road to victory, we were stopped by `CORS` and we briefly talked about why it exists. Eventually we learnt how to enable `CORS` for our django app with `django-cors-header`.
+
+In the next part, we'll build the models and API for the Chat app.
+
+<br />
+
+[Continue reading Realtime Django Part 3: Build an API with django rest framework]({{ '2018/01/07/realtime-django-3.html' | relative_url }})

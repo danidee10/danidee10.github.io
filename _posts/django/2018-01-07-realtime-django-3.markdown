@@ -1,18 +1,19 @@
 ---
 layout: post
-title: 'Realtime Django Part 3: Building a Chat application RabbitMQ and uWSGI websockets (Building the API)'
+title: 'Realtime Django Part 3: Build a Chat application with django, RabbitMQ and Vue.js (Build an API with django rest framework)'
 date: 2018-01-07T20:45:12+07:00
 ---
 
-From the last part, we built the authentication system. In this part we're going to dive into the main part of our chat application and actually make it functional. At the end of this part, we should have a functional chat app where users can chat with themselves and invite other friends over.
+From the last part, we used `djoser` to build the authentication backend and then we connected the frontend Vue.js application to it. 
 
-Let's go!
+In this part we're going to build an API using django rest framework, this API should provide us with endpoints to start new chat sessions, join chat sessions, post new messages and fetch a chat session's message history.
 
 ### Workflow and Architecture
+
 Before we start, let's discuss how everything works from a higher level
 
 
-If you're worried about having an extra node server. You don't have to because you just have to build your app with `webpack` when you're ready to deploy and you can serve if from `django`, `Nginx`, `Apache` even github pages.
+If you're worried about having an extra node server. You don't have to because you just have to build your app with `webpack` when you're ready to deploy and you can serve if from `django`, `Nginx`, `Apache` even github pages and netlify.
 
 The `npm run dev` command actually runs this:
 
@@ -29,10 +30,10 @@ Our goal in this part is to implement the django `API` so we can start new sessi
 Let's start a new django app called `chat`
 
 {% highlight bash %}
-python manage.py startapp chat
+$ python manage.py startapp chat
 {% endhighlight %}
 
-Make sure you add the new app to your application's settings before you proceed.
+**Make sure you add the new app to the `INSTALLED_APPS` list before you proceed.**
 
 Next we're going to create models that'll hold the data for the messages, chat sessions and the associated users. Let's create some new models in `models.py`.
 
@@ -206,19 +207,22 @@ class ChatSessionMessageView(APIView):
         })
 {% endhighlight %}
 
-The `patch` method for the `ChatSessionView` is idempotent because making an HTTP `PATCH` request to it multiples times gives us the same outcome. That means a user can join a chat room several times but there's only going to be one instance of that user in the response (and also in our database table).
+The `patch` method for the `ChatSessionView` is idempotent because making an HTTP `PATCH` request to it multiples times gives us the same result. That means a user can join a chat room several times but there's only going to be one instance of that user in the response (and also in our database table).
 
-Another thing to note about the patch method is that it returns the owner of the chat room as a member but in our database we never add the owner as a member of the room, we just retrieve his information and insert it into the list that's returned back to the client. There's no point duplicating information and having the owner as a member in the database.
+Another thing to note about the patch method is that it returns the owner of the chat room as a member but in our database we never add the owner as a member of the room, we just retrieve his information and insert it into the list that's returned back to the client. There's no point duplicating information and having the owner as a member of their chatroom in the database.
 
-We could have easily gotten the user in the `patch` method by calling `request.user` instead we got the username from the client and used that to get the user. This causes an extra database `SELECT` but why did we do that?
+We could have easily gotten the user in the `patch` method by calling `request.user` instead we got the username from the posted data and used that to get the user. This causes an extra database `SELECT` but why did we do that?
 
-Let me give you a simple scenario, what happens if we decide to invite our friends by username to a chat session. With `request.user` we wouldn't be able to do that because `request.user` would refer to the current authenticated user making the request which is us. But by using usernames to join chat sessions it's a piece of cake we just need to post the username to server and it'll know how to get the user and add them to the chat room.
+Let me give you a simple scenario, what happens if we decide to invite our friends by username to a chat session. With `request.user` we wouldn't be able to do that because `request.user` would refer to the current authenticated user making the request.
 
-If you decide to have the functionality of adding multiple users at once, you can modify the code to read a list of usernames and fetch them in one go from the database. It's up to you
+On the otherhand with username's it's a piece of cake we just need to post the username to server and it'll use that to retrieve the user and add them to the chat room.
 
-The main thing you need to have at the back of your mind is to make your code extensible in future.
+Also, if you decide to add an "Invite multiple users" functionality, you can modify the code to read a list of usernames and fetch them in one go from the database. It's up to you.
 
-in the `uris.py` file include this:
+Using username's is makes our code more flexible and open to improvements.
+
+
+Now let's add the URL's for the views.
 
 {% highlight python %}
 """URL's for the chat app."""
@@ -235,7 +239,7 @@ urlpatterns = [
 ]
 {% endhighlight %}
 
-In the main app `uris.py` don't forget to include the URL's for the chat app
+Don't forget to include the URL's in the base `urls.py` file
 
 {% highlight python %}
 from django.contrib import admin
@@ -251,7 +255,7 @@ uripatterns = [
 ]
 {% endhighlight %}
 
-Our endpoints are ready and now and any **AUTHENTICATED** user can create/join a chat session and they can also post new messages and retrieve messages from a chat session.
+Our endpoints are ready and any **AUTHENTICATED** user make requests to them
 
 Let's try it out:
 
@@ -291,6 +295,8 @@ $ curl http://127.0.0.1:8000/api/chats/040213b14a02451/messages/ -H 'Authorizati
 
 Congrats! if you made it this far, you've succesfully built an API that allows users to communicate with each other by starting chat sessions and inviting other users to join the session.
 
-That's about all there is to this part, In the next part, we're going to plug our Vue frontend into this `API`.
+In the next part, we'll build the Chat UI and call those methods from Vue.
 
-I hope you're enjoying this article as much as i did while writing it.
+<br />
+
+[Continue reading Realtime Django Part 4: Build an API with django rest framework]({{ '2018/01/10/realtime-django-4.html' | relative_url }})
