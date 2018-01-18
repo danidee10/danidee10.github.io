@@ -2,12 +2,12 @@
 layout: post
 title: 'Realtime Django Part 1: Build a Chat application with django, RabbitMQ and Vue.js (Introduction and Setup)'
 date: 2018-01-01T22:35:33+01:00
-tags: Django
+tags: django vue rabbitmq
+excerpt: The main goal of this tutorial is to teach you about WebSockets and how you can integrate them with your django application(s).
 ---
 
 ![Realtime Django 1.1](../../../images/django/realtime-django/realtime-django-1.1.png)
 
-<br />
 
 ## Prerequisites
 
@@ -43,8 +43,6 @@ If you don't understand anything, the comments are wide-open. Feel free to reach
 - [vue-cli](https://github.com/vuejs/vue-cli)
 - [vue-router](https://router.vuejs.org/)
 
-<br />
-
 ### What are you going to learn?
 
 - The main goal of this tutorial is to teach you about WebSockets and how you can integrate them with your django application(s).
@@ -53,7 +51,11 @@ If you don't understand anything, the comments are wide-open. Feel free to reach
 
 - That's not all, while we're at it, We'll build a simple token based auth system and you'll see how you can connect a Vue.js SPA to a django backend with `django-rest-framework`. There are a lot of Vue tutorials online but most of them are based on `Laravel` or `NodeJS`.
 
-<br />
+Before we proceed, this is a glimpse of what we'll build:
+
+![Realtime Django 1.2](../../../images/django/realtime-django/realtime-django-1.2.gif)
+
+I call the application chatire but you can call it whatever you want to.
 
 ## Installation
 

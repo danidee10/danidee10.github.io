@@ -2,30 +2,52 @@
 layout: post
 title: 'Realtime Django Part 3: Build a Chat application with django, RabbitMQ and Vue.js (Build an API with django rest framework)'
 date: 2018-01-07T20:45:12+07:00
+tags: api django vue
 ---
 
-From the last part, we used `djoser` to build the authentication backend and then we connected the frontend Vue.js application to it. 
+From the last part, we used `djoser` to build the authentication backend and then we connected the frontend Vue.js application to it.
 
 In this part we're going to build an API using django rest framework, this API should provide us with endpoints to start new chat sessions, join chat sessions, post new messages and fetch a chat session's message history.
 
-### Workflow and Architecture
+### Architecture
 
 Before we start, let's discuss how everything works from a higher level
 
+![Realtime Django 3.1](../../../images/django/realtime-django/realtime-django-3.1.png)
+<figcaption>Overview</figcaption>
 
-If you're worried about having an extra node server. You don't have to because you just have to build your app with `webpack` when you're ready to deploy and you can serve if from `django`, `Nginx`, `Apache` even github pages and netlify.
+<br />
 
-The `npm run dev` command actually runs this:
+- When a user sends a message, this message would be forwarded to django through the API.
 
-{% highlight bash %}
-webpack-dev-server --inline --progress --config build/webpack.dev.conf.js
-{% endhighlight %}
+- After django has received the message, It would also be forwarded to RabbitMQ.
 
-The `--inline` option injects the generated static files into our `index.html` page.
+- RabbitMQ uses an `exchange` to broadcast the messages to multiple queues. The queues are communication     channels that would eventually deliver the messages to the clients. The Workers are background processes   that do the actual work of broadcasting and delivering messages.
+
+  <br /><br />
+
+  RabbitMQ is the glue that connects two important parts of our application together (Django and uWSGI).
+  It also makes our application very flexible because aside django and python. They are various means to send messages to RabbitMQ even from the command line!. This means that other applications that have no knowledge of our chat application can still communicate with it.
+
+  <br /><br />
+
+  For example a desktop application written in `C#` can put a message on a RabbitMQ queue and the message would be recieved by our clients and even a mobile app.
+
+  Without RabbitMQ, the uWSGI WebSocket server is dumb and knows nothing about our django app (how to access the database, authentication etc) because it run in a different process or even a different webserver entirely depending on your setup.
+
+- uWSGI serves as the websocket server. After the client has established a connection and specified the      channel (RabbitMQ exchange) they want to receive messages from. We'll read the message as soon as          they're received and send them down to the users instantly using the WebSocket.
+
+<br />
+
+If you're worried about having an extra node server. The webpack dev server is just a convenience for development locally when you're ready to deploy your application you can bundle your application by running:
+
+`npm build`
+
+The resulting static files can be served by any capable web server E.g `Nginx`, `Apache` even `github pages`. In essence, The Vue layer doesn't really exist it's Typically the user's web browser.
 
 ### Implementation
 
-Our goal in this part is to implement the django `API` so we can start new sessions, join sessions and send messages.
+In this part, our goal is to implement the API with django rest framework. The API would allow users start new chat sessions, join existing sessions and send messages. It would also allow us retrieve messages from a chat session.
 
 Let's start a new django app called `chat`
 
@@ -207,9 +229,9 @@ class ChatSessionMessageView(APIView):
         })
 {% endhighlight %}
 
-The `patch` method for the `ChatSessionView` is idempotent because making an HTTP `PATCH` request to it multiples times gives us the same result. That means a user can join a chat room several times but there's only going to be one instance of that user in the response (and also in our database table).
+The `patch` method for the `ChatSessionView` is idempotent because making an request to it multiples times gives us the same result. That means a user can join a chat room several times but there's only going to be one instance of that user in the response (and also in our database table).
 
-Another thing to note about the patch method is that it returns the owner of the chat room as a member but in our database we never add the owner as a member of the room, we just retrieve his information and insert it into the list that's returned back to the client. There's no point duplicating information and having the owner as a member of their chatroom in the database.
+Another thing to note about the patch method is that it returns the owner of the chat room as a member but in our database we never add the owner as a member of the room, we just retrieve his information and insert it into the list that's returned back to the client. There's no point duplicating information by having the owner as a member of their chatroom in the database.
 
 We could have easily gotten the user in the `patch` method by calling `request.user` instead we got the username from the posted data and used that to get the user. This causes an extra database `SELECT` but why did we do that?
 
@@ -299,4 +321,4 @@ In the next part, we'll build the Chat UI and call those methods from Vue.
 
 <br />
 
-[Continue reading Realtime Django Part 4: Build an API with django rest framework]({{ '2018/01/10/realtime-django-4.html' | relative_url }})
+[Continue reading Realtime Django Part 4: Plug the Vue frontend into the Django API]({{ '2018/01/10/realtime-django-4.html' | relative_url }})

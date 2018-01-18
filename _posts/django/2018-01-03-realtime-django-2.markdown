@@ -2,6 +2,7 @@
 layout: post
 title: 'Realtime Django Part 2: Build a Chat application with django, RabbitMQ and Vue.js (Authentication and User Management)'
 date: 2018-01-03T22:35:33+01:00
+tags: django vue django-rest-framework cors
 ---
 
 We're going to kick off chatire by Implementing User Management and Authentication so users can create accounts and login.
@@ -15,9 +16,7 @@ pip install djangorestframework
 pip install djoser
 {% endhighlight %}
 
-Basically, djoser is an authentication that add's more functionality to django-rest-framework's inbuilt authentication system
-
-It provides us with url endpoints for user registration, token creation, user management etc.
+Djoser is a REST Implementation of Django's inbuilt authentication system. So instead of forms and views that return html, it provides us with REST endpoints for user registration, token creation, user management etc.
 
 
 ### Configuring djoser
@@ -48,7 +47,7 @@ urlpatterns = [
 ]
 {% endhighlight %}
 
-Finally, Add `rest_framework.authentication.TokenAuthentication` to Django REST Framework authentication classes:
+Include `rest_framework.authentication.TokenAuthentication` to django rest framework's authentication classes:
 
 {% highlight python %}
 REST_FRAMEWORK = {
@@ -59,7 +58,7 @@ REST_FRAMEWORK = {
 }
 {% endhighlight %}
 
-Lastly, run the migrations again with `python manage.py migrate`
+Lastly, run the database migrations with `python manage.py migrate` this would create the tables that are required by `djsoer`.
 
 That's it! The authentication endpoints are now available for use. Let's create a new user:
 
@@ -75,9 +74,9 @@ Voila! we have a new user. Check out the djoser docs for the list of available e
 
 Vue is a JavaScript Framework for building Reactive interfaces. Even though i'm a big fan of React (Due to React-native), I still prefer Vue for developing web applications.
 
-One of the reasons is it's gentle learning curve, It's very easy to get started and unlike React you don't need a build pipeline (with Webpack and co) to build a production ready Vue app. You can just include an external `<script>` tag like you would do with `JQuery`.
+One of the reasons is it's gentle learning curve, It's very easy to get started and unlike React you don't need a build pipeline (with Webpack and co) to build a ***production ready*** app. You can just include an external `<script>` tag like you would do with `JQuery`.
 
-It has a Vibrant community with lot of plugins and tutorials available on the web.
+It also has a Vibrant community with lot of plugins and tutorials available on the web.
 
 We'll make use of `vue-cli` to quickly create a Vue app (instead of the `<script>` tag method). This method allows us to leverage the full power of `ES6+` and single file Vue components.
 
@@ -95,21 +94,94 @@ vue init webpack chatire-frontend
 
 ***NoTE: Make Sure you select the "install vue-router" option***
 
-This might be the right time to grab a coffee or a quick snack because this might take sometime depending on your network speed. Our ISP's are pretty terrible in Nigeria lol.
+This might be the right time to grab a coffee or a quick snack because this might take sometime depending on your network speed. Our ISP's are Really terrible in Nigeria. it took over 10 minutes.
 
-After that navigate to the new vue app and run the dev server with `npm run dev`. You should see this when you access `localhost:8080`
+After that navigate to the new vue app and run the dev server with: 
+
+`npm run dev`. 
+
+You should see this when you access `localhost:8080`
 
 ![Realtime Django 2.1](../../../images/django/realtime-django/realtime-django-2.1.png)
 
 Let's talk about the folder structure a little:
 
-<br />
+{% highlight bash %}
+.
+├── build
+│   ├── build.js
+│   ├── check-versions.js
+│   ├── logo.png
+│   ├── utils.js
+│   ├── vue-loader.conf.js
+│   ├── webpack.base.conf.js
+│   ├── webpack.dev.conf.js
+│   └── webpack.prod.conf.js
+├── config
+│   ├── dev.env.js
+│   ├── index.js
+│   ├── prod.env.js
+│   └── test.env.js
+├── index.html
+├── node_modules
+├── package.json
+├── package-lock.json
+├── README.md
+├── src
+│   ├── App.vue
+│   ├── assets
+│   │   └── logo.png
+│   ├── components
+│   ├── main.js
+│   └── router
+│       └── index.js
+├── static
+└── test
+    ├── e2e
+    │   ├── custom-assertions
+    │   │   └── elementCount.js
+    │   ├── nightwatch.conf.js
+    │   ├── runner.js
+    │   └── specs
+    │       └── test.js
+    └── unit
+        ├── jest.conf.js
+        ├── setup.js
+        └── specs
+            └── HelloWorld.spec.js
+{% endhighlight %}
 
-Create two new components one for the main chat screen callled `Chat.vue` and another for User Authentication and Signup we'll call that `UserAuth.vue`
+- **build:** This directory contains script that are used to run the webpack developement server or bundle   the application when you're ready to deploy to production. For example, The `npm run dev` command          actually runs this:
+
+  <br />
+
+  `webpack-dev-server --inline --progress --config build/webpack.dev.conf.js`
+
+  The `--inline` option injects the generated static files into our `index.html` page.
+
+- **config:** Just like the name says, this you should store configuration values for development, testing and production
+
+- **src:** This is where we'll be writing most of our code, it contains subfolders for different aspects of our application.
+
+  Our single file components would be placed inside this folder. There's already a default `HelloWorld.vue` component there.
+
+  The `index.js` file in the router folder contains the configuration for vue-router
+
+- **static:** Static files (HTML, CSS and JavaScript) should be stored in this folder.
+
+- **test:** Finally, the `vue-cli` webpack template makes it easy to test our application by generating End to end tests (e2e) that are run with [Nightwatch](http://nightwatchjs.org/) and unit tests that are run with [Jest](https://facebook.github.io/jest/).
+
+  The tests can be run with `npm run unit` (For unit tests) and `npm run e2e` for End to end tests.
+
+`vue-cli` also sets up hotreloading for us which really improves the developer's experience. As soon as you hit save after editing a component, the change is immediately reflected in the browser.
+
+### Configure Vue router
+
+Create two components one for the main chat screen callled `Chat.vue` and another for User Authentication and Signup we'll call that `UserAuth.vue`
 
 Ideally what we want is to conditionally display the components based on the Login status of the user. If the User is Authenticated, we want to display the Chat component else we want them to either signup or login which means we'll display the `UserAuth` Component.
 
-We can do this by creating a implementing a global navigation guard on the router. Edit the router's `index.js` file to include the following
+We can do this by creating a implementing a global navigation. Edit the router's `index.js` file to include the following
 
 {% highlight JavaScript %}
 import Vue from 'vue'
@@ -147,11 +219,13 @@ router.beforeEach((to, from, next) => {
 export default router
 {% endhighlight %}
 
-The `beforeEach` guard is called before a navigating to any route in our application (Global guard) if a token is stored in the `sessionStorage` we allow the navigation to proceed by calling `next()` else we redirect to the auth component.
+The `beforeEach` guard is called before a navigating to any route in our application.
+
+If a token is stored in the `sessionStorage` we allow the navigation to proceed by calling `next()` else we redirect to the auth component.
 
 No matter the route a user navigates to in our application this function will check if the user has an auth token and redirect them appropraitely.
 
-### Design the Login/Signup page
+### Login/Signup page
 
 I've built a simple Login/Signup page with Bootstrap 4 tabs, this is the content of `UserAuth.vue`:
 
@@ -240,11 +314,11 @@ I've built a simple Login/Signup page with Bootstrap 4 tabs, this is the content
 </style>
 {% endhighlight %}
 
-In the snippet above i used `v-model` for two way data binding on all the input fields. Which means whatever is typed in those fields can be accessed on the JavaScript side with `this.field_name`.
+In the snippet above, `v-model` was used for two way data binding on all the input fields. Which means whatever is typed in those fields can be accessed on the JavaScript side with `this.field_name`.
 
-Also i've created event listeners on both forms (`@submit.prevent`) that'll listen to the form submit event of each form and call the methods specified. We haven't implemented these methods yet.
+We also created event listeners on both forms using `@submit.prevent` that'll listen to the form submit event of each form and call the methods specified. We haven't implemented these methods yet.
 
-Since we're making use of `Bootstrap`, instead of installing `jQuery` from `npm` we defined a variable `$` that points to the global `window.jQuery`.
+Since we're making use of `Bootstrap`, instead of installing `jQuery` from `npm` we defined a variable `$` that points to the globally registered `window.jQuery`.
 
 We'll use `jQuery`'s ajax methods to communicate with the django server. Feel free to use another ajax library like [Axios](https://github.com/axios/axios) if you want to decouple your application from `jQuery`. It's pretty popular among `Vue` users.
 
@@ -326,16 +400,16 @@ Quoting the mozilla developer's site:
 
 > Cross-Origin Resource Sharing (CORS) is a mechanism that uses additional HTTP headers to let a user agent gain permission to access selected resources from a server on a different origin (domain) than the site currently in use. A user agent makes a cross-origin HTTP request when it requests a resource from a different domain, protocol, or port than the one from which the current document originated.
 
-Basically it's a security mechanicsm that prevents a website on a domain from making a `XmlHttpRequest` to another website/webservice running on a different domain unless it's explicitly allowed to do so.
+Basically It's a mechanicsm that subverts the same origin policy. The same origin policy is what prevents a website on a different domain from making a `XmlHttpRequest` (Ajax) to another website/webservice. You can use CORS to weaken the security mechanicsm a little and tell the webserver that it's safe to allow Ajax requests from a particular domain(s).
 
 In our case, even though both webservers are running on localhost, due to the fact that they're on different ports (8080 and 8000) they're seen as different domains.
 
-For the domains to match the protocol (`http` or `https`) must be the same and the ports must also be the same.
+For the domains to match the scheme (`http` or `https`), hostname (`localhost`) and the port must match.
 
-So how do we enable CORS in our django application? There is an excellent third-party app that handles all that for us called `django-cors-header` let's install it from pip
+So how do we enable CORS in our django application? There is third-party app we can install to do that called `django-cors-headers`.
 
 {% highlight bash %}
-pip install django-cors-header
+pip install django-cors-headers
 {% endhighlight %}
 
 add it to your `INSTALLED_APPS`
@@ -380,31 +454,34 @@ Finally set `CORS_ORIGIN_ALLOW_ALL = True`
 
 `CORS_ORIGIN_WHITELIST`
 
-Read the django-cors-header docs to find out about other options
+Read the django-cors-header [documentation](https://github.com/ottoyiu/django-cors-headers) to find out about other options.
+
 After doing this, you should be able to create an account and sign in immediately.
 
-Behnind the scenes, `django-cors-header` uses a Middleware to add appropriate headers to each request that tells Django that the request is safe and it should be allowed.
+Behnind the scenes, `django-cors-headers` uses a Middleware to add appropriate headers to each request that tells Django that the request is safe and it should be allowed.
 
 ### Logout
 
-Because we use `sessionStorage` to store the auth token, we can easily logout by opening a new browser tab. To actually persist the token between browser restarts/new tabs you can switch to `localStorage`.
-It has the same api as the `sessionStorage` so you're just changing "session" to "local" really.
+Because we use `sessionStorage` to store the auth token, we can start a new session by opening a new browser tab.
 
-Then you can create a function that removes the token from the storage you decide to stick with by calling `removeItem`. This is how we would do it for `sessionStorage`.
+To actually persist the token between browser restarts/new tabs you can switch to `localStorage`.
+It has the same api as the `sessionStorage` so you're just changing `session` to `local`.
+
+Then you can create a function that removes the token from the storage you decide to stick with by calling `removeItem`. This is how we would do it for `localStorage`.
 
 {% highlight JavaScript %}
-sessionStorage.removeItem('authToken')
+localStorage.removeItem('authToken')
 {% endhighlight %}
 
 ### Recap
 
-That's all for this part, Our goal was to built a simple User managment and auth system. We started out by installing djoser which is an excellent third party django app that provides authentication `REST` endpoints.
+That's all for this part, Our goal was to built a simple User managment and auth system. We started out by installing djoser which is an excellent third party django app that provides `REST` endpoints for authentication.
 
 We also saw how we could use `jQuery`'s ajax methods to call those endpoints from Vue.
 
-On the road to victory, we were stopped by `CORS` and we briefly talked about why it exists. Eventually we learnt how to enable `CORS` for our django app with `django-cors-header`.
+On the road to victory, we were stopped by `Same origin policy` and we briefly talked about why it exists. Eventually we learnt how to allow Ajax requests from the Vue app to the django backend using `CORS` through `django-cors-headers`.
 
-In the next part, we'll build the models and API for the Chat app.
+In the next part, we'll build the django models and API for the Chat app.
 
 <br />
 
