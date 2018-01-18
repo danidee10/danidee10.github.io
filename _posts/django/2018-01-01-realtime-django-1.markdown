@@ -94,6 +94,8 @@ If everything worked you should see this:
 
 That wraps it up for this part, in the next part we'll implement user registration and authentication with djoser.
 
+The Repo for this tutorial is available on [Github](https://github.com/danidee10/chatire)
+
 <br />
 
 [Continue reading Realtime Django Part 2: Authentication and User Managment]({{ '2018/01/03/realtime-django-2.html' | relative_url }})
