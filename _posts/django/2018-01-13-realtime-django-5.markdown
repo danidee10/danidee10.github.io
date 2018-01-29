@@ -2,7 +2,7 @@
 layout: post
 title: 'Realtime Django Part 5: Building a Chat application RabbitMQ and uWSGI websockets (uWSGI WebSockets)'
 date: 2018-01-13T14:30:12+08:00
-tags: api vue django, websockets, rabbitmq
+tags: api vue django websockets rabbitmq
 ---
 
 Welcome to the penultimate part of this tutorial. I've really learnt a lot writing this tutorial and i hope you have to.
