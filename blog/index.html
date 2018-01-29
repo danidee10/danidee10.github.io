@@ -22,7 +22,7 @@ title: "Blog"
               </h1>
               <p>{{ post.excerpt }}</p>
               <div class="post-meta">
-                <p><time>{{ post.date | date: "%B %e, %Y" }}</time> Tagged under: {% for tag in post.tags %} <a href="//localhost:4000/tags/{{ tag }}">{{ tag }},</a> {% endfor %}</p>
+                <p><time>{{ post.date | date: "%B %e, %Y" }}</time> Tagged under: {% for tag in post.tags %} <a href="{{ site.url }}/tags/{{ tag }}">{{ tag }},</a> {% endfor %}</p>
               </div>
             </header>
 

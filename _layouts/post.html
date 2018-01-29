@@ -16,7 +16,7 @@ date: {{ date }}
           <div class="card">
             <header class="post-header">
               <h1 class="post-title">{{ page.title }}</h1>
-              <p class="post-meta">{{ page.date | date: '%B %d, %Y' }} | <i>Tags: {% for tag in page.tags %} <a href="//localhost:4000/tags/{{ tag }}">{{ tag }},</a> {% endfor %}</i>
+              <p class="post-meta">{{ page.date | date: '%B %d, %Y' }} | <i>Tags: {% for tag in page.tags %} <a href="{{ site.url }}/tags/{{ tag }}">{{ tag }},</a> {% endfor %}</i>
             </header>
 
             <div class="post-content">
