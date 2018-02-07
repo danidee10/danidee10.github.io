@@ -198,7 +198,7 @@ You need to tell `django-notifs` about the new channel you just created. In your
 {% highlight python %}
 # notifications settings
 NOTIFICATIONS_CHANNELS = ['chat.channels.BroadCastWebSocketChannel']
-{% endhiglight %}
+{% endhighlight %}
 
 This tells it to use forward notifications to our websocket channel which handles the logic for sending messages to `RabbitMQ`.
 
