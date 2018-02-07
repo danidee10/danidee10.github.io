@@ -118,7 +118,9 @@ class ChatSessionMessageView(APIView):
             'short_description': 'You a new message', 'silent': True,
             'extra_data': {'uri': chat_session.uri}
         }
-        notify.send(sender=self.__class__, **notif_args)
+        notify.send(
+            sender=self.__class__, **notif_args, channels=['websocket']
+        )
 
         return Response ({
             'status': 'SUCCESS', 'uri': chat_session.uri, 'message': message,
@@ -196,13 +198,67 @@ We also dumped the chat message as a dictionary. We'll need all the details abou
 You need to tell `django-notifs` about the new channel you just created. In your application settings include the following:
 
 {% highlight python %}
+# Celery settings
+CELERY_TASK_ALWAYS_EAGER = True
+
 # notifications settings
-NOTIFICATIONS_CHANNELS = ['chat.channels.BroadCastWebSocketChannel']
+NOTIFICATIONS_CHANNELS = {
+   'websocket': 'chat.channels.BroadCastWebSocketChannel'
+}
 {% endhighlight %}
 
 This tells it to use forward notifications to our websocket channel which handles the logic for sending messages to `RabbitMQ`.
 
-Try and send a message and it should create a new RabbitMQ exhange based on the uri for the chat session.
+django-notifs uses Celery to process notifications asynchronously so long running notification tasks (Like sending emails) don't block the user's request.
+
+Inside the `chatire` folder, create a new file called `celery.py` and include the following:
+
+{% highlight python %}
+"""Celery init."""
+
+from __future__ import absolute_import, unicode_literals
+import os
+
+from celery import Celery
+
+
+# set the default Django settings module for the 'celery' program.
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chatire.settings')
+
+app = Celery('chatire')
+app.config_from_object('django.conf:settings', namespace='CELERY')
+
+app.autodiscover_tasks()
+
+{% endhighlight %}
+
+The `app.autodiscover_tasks()` line is very important. It automatically locates and imports the celery tasks defined in `django-notifs` without it, you'll have to import the task manually.
+
+In `__init__.py` include this:
+
+{% highlight python %}
+"""Initialize celery."""
+
+from __future__ import absolute_import, unicode_literals
+
+from .celery import app as celery_app
+
+__all__ = ['celery_app']
+{% endhighlight %}
+
+This imports the `app` object we created in `celery.py` as `celery_app` once the app is loaded.
+
+Because we set `CELERY_TASK_ALWAYS_EAGER` to `True` in `settings.py` we should be able to send messages *Synchronously* without a Celery worker. If you want the asynchronous behaviour (Which i highly recommend) set `CELERY_TASK_ALWAYS_EAGER` to `False` or Omit it entirely and start a celery worker with:
+
+{% highlight bash %}
+celery -A chatire worker -l info
+{% endhighlight %}
+
+Make sure you see the task from `django-notifs` listed under `[tasks]`
+
+![realtime-django-5.1](../../../images/django/realtime-django/realtime-django-5.1.png)
+
+Try and send a message through the Chat UI. A new RabbitMQ exhange based on the uri for the chat session should be created.
 
 To see the list of exchanges we have (for *nix systems) run this in the terminal:
 
