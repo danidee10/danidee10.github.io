@@ -193,6 +193,15 @@ We set the exchange name as the `uri` of the chat session.
 
 We also dumped the chat message as a dictionary. We'll need all the details about the message on the client side not just the actual message.
 
+You need to tell `django-notifs` about the new channel you just created. In your application settings include the following:
+
+{% highlight python %}
+# notifications settings
+NOTIFICATIONS_CHANNELS = ['chat.channels.BroadCastWebSocketChannel']
+{% endhiglight %}
+
+This tells it to use forward notifications to our websocket channel which handles the logic for sending messages to `RabbitMQ`.
+
 Try and send a message and it should create a new RabbitMQ exhange based on the uri for the chat session.
 
 To see the list of exchanges we have (for *nix systems) run this in the terminal:
