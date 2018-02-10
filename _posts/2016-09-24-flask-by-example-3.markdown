@@ -501,7 +501,7 @@ You have to repeat the same procedure and change all the links to equivalent fla
 
 I created an open source python library called [Staticfy](https://github.com/danidee10/Staticfy) to automate this process.
 
-To Use Staticfy, install if from pip
+To Use Staticfy, install it from pip:
 
 {% highlight bash %}
 $ pip install staticfy
@@ -510,10 +510,7 @@ $ pip install staticfy
 Once it's done, run staticfy on the template folder
 
 {% highlight bash %}
-$ staticfy ../templates                                  
-staticfied ../templates/signup.html ==> staticfy/signup.html
-
-staticfied ../templates/index.html ==> staticfy/index.html
+$ for i in ../templates/*.html; do staticfy $i | install -D /dev/stdin staticfy/$i; done
 {% endhighlight %}
 
 It should create a folder called `staticfy` containing two new files (with the same name as our original templates), whose html links have been converted to their flask equivalents.

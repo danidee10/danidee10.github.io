@@ -20,7 +20,7 @@ exclude:      []
 keep_files:   [".git", ".svn"]
 encoding:     "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
-paginate: 5
+paginate: 15
 paginate_path: "/blog/page:num/"
 
 # Filtering Content
