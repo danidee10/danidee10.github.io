@@ -5,7 +5,7 @@ date: 2018-01-13T14:30:12+08:00
 tags: api vue django websockets rabbitmq
 ---
 
-Welcome to the penultimate part of this tutorial. I've really learnt a lot writing this tutorial and i hope you have to.
+Welcome to the penultimate part of this tutorial. I've really learnt a lot writing this tutorial and i hope you have too.
 
 In part 4, we were able to acheive our main goal of the tutorial which was to build a web based chat application with django and Vue. But we faced a major issue with scaling the application.
 
