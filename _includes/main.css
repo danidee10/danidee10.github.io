@@ -67,6 +67,11 @@ figcaption {
   margin-top: 10px;
 }
 
+.logo {
+  display: block;
+  margin-top: 10px;
+}
+
 .postlist {
   list-style: inside;
   font-style: italic;
