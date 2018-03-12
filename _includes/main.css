@@ -98,3 +98,7 @@ figcaption {
   display: block;
   margin: 0 auto;
 }
+
+.post-content {
+  text-align: justify;
+}
