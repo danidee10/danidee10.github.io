@@ -7,7 +7,7 @@ tags: Go Languages
 
 Go or "gOlAnG" (It just sounds weird when people call it GoLang. Imagine calling `Python` Pythonlang or `JavaScript` JavaScriptLang).
 
-![golAnG Sponge bob](https://i.imgflip.com/1thjsg.jpg)
+![golAnG Sponge bob](https://images.complex.com/complex/images/c_limit,w_680/fl_lossy,pg_1,q_auto/bujewhyvyyg08gjksyqh/spongebob)
 <figcaption>gOlAnG</figcaption>
 
 <br />
@@ -50,6 +50,11 @@ It’s a compiled language with static types. So can we really expect it to be a
 
 A lot of people exaggerate the verbosity of Go. Even Java Programmers haha!
 
+![golAnG Sponge bob](https://images.complex.com/complex/images/c_limit,w_680/fl_lossy,pg_1,q_auto/bujewhyvyyg08gjksyqh/spongebob)
+<figcaption>Go is verbose - Java Programmer (Sorry i had to use this picture again)</figcaption>
+
+<br />
+
 Though, i'll admit that error handling can be repetitive sometimes.
 
 Let's write a simple hello world server in `Go` and Python's beloved web framework `Flask`.
@@ -74,7 +79,7 @@ if __name__ == '__main__':
 
 In `Go`:
 
-{% highlight go %}
+{% highlight python %}
 package main
 
 import (
@@ -204,7 +209,7 @@ There was a time i tried to compile `KDE` and it took over 5 hours. Eventually i
 
 Over the weekend, i also compiled `gcc 4.x` and while it was compiling, I cleaned up the house, took my bath and even cooked a meal. Eventually it failed because i ran out of space on `/tmp`. That's a story for another day.
 
-In Comparision, building `docker` locally on my machine took less than 20 minutes.
+In Comparision, building `docker` (The biggest `go` program i know) locally on my machine took over an hour. Much longer than I expected. Though, a large part was spent downloading and cloning stuff.
 
 ## Conclusion and Advice
 
