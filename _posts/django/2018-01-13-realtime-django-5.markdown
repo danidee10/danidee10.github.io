@@ -624,24 +624,22 @@ As a bonus, i'm going to make one last part containing a lot of improvements to 
 
 Below are the things i'll cover in the next part:
 
-#### Backend
-
-Sending the messages directly through the WebSocket instead of the API.
-
-JSON web tokens with `djsoer`.
-
 #### Frontend
 
 Implementing a loading screen. Before we determine if we should join a chat session or not.
-
-Displaying the username and timestamp of the message.
 
 Automatically scrolling to the bottom of the screen when messages exceed the window height.
 
 Play sounds when the notification window is not focused.
 
+#### Backend
+
+JSON web tokens with `djsoer`.
+
 <br />
 
-Thanks for reading If you've enjoyed this tutorial please acknowledge it by dropping a comment or you can follow me on [twitter](https://twitter.com/osaetindaniel) or send me a [mail](mailto:osaetindaniel@gmail.com)
+Thanks for reading If you've enjoyed this tutorial please acknowledge it starring the [repo](https://github.com/danidee10/Chatire), dropping a comment or following me on twitter [twitter](https://twitter.com/osaetindaniel)
 
-It really means a lot to know that people actually read and learn from the tutorials.
+You can also [send a mail](mailto:osaetindaniel@gmail.com)
+
+The Feedback really means a lot to me.
