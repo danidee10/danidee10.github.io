@@ -552,7 +552,7 @@ so why is this happening?
 
 ### I thought you said WebSockets Scale
 
-Yes i said that. The reason our current setup won't scale is simply because of the way we're running `uWSGI`; with processes and threads like a normal python `WSGI` server runs.
+Yes I said that. The reason our current setup won't scale is simply because of the way we're running `uWSGI`; with processes and threads like a normal python `WSGI` server runs.
 
 An Easy solution would be to increase the processes but that can only take us to probably a few hundred users or less depending on your server's resources.
 
@@ -564,9 +564,9 @@ Basically the idea behind `AsyncIO` or simply `async` is when we have multiple I
 
 This Simple concept (high level explanation) is what makes `NodeJS` excel so much for IO bound applications.
 
-For python and `uWSGI` things are a little different because it's not asynchronous by design. There are several async libraries for python. The Official asyncio, gevent, curio etc. `uWSGI` itself supports some of these libraries `asyncio` being one of them but we're going to use `gevent`.
+For python and `uWSGI` things are a little different because they are not asynchronous by design. There are several async libraries for python. The Official asyncio, gevent, curio etc. `uWSGI` itself supports some of these libraries `asyncio` being one of them but we're going to use `gevent`.
 
-From my experience i found `gevent` works better compared to `asyncio` and `uGreen`. `Gevent` also has a lot of useful methods. For example `monkey.patch_all` which replaces most of the standard library with gevent's libraries and allows you write synchronous code that's executes asynchronously.
+From my experience, I found `gevent` works better compared to `asyncio` and `uGreen`. `Gevent` also has a lot of useful methods. For example `monkey.patch_all` which replaces most of the standard library with gevent's libraries and allows you write synchronous code that's executes asynchronously.
 
 Install gevent with pip.
 
@@ -634,7 +634,7 @@ Play sounds when the notification window is not focused.
 
 #### Backend
 
-JSON web tokens with `djsoer`.
+`JSON` tokens with `djsoer`.
 
 <br />
 
