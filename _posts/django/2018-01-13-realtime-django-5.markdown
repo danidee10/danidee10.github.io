@@ -643,3 +643,5 @@ Thanks for reading If you've enjoyed this tutorial please acknowledge it starrin
 You can also [send a mail](mailto:osaetindaniel@gmail.com)
 
 The Feedback really means a lot to me.
+
+[Continue reading Realtime Django Part 6: Extras]({{ '2018/03/11/realtime-django-6.html' | relative_url }})
