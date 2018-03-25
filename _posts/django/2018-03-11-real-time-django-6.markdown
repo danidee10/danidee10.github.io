@@ -94,7 +94,7 @@ That's all for this section, I'll leave you to figure out the CSS.
 
 You'll also notice that the chat window doesn't scroll the bottom once our messages exceeds the height of the containing div. That's really annoying. Imagine if you had to scroll on your mobile phone to read the latest message from Whatsapp. Let's fix it.
 
-We can quickly fix this by hooking in the `updated` life cycle. It's called after a Component's state has been updated and it's been re-rendered.
+We can quickly fix this by hooking into the `updated` life cycle. It's called after a Component's state has been updated and it's been re-rendered.
 
 {%highlight JavaScript%}
 updated () {
@@ -108,7 +108,7 @@ updated () {
 
 PAY ATTENTION TO THIS!
 
-*If you try to scroll too early for example in `mounted` the ref might not be available because it's in an `if block`, the ref is only set when the page has finished loading and we've started a new session.*
+*If you try to scroll too early for example in `mounted`, the `ref` might not be available because it's in an `if block`, the ref is only set when the page has finished loading and we've started a new session.*
 
 *The first condition that's true when the page is mounted is the "loading" block (i.e v-else) when `mounted` is called, the ref is not set in that block. MOUNTED IS ONLY CALLED ONCE. The $refs Object will eventually be updated by Vue, but by then you won't be able to call it again because MOUNTED is only called once and it won't be called again when $refs is updated*
 
