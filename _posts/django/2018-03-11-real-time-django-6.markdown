@@ -212,7 +212,8 @@ curl -X POST http://127.0.0.1:8000/auth/jwt/create/ --data 'username=username&pa
 
 You should get a token back. You can take that token to [JWT.io](https://jwt.io) and look inside, below is an image of what is contained in my own token.
 
-<img> Image of JWT.io </img>
+![realtime django 6.2](../../../images/django/realtime-django/realtime-django-6.2.png)
+<figcaption>Don't store secrets in JWT's</figcaption>
 
 You can view all the information inside the JWT. The Goal of JSON web tokens is not to store sensitive information (Like credit card details, addresses etc). It's to allow us transfer information securely between the client and the server.
 
@@ -263,11 +264,17 @@ Telling us that the token has expired. The default expiry time is 300 Seconds (5
 
 We can also store the username and password and initiate a login but that's a NO NO!. You could get away with it in a mobile app or server side environment, but it's still a bad idea.
 
-The best way is to have shortlived tokens and refresh them (obtain a new token). We can easily incorporate that into our Vue app by creating a new method that's call at a specific interval (Before the token expires).
+The best way is to have shortlived tokens and refresh them (obtain a new token). We can easily incorporate that into our Vue app by creating a new method that's called at a specific interval (Before the token expires).
 
 The endpoint for refreshing tokens in `djoser` is `/jwt/refresh` but that's very easy to guess. We can change it to something more obscure to make it difficult to discover. *This is security by Obfuscation.* We're just making it harder for attackers to find the endpoint for refreshing tokens. Even if they use a bruteforcing software like [DirBuster](https://www.owasp.org/index.php/Category:OWASP_DirBuster_Project) It can take them weeks (Even months) to get the link.
 
-Let's do that quickly in `urls.py`
+The first thing to do is to enable the refresh functionality by setting
+
+{% highlight python %}
+JWT_ALLOW_REFRESH = True
+{% endhighlight %}
+
+Now update `urls.py` to include the link:
 
 {% highlight python %}
 from django.contrib import admin
