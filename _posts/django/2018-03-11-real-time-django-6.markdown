@@ -217,7 +217,7 @@ You should get a token back. You can take that token to [JWT.io](https://jwt.io)
 
 You can view all the information inside the JWT. The Goal of JSON web tokens is not to store sensitive information (Like credit card details, addresses etc). It's to allow us transfer information securely between the client and the server.
 
-If an attacker alters this JWT by modifying it's data when he sends it to the server the JWT verification will fail because he signed it with a different key. ***YOU MUST PROTECT YOUR SECRET KEY AT ALL COST!***
+If an attacker alters this JWT by modifying it's data when he sends it to the server the JWT verification will fail because he signed it with a different key. ***YOU MUST PROTECT YOUR SECRET KEY AT ALL COSTS!***
 
 Now that we have that out of the way, we need to update the `signIn` method in Vue to use the new endpoint.
 
