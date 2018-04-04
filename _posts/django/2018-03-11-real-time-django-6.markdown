@@ -161,8 +161,6 @@ That's it for the frontend and UI/UX Improvements.
 
 ## Backend Improvements
 
-### Sending the messages directly through the WebSocket instead of the API
-
 ### JSON web tokens with `djsoer`
 
 If you have some experience with tokens and authentication you might be asking yourself "What's the expiry date of the tokens obtained from `djoser`". It turns out that by default there's no expiry date. We're putting our users at risk because if an attacker obtains the token, that means they'll have lifetime access to a user's account and [`localStorage` and `sessionStorage` aren't the best place to store sensitive information](https://dev.to/rdegges/please-stop-using-local-storage-1i04) (Which includes tokens)
