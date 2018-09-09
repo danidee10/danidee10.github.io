@@ -177,7 +177,7 @@ Let's talk about the folder structure a little:
 
 ### Configure Vue router
 
-Create two components one for the main chat screen callled `Chat.vue` and another for User Authentication and Signup we'll call that `UserAuth.vue`
+Create two components in the `components` folder. One for the main chat screen callled `Chat.vue` and another for User Authentication and Signup we'll call that `UserAuth.vue`
 
 Ideally what we want is to conditionally display the components based on the Login status of the user. If the User is Authenticated, we want to display the Chat component else we want them to either signup or login which means we'll display the `UserAuth` Component.
 
