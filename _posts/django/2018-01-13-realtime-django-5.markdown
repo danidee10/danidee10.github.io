@@ -27,6 +27,8 @@ So many people approached the problem from different angles
 
 modifying django directly was going to be difficult because it was going to require some drastic changes in the core of django due to it's synchronous nature and the `WSGI` protocol itself.
 
+{% include article_ads.html %}
+
 ### django channels
 
 Andrew Godwin brought websockets to django natively with `django-channels`. At the time this tutorial was written it's currently an official project of the django software foundation. Meaning it's not going anywhere soon.

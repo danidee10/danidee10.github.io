@@ -237,6 +237,8 @@ We could have easily gotten the user in the `patch` method by calling `request.u
 
 Let me give you a simple scenario, what happens if we decide to invite our friends by username to a chat session. With `request.user` we wouldn't be able to do that because `request.user` would refer to the current authenticated user making the request.
 
+{% include article_ads.html %}
+
 On the otherhand with username's it's a piece of cake we just need to post the username to server and it'll use that to retrieve the user and add them to the chat room.
 
 Also, if you decide to add an "Invite multiple users" functionality, you can modify the code to read a list of usernames and fetch them in one go from the database. It's up to you.

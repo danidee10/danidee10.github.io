@@ -217,6 +217,8 @@ You can view all the information inside the JWT. The Goal of JSON web tokens is 
 
 If an attacker alters this JWT by modifying it's data when he sends it to the server the JWT verification will fail because he signed it with a different key. ***YOU MUST PROTECT YOUR SECRET KEY AT ALL COSTS!***
 
+{% include article_ads.html %}
+
 Now that we have that out of the way, we need to update the `signIn` method in Vue to use the new endpoint.
 
 {% highlight JavaScript %}

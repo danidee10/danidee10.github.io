@@ -632,6 +632,8 @@ which retrieves the Chat history every 3 seconds and gives the end user the illu
 
 You've just implemented `polling`. For small applications this is fine. but if your application has a large userbase, polling can be horribly inefficient. You'll see why.
 
+{% include article_ads.html %}
+
 <br />
 
 **Let's do a little maths:**

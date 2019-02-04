@@ -186,6 +186,8 @@ That's all you need to do. Reload the webpage and the application should still f
 
 That's all you need to know about blueprints, they're really helpful when you want to refactor your flask application and split it into smaller parts. They help you to add extra routes and functions to your application without chunking the code into a single file.
 
+{% include article_ads.html %}
+
 Join me in the next part where I'll show you how to schedule and run background jobs in Flask with [Celery](http://www.celeryproject.org/).
 
 We're going to use celery to implement a feature where users can set the time they want a poll to stay active. after which the poll would be automatically closed.

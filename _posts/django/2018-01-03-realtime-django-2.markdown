@@ -181,6 +181,8 @@ Create two components in the `components` folder. One for the main chat screen c
 
 Ideally what we want is to conditionally display the components based on the Login status of the user. If the User is Authenticated, we want to display the Chat component else we want them to either signup or login which means we'll display the `UserAuth` Component.
 
+{% include article_ads.html %}
+
 We can do this by creating a implementing a global navigation. Edit the router's `index.js` file to include the following
 
 {% highlight JavaScript %}

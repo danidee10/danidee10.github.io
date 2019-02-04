@@ -97,6 +97,8 @@ Lastly you should have basic knowledge of the Python programming language.
 
 Now we're going to install virtualenv and create a new virtual environment where our project and all it's files and dependencies will reside.
 
+{% include article_ads.html %}
+
 ### Installing virtualenv
 
 ###### Install virtualenv with pip.

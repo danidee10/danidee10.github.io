@@ -173,6 +173,7 @@ We also created a session with `requests.Session`, so we can login to the applic
 At the end of everything, we started a new instance of our application which we would run our tests against.
 The small pause (`sleep(2)`) at the end of the method is important, so the flask application has enough time to initialize and listen for connections before we start running our tests, if you don't do this most of the tests won't pass as `requests` will be unable to connect to the application.
 
+{% include article_ads.html %}
 
 Without any explanation, you can guess what the `tearDownClass` method does. There is also another method that wasn't used here `tearDown` which is run at the end of every individual test.
 

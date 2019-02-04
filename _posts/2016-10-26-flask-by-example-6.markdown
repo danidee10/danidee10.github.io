@@ -383,6 +383,8 @@ Until now, we've fetched all the from the database and displayed them on the hom
 
 Without this, they'll have to sift through all the polls on the homepage before they can find the poll they're looking for.
 
+{% include article_ads.html %}
+
 Lets create two new routes in `votr.py`
 
 {% highlight python %}

@@ -124,6 +124,7 @@ class Polls(Base):
 
 To properly use `flask_sqlalchemy`, we have to create a configuration file which tells flask the type of database we're making use of and how to connect it, we can also use our configuration file to store site-wide information. We're going to use sqlite as the database for votr because it's lightweight and easy to setup.
 
+{% include article_ads.html %}
 
 ###### Create a new file `config.py` and include the following
 

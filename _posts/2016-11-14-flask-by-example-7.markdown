@@ -127,6 +127,8 @@ That's all!, with this information flask admin is able to build the blueprints w
 
 The admin page should also be protected from users whose username doesn't equal **Administrator**. Our username field is actually unique, so this means that we can only have one admin user.
 
+{% include article_ads.html %}
+
 To create other admin users, you can add more usernames to check for in the `is_accessible` method or better still add a boolean field to your user model to determine if the user is an admin user or not. I'll leave you to your imagination here.
 
 <br />

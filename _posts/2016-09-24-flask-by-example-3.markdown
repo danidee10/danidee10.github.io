@@ -202,7 +202,6 @@ Woah! that's a lot of imports at the top of the file, Let's discuss each of them
 
   **<u>url_for</u>:** This prevents us from hardcoding the `homepage` route as `/` when calling `redirect`, if you hardcode it, then what happens when you decide to change the route of `home` from `/` to `/index`. this would break all existing links to the homepage in your application, you'll have to go round and change all the hardcoded url's to new url.
 
-
   **<u>generate_password_hash and check_password_hash</u>**: are helpers from [werkzeug](http://werkzeug.pocoo.org/) for hashing and comparing a string with a password hash respectively. The hash is a one way [salted hash](https://www.quora.com/What-does-it-mean-to-add-a-salt-to-a-password-hash) post.
 , meaning we cannot decrypt it to get back the original string that was entered by the user.
 
@@ -284,6 +283,8 @@ def home():
 You could get killed if other flask developers see this!. On a more serious note, this has a lot of downsides. You'll have to escape all the double quotes, poor handling of urls and links and you can't re-use similar templates by inheritance, i can go on and on but it's very obvious that is just ugly and messy and would be hard to debug because you wouldn't even have html templates! No text editor would be able to work with this ***stringified*** html.
 
 I'll advise you to skim through the [jinja2](http://jinja.pocoo.org/docs/dev/) docs to get a feel of how it works and looks before moving on to the next section.
+
+{% include article_ads.html %}
 
 ### Landing page template
 

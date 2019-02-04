@@ -101,6 +101,8 @@ Before we proceed, it's good practice to layout the structure of the UI we have 
 
 We're going to have two components, the main component which we'll call `PollForm` is going to contain the form used to create the poll, and the second component called `LivePreview` is a form that shows us how a poll is going to look like during creation.
 
+{% include article_ads.html %}
+
 `LivePreview` is part of the `PollForm` component because it displays data that's entered in the `PollForm` component. `PollForm` is the parent component and `LivePreview` is the child component.
 
 `form_container` is just a plain div that houses the two forms.

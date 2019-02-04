@@ -91,6 +91,8 @@ If you paid attention to the flask docs you'd have come across a section where i
 
 So we need to another server to run our application. You may have heard of Apache, Nginx, IIS etc but those servers are written in other programming languages that are not python, so there's no way for them to directly understand python and run our application. Which led to the creation of WSGI (Web Server Gateway Interface)
 
+{% include article_ads.html %}
+
 Before WSGI, One python application would work with a web server let's say Apache and when you switch to another web server e.g Nginx it wouldn't work. So WSGI came in as a interface/standard to solve this problem. Today once an application is WSGI Compatible (Thanks to the framework itself not you) it can be run any application server that's WSGI compatible.
 
 There are various WSGI servers for python. You can find them on [WSGI.org](http://wsgi.readthedocs.io/en/latest/servers.html) In our case, we're going to be using [Gunicorn](http://gunicorn.org/) It's popular, fast and is purely python based so it can easily be installed with 

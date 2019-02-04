@@ -137,6 +137,8 @@ In the POST request, we aren't really doing anything, we just get the JSON the u
 
 Earlier, our aim was to return a JSON string containing the poll and various details associated with it. This is exactly what we implemented in the GET request. To acheive that we queried the database for all the existing Topics and then for each topic we fetched the associated polls (`Polls.query.filter_by(topic=topic)`), after that we appended the results in the format we wanted and then used another flask helper function called `jsonify` to convert the string to JSON. jsonify is also similar to python's json.dumps but like `request.get_json` it does more than what meets the eye.
 
+{% include article_ads.html %}
+
 Okay our should work properly but we could still improve it by leveraging the power of SQLAlchemy and using an SQL join statement *But how do you use a join statement when you're not writing raw SQL...Simple use SQLAlchemy*
 
 ##### Let's fire up a terminal and play around with SQLAlchemy

@@ -343,10 +343,11 @@ var PollForm = React.createClass({
 });
 {% endhighlight %}
 
-
 We imported the timepicker at the top of the file, we put it at the top of the file so we don't get an exception when we try to use it a file that doesn't have the included bundle
 
 We also added a new state `close_date` to track the closing date of the poll, by default we will close each poll in 24 hours if the close date was not specified. we're also converting the time to a utc timestamp expressed in seconds (`e.getTime() / 1000`). so we can easily use python's `datetime.utcfromtimestamp` to convert it to a datetime object that celery's apply_async method expects as the eta argument.
+
+{% include article_ads.html %}
 
 The Timepicker is really simple. we just declared it with:
 

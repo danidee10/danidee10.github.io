@@ -109,6 +109,8 @@ This is another popular criticsm of Go. Many Programmers  complain that it doesn
 
 It turns out that `structs` can be used in places where you'd usually use a `Class` in other languages. `structs` can have methods and they can also inherit behaviour from other Structs (Through composition or "embedding" in the world of Go developers.)
 
+{% include article_ads.html %}
+
 This decision is both a good one and a bad one from the `Go` developers. While `Objects`, `Generics` etc  have their places. Removing them from the Go has it’s advantages. It makes it very easy to learn.
 
 You can learn Go and start building real world applications by just following the [official guide](https://tour.golang.org/list)
