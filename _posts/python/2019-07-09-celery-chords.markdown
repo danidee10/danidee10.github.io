@@ -1,7 +1,8 @@
 ---
 layout: post
 title: Run Chord callbacks in Celery (4.3.0) regardless of the exit status of it's tasks
-date: 2019-07-07T22:35:33+01:00
+date: 2019-07-09T22:35:33+01:00
+tags: python celery chords
 ---
 
 You're probably here because you've stumbled upon a problem with Celery chords. The Chord callback function isn't executed if one of the tasks in the Chord's body fails.
