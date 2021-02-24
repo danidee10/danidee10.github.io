@@ -1,4 +1,6 @@
 source 'https://rubygems.org'
-gem 'jekyll', '~> 3.7', '>= 3.7.3'
+gem 'ffi', '>= 1.9.24'
+gem 'jekyll', '>= 3.7.4'
 gem 'jekyll-paginate'
+gem 'kramdown', '>=2.3.0'
 gem 'rouge', '~> 3.0'
