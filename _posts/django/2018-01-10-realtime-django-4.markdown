@@ -303,8 +303,8 @@ created () {
 
   // Setup headers for all requests
   $.ajaxSetup({
-    headers: {
-      'Authorization': `Token ${sessionStorage.getItem('authToken')}`
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader('Authorization', `JWT ${sessionStorage.getItem('authToken')}`)
     }
   })
 },
@@ -421,8 +421,8 @@ export default {
 
     // Setup headers for all requests
     $.ajaxSetup({
-      headers: {
-        'Authorization': `Token ${sessionStorage.getItem('authToken')}`
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('Authorization', `JWT ${sessionStorage.getItem('authToken')}`)
       }
     })
   },
@@ -539,8 +539,8 @@ export default {
 
     // Setup headers for all requests
     $.ajaxSetup({
-      headers: {
-        'Authorization': `Token ${sessionStorage.getItem('authToken')}`
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('Authorization', `JWT ${sessionStorage.getItem('authToken')}`)
       }
     })
 
@@ -611,8 +611,8 @@ created () {
 
   // Setup headers for all requests
   $.ajaxSetup({
-    headers: {
-      'Authorization': `Token ${sessionStorage.getItem('authToken')}`
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader('Authorization', `JWT ${sessionStorage.getItem('authToken')}`)
     }
   })
 

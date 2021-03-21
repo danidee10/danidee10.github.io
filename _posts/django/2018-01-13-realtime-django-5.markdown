@@ -164,7 +164,7 @@ from notifications.channels import BaseNotificationChannel
 
 
 class BroadCastWebSocketChannel(BaseNotificationChannel):
-    """Fanout notification for RabbitMQ."""
+    """Fanout notification channel with RabbitMQ."""
 
     def _connect(self):
         """Connect to the RabbitMQ server."""
@@ -463,8 +463,8 @@ export default {
 
     // Setup headers for all requests
     $.ajaxSetup({
-      headers: {
-        'Authorization': `Token ${sessionStorage.getItem('authToken')}`
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('Authorization', `JWT ${sessionStorage.getItem('authToken')}`)
       }
     })
 

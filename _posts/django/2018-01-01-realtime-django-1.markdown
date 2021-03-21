@@ -23,6 +23,8 @@ During the course of this tutorial i'll do my best to breakdown and explain any 
 
 If you don't understand anything, the comments are wide-open. Feel free to reach out.
 
+**Originally, this tutorial used uWSGI for the WebSocket layer. Times have changed and today (March 2021), django-channels is now the defacto way to handle WebSockets in django and it's only going to get better. Hence, the tutorial was extended to incorporate django-channels. It's still adviseable to go through each part to get a broad understanding of how django-channels works under the hood**
+
 <br />
 
 ### Libraries involved
@@ -34,6 +36,7 @@ If you don't understand anything, the comments are wide-open. Feel free to reach
 - [django-notifs](https://github.com/danidee10/django-notifs)
 - [pika](https://pika.readthedocs.io)
 - [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/)
+- [django-channels](https://channels.readthedocs.io/en/stable/)
 
 <br />
 

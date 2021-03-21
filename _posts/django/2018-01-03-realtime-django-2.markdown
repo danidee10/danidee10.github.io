@@ -23,7 +23,7 @@ Djoser is a REST Implementation of Django's inbuilt authentication system. So in
 
 We're going with the simplest setup possible for djoser. Include the following in your `INSTALLED_APPS`
 
-{% highlight bash %}
+{% highlight python %}
 INSTALLED_APPS = (
     'django.contrib.auth',
     ...,
@@ -35,7 +35,7 @@ INSTALLED_APPS = (
 
 add djoser's urls to `urls.py`:
 
-{% highlight bash %}
+{% highlight python %}
 from django.contrib import admin
 from django.urls import path, include
 

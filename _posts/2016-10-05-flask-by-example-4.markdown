@@ -2,7 +2,7 @@
 layout: post
 title: Flask by example 4 (Building an interactive UI with ReactJS)
 date: 2016-10-05T22:35:33+01:00
-tags: Flask React Javascript
+tags: Flask React JavaScript
 ---
 
 From the [previous tutorial]({% post_url 2016-09-24-flask-by-example-3 %}), we designed a landing page and built an authentication system to enable us track our users and the posts they create / vote on.

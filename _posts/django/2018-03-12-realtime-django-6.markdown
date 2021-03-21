@@ -239,8 +239,8 @@ created () {
 
   // Setup headers for all requests
   $.ajaxSetup({
-    headers: {
-      'Authorization': `JWT ${sessionStorage.getItem('authToken')}`
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader('Authorization', `JWT ${sessionStorage.getItem('authToken')}`)
     }
   })
 
@@ -268,10 +268,14 @@ The best way is to have shortlived tokens and refresh them (obtain a new token).
 
 The endpoint for refreshing tokens in `djoser` is `/jwt/refresh` but that's very easy to guess. We can change it to something more obscure to make it difficult to discover. *This is security by Obfuscation.* We're just making it harder for attackers to find the endpoint for refreshing tokens. Even if they use a bruteforcing software like [DirBuster](https://www.owasp.org/index.php/Category:OWASP_DirBuster_Project) It can take them weeks (Even months) to get the link.
 
-The first thing to do is to enable the refresh functionality by setting
+The first thing to do is to enable the refresh functionality and increase the expiration time by the following settings:
 
 {% highlight python %}
-JWT_ALLOW_REFRESH = True
+# djangorestframework-jwt settings
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': timedelta(minutes=30)
+}
 {% endhighlight %}
 
 Now update `urls.py` to include the link:
@@ -280,7 +284,7 @@ Now update `urls.py` to include the link:
 from django.contrib import admin
 from django.urls import path, include
 
-from rest_framework_jwt.views import verify_jwt_token
+from rest_framework_jwt.views import refresh_jwt_token
 
 from chat.views import raise_404
 
@@ -294,7 +298,7 @@ urlpatterns = [
     path('auth/jwt/refresh/', raise_404),
 
     # Register the new URL under an ambigous name
-    path('this/is/hard/to/find/', verify_jwt_token),
+    path('this/is/hard/to/find/', refresh_jwt_token),
 
     path('auth/', include('djoser.urls.jwt')),
     path('api/', include('chat.urls'))
@@ -338,5 +342,3 @@ created () {
 That's it! Your chat shouldn't get interrupted because the token is silently refreshed in the background.
 
 If you need to customize JSON web tokens in django rest framework, please take a look at the options available in the [documentation](https://getblimp.github.io/django-rest-framework-jwt/#additional-settings)
-
-That's the end of this tutorial. The real end :-)

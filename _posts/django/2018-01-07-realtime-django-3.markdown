@@ -188,7 +188,7 @@ class ChatSessionView(APIView):
 
         return Response ({
             'status': 'SUCCESS', 'members': members,
-            'message': '%s joined that chat' % user.username,
+            'message': '%s joined the chat' % user.username,
             'user': deserialize_user(user)
         })
     
@@ -297,7 +297,7 @@ $ curl -X POST http://127.0.0.1:8000/auth/token/create/ --data 'username=daniel&
 {"auth_token":"9c3ea2d194d7236ac68d2faefba017c8426a8484"}
 
 $ curl -X PATCH http://127.0.0.1:8000/api/chats/040213b14a02451/ --data 'username=daniel' -H 'Authorization: Token 9c3ea2d194d7236ac68d2faefba017c8426a8484'
-{"status":"SUCCESS","members":[{"id":1,"username":"danidee","email":"osaetindaniel@gmail.com","first_name":"","last_name":""},{"id":2,"username":"daniel","email":"","first_name":"","last_name":""}],"message":"daniel joined that chat","user":{"id":2,"username":"daniel","email":"","first_name":"","last_name":""}}
+{"status":"SUCCESS","members":[{"id":1,"username":"danidee","email":"osaetindaniel@gmail.com","first_name":"","last_name":""},{"id":2,"username":"daniel","email":"","first_name":"","last_name":""}],"message":"daniel joined the chat","user":{"id":2,"username":"daniel","email":"","first_name":"","last_name":""}}
 {% endhighlight %}
 
 Let's send some messages
